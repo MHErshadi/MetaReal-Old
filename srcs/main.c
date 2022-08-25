@@ -28,15 +28,6 @@
         ic = ictx_set2(ROOT_ICTX);           \
     } while (0)
 
-#define code_trim(c, r)                                     \
-    do                                                      \
-    {                                                       \
-        for (; *c == ' ' || *c == '\t' || *c == '\n'; c++); \
-        if (!*c)                                            \
-            r;                                              \
-        c[strlen(c) - 1] = '\0';                            \
-    } while (0)
-
 #define code_free(c, lm, pm, ps, igm) \
     do                                \
     {                                 \
@@ -87,7 +78,10 @@ uint8 main(uint8 argc, strp argv)
                 siz = strlen(code) - 1;
             }
 
-            code_trim(code, continue);
+            for (; *code == ' ' || *code == '\t' || *code == '\n'; code++);
+            if (!*code)
+                continue;
+            code[strlen(code) - 1] = '\0';
 
             lres_t lres = lex(code, '\0', STDIN_NAM, lmem);
 
@@ -113,7 +107,9 @@ uint8 main(uint8 argc, strp argv)
                 goto clear;
             }
 
+            putc('\n', STDOUT);
             mrir_print(igres._ir);
+            putc('\n', STDOUT);
             mrir_free(igres._ir);
 
 clear:
@@ -148,7 +144,10 @@ clear:
         while (fgets(code + siz, FIL_MAX_INP - siz, file))
             siz = strlen(code);
 
-        code_trim(code, goto free);
+        for (; *code == ' ' || *code == '\t' || *code == '\n'; code++);
+        if (!*code)
+            goto free;
+        code[strlen(code) - 1] = '\0';
 
         lres_t lres = lex(code, '\0', STDIN_NAM, lmem);
 

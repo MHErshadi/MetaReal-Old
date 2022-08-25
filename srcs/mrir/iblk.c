@@ -46,5 +46,14 @@ void iblk_print(iblk_t blk)
     case INT_I:
         fprintf(STDOUT, "%llu;\n", blk._siz);
         return;
+    case FLT_I:
+        fprintf(STDOUT, "%llf;\n", *(dec64p)blk._blk);
+        return;
+    case BOL_I:
+        fprintf(STDOUT, "%u;\n", blk._siz);
+        return;
+    case STR_I:
+        fprintf(STDOUT, "%s;\n", blk._inst);
+        return;
     }
 }

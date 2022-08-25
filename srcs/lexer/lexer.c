@@ -15,7 +15,6 @@
         code++;                               \
                                               \
         toks[siz++] = tok_set2(t, pss, cpos); \
-        break;                                \
     } while (0)
 
 lres_t lres_succ(tok_tp toks);
@@ -158,6 +157,7 @@ lres_t lex(cstr code, uint8 term, cstr fn, mem_t lmem)
 
         case '~':
             tok_set(BNT_T);
+            break;
 
         case '<':
             code = gen_lst(&toks[siz++], code, &cpos);
@@ -175,30 +175,41 @@ lres_t lex(cstr code, uint8 term, cstr fn, mem_t lmem)
 
         case '(':
             tok_set(LPR_T);
+            break;
         case ')':
             tok_set(RPR_T);
+            break;
 
         case '{':
             tok_set(LCB_T);
+            break;
         case '}':
             tok_set(RCB_T);
+            break;
 
         case '[':
             tok_set(LSB_T);
+            break;
         case ']':
             tok_set(RSB_T);
+            break;
 
         case '.':
             tok_set(DOT_T);
+            break;
         case ':':
             tok_set(COL_T);
+            break;
 
         case '?':
             tok_set(QUE_T);
+            break;
         case '$':
             tok_set(DLR_T);
+            break;
         case ',':
             tok_set(CMA_T);
+            break;
         default:
             free(toks);
             return lres_fail(ill_chr_set(*code, cpos));

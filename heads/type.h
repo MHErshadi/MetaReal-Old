@@ -22,7 +22,6 @@ typedef unsigned long long uint64;
 typedef float dec32;
 
 typedef double dec64;
-typedef long double dec128;
 
 /* pointer */
 
@@ -41,7 +40,6 @@ typedef unsigned long long *uint64p;
 typedef float *dec32p;
 
 typedef double *dec64p;
-typedef long double *dec128p;
 
 typedef void *ptr;
 typedef void **ptrp;
