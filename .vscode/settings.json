@@ -1,0 +1,28 @@
+{
+    "files.associations": {
+        "blk.h": "c",
+        "pos.h": "c",
+        "lexer.h": "c",
+        "stdio.h": "c",
+        "tok.h": "c",
+        "stdlib.h": "c",
+        "mem.h": "c",
+        "type.h": "c",
+        "info.h": "c",
+        "disp.h": "c",
+        "signal.h": "c",
+        "string.h": "c",
+        "errlib.h": "c",
+        "def.h": "c",
+        "parser.h": "c",
+        "node.h": "c",
+        "mint.h": "c",
+        "crash.h": "c",
+        "mrirgen.h": "c",
+        "mrir.h": "c",
+        "mrirop.h": "c",
+        "ictx.h": "c",
+        "irgen.h": "c",
+        "ival.h": "c"
+    }
+}

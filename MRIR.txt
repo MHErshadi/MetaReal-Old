@@ -1,0 +1,72 @@
+12 + 5 * 23
+
+&main ($argc |int, $argv |lst) |int
+{
+    $INT0 |int = ~mulII 5, 23;
+    ~addII 12, $INT0;
+
+    ~ret (0);
+}
+
+##############################################
+
+(6 + 1) * (9 + 10)
+
+&main ($argc |int, &argv |lst) |int
+{
+    $INT0 |int = ~addII 6, 1;
+    $INT1 |int = ~addII 9, 10;
+    ~mulII $INT0, $INT1;
+
+    ~ret (0);
+}
+
+##############################################
+
+(1 + 1 + 1) * (2 + 2 + 2)
+
+&main ($argc |int, $argv |lst) |int
+{
+    $INT0 |int = ~addII 1, 1;
+    $INT1 |int = ~addII $INT0, 1;
+    $INT2 |int = ~addII 2, 2;
+    $INT3 |int = ~addII $INT2, 2;
+    ~mulII $INT1, $INT3;
+
+    ~ret (0);
+}
+
+##############################################
+
+a = 1
+
+&main ($argc |int, $argv |lst) |int
+{
+    $INT0 |int = 1;
+
+    ~ret (0);
+}
+
+##############################################
+
+a = 1 + 2
+
+&main ($argc |int, $argv |lst) |int
+{
+    $INT0 |int = ~addII 1, 2;
+
+    ~ret (0);
+}
+
+##############################################
+
+a = (100 + 5) * (1 + 7)
+
+&main ($argc |int, $argv |lst) |int
+{
+    $INT0 |int = ~addII 100, 5;
+    $INT1 |int = ~addII 1, 7;
+    $INT2 |int = ~mulII $INT0, $INT1;
+
+    ~ret (0);
+}
