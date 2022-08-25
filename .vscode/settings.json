@@ -23,6 +23,8 @@
         "mrirop.h": "c",
         "ictx.h": "c",
         "irgen.h": "c",
-        "ival.h": "c"
+        "ival.h": "c",
+        "mstr.h": "c",
+        "stddef.h": "c"
     }
 }

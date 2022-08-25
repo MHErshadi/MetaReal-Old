@@ -51,6 +51,8 @@ typedef struct __igres__ *igres_tp;
 
 igres_t irgen(node_tp nodes, mem_t igmem, ictx_t ictx);
 
+void igres_fail(igres_tp res, run_tim_t error);
+
 void mrir_print(mrir_t ir);
 void mrir_free(mrir_t ir);
 

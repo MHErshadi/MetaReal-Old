@@ -432,6 +432,15 @@ cstr gen_str(tok_tp tok, mem_t lmem, cstr code, uint8 term, pos_tp cpos)
     uint8 quote = *code++;
     posp_adv(cpos);
 
+    if (*code == quote)
+    {
+        posp_adv(cpos);
+
+        *tok = tok_set2(STR_T, pss, *cpos);
+
+        return ++code;
+    }
+
     str str = blk_alloc(lmem, GSTR_SIZ, LMEM_SIZ);
     uint64 alc = GSTR_SIZ;
     uint64 siz = 0;
@@ -465,7 +474,6 @@ cstr gen_str(tok_tp tok, mem_t lmem, cstr code, uint8 term, pos_tp cpos)
         str[siz++] = *code++;
     }
 
-    code++;
     posp_adv(cpos);
 
     if (siz == alc)
@@ -483,7 +491,7 @@ cstr gen_str(tok_tp tok, mem_t lmem, cstr code, uint8 term, pos_tp cpos)
 
     *tok = tok_set1(STR_T, str, siz, pss, *cpos);
 
-    return code;
+    return ++code;
 }
 
 cstr gen_etr(tok_tp tok, mem_t lmem, cstr code, uint8 term, pos_tp cpos, uint8p flg)
@@ -500,6 +508,15 @@ cstr gen_etr(tok_tp tok, mem_t lmem, cstr code, uint8 term, pos_tp cpos, uint8p 
 
     uint8 quote = *code++;
     posp_adv(cpos);
+
+    if (*code == quote)
+    {
+        posp_adv(cpos);
+
+        *tok = tok_set2(STR_T, pss, *cpos);
+
+        return ++code;
+    }
 
     str str = blk_alloc(lmem, GSTR_SIZ, LMEM_SIZ);
     uint64 alc = GSTR_SIZ;
@@ -535,7 +552,6 @@ cstr gen_etr(tok_tp tok, mem_t lmem, cstr code, uint8 term, pos_tp cpos, uint8p 
         str[siz++] = *code++;
     }
 
-    code++;
     posp_adv(cpos);
 
     if (siz == alc)
@@ -553,7 +569,7 @@ cstr gen_etr(tok_tp tok, mem_t lmem, cstr code, uint8 term, pos_tp cpos, uint8p 
 
     *tok = tok_set1(STR_T, str, siz, pss, *cpos);
 
-    return code;
+    return ++code;
 }
 
 cstr gen_double(tok_tp tok, cstr code, uint8 typ1, uint8 typ2, uint8 chr, pos_tp cpos)

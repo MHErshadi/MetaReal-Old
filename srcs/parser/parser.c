@@ -917,7 +917,17 @@ tok_tp core(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
 
     if (toks->_typ == STR_T)
     {
-        str_n nod = str_set(pmem, toks->_val, toks->_len + 2);
+        if (!toks->_val)
+        {
+            *res->_nodes = node_set2(STR_N, toks->_pss, toks->_pse);
+
+            toks++;
+            adv_nln1(toks);
+
+            return toks;
+        }
+
+        str_n nod = str_set(pmem, toks->_val, toks->_len);
 
         *res->_nodes = node_set1(STR_N, nod, toks->_pss, toks->_pse);
 
