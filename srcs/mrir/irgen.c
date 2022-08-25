@@ -8,13 +8,26 @@
 #include <mem/blk.h>
 #include <debug/crash.h>
 
+#define num_cnt(n, s)  \
+    do                 \
+    {                  \
+        uint64 cn = n; \
+        do             \
+        {              \
+            cn /= 10;  \
+            s++;       \
+        } while (cn);  \
+    } while (0)
+
 mrir_t mrir_init();
+
+idata_t idata_init();
 
 void igres_fail(igres_tp res, run_tim_t error);
 
 iblk_t visit_nod(igres_tp res, node_t node, mem_t igmem, ictx_t ictx);
 
-iblk_t visit_int(node_t node);
+iblk_t visit_int(node_t node, mem_t igmem);
 iblk_t visit_flt(node_t node, mem_t igmem);
 iblk_t visit_bol(node_t node);
 iblk_t visit_str(node_t node, mem_t igmem);
@@ -28,6 +41,7 @@ igres_t irgen(node_tp nodes, mem_t igmem, ictx_t ictx)
     res._herr = 0;
 
     res._ir = mrir_init();
+    res._data = idata_init();
 
     uint64 m_alc = IMAIN_SIZ;
 
@@ -83,7 +97,7 @@ void mrir_print(mrir_t ir)
         uint64 i;
         for (i = 0; i < ir._dsiz; i++)
         {
-            iblk_print(ir._defs[i]);
+            iblk_print(ir._defs[i], ";\n");
             fputc('\n', STDOUT);
         }
     }
@@ -95,7 +109,7 @@ void mrir_print(mrir_t ir)
         uint64 i;
         for (i = 0; i < ir._msiz; i++)
         {
-            iblk_print(ir._main[i]);
+            iblk_print(ir._main[i], ";\n");
             fputc('\n', STDOUT);
         }
     }
@@ -109,7 +123,7 @@ void mrir_print(mrir_t ir)
         uint64 i;
         for (i = 0; i < ir._fsiz; i++)
         {
-            iblk_print(ir._funcs[i]);
+            iblk_print(ir._funcs[i], ";\n");
             fputc('\n', STDOUT);
         }
     }
@@ -147,6 +161,21 @@ mrir_t mrir_init()
     return ir;
 }
 
+idata_t idata_init()
+{
+    idata_t data;
+
+    data._int_cnt = 0;
+    data._flt_cnt = 0;
+    data._bol_cnt = 0;
+    data._str_cnt = 0;
+    data._lst_cnt = 0;
+    data._tpl_cnt = 0;
+    data._dct_cnt = 0;
+
+    return data;
+}
+
 void igres_fail(igres_tp res, run_tim_t error)
 {
     res->_error = error;
@@ -158,24 +187,32 @@ iblk_t visit_nod(igres_tp res, node_t node, mem_t igmem, ictx_t ictx)
     switch (node._typ)
     {
     case INT_N:
-        return visit_int(node);
+        return visit_int(node, igmem);
     case FLT_N:
         return visit_flt(node, igmem);
     case BOL_N:
         return visit_bol(node);
     case STR_N:
         return visit_str(node, igmem);
+    case LST_I:
+        return visit_lst(res, node, igmem, ictx);
+    case TPL_I:
+        return visit_tpl(res, node, igmem, ictx);
+    case DCT_I:
+        return visit_dct(res, node, igmem, ictx);
     }
 }
 
-iblk_t visit_int(node_t node)
+iblk_t visit_int(node_t node, mem_t igmem)
 {
     int_n nod = node._nod;
 
     uint8 flg = 0;
     uint64 val = conv_int(nod->_val, nod->_len - 1, &flg);
 
-    return iblk_set2(INT_I, NULL, val, SET_PROP(0, 0, 1));
+    int_i blk = iint_set(igmem, val);
+
+    return iblk_set1(INT_I, blk, SET_PROP(0, 0, 1, 0));
 }
 
 iblk_t visit_flt(node_t node, mem_t igmem)
@@ -183,28 +220,155 @@ iblk_t visit_flt(node_t node, mem_t igmem)
     flt_n nod = node._nod;
 
     uint8 flg = 0;
+    dec64 val = conv_dec(nod->_val, nod->_len - 1, &flg);
 
-    dec64p val = blk_alloc(igmem, sizeof(dec64), IGMEM_SIZ);
-    *val = conv_dec(nod->_val, nod->_len - 1, &flg);
+    flt_i blk = iflt_set(igmem, val);
 
-    return iblk_set1(FLT_I, val, NULL, 0, SET_PROP(0, 0, 1));
+    return iblk_set1(FLT_I, blk, SET_PROP(0, 0, 1, 0));
 }
 
 iblk_t visit_bol(node_t node)
 {
     bol_n nod = node._nod;
 
-    return iblk_set2(BOL_I, NULL, nod->_stat, SET_PROP(0, 0, 1));
+    if (nod->_stat)
+        return iblk_set2(BOL_I, SET_PROP(0, 0, 1, 1));
+    return iblk_set2(BOL_I, SET_PROP(0, 0, 1, 1));
 }
 
 iblk_t visit_str(node_t node, mem_t igmem)
 {
     str_n nod = node._nod;
 
-    uint64 siz = nod->_len + 2;
+    str_i blk = istr_set(igmem, nod->_val, nod->_len);
 
-    str val = blk_alloc(igmem, siz, IGMEM_SIZ);
-    snprintf(val, siz, "\"%s\"", nod->_val);
+    return iblk_set1(STR_I, blk, SET_PROP(0, 0, 1, 0));
+}
 
-    return iblk_set2(STR_I, val, siz, SET_PROP(0, 0, 1));
+iblk_t visit_lst(igres_tp res, node_t node, mem_t igmem, ictx_t ictx)
+{
+    if (!node._nod)
+        return iblk_set2(LST_I, SET_PROP(0, 0, 1, 0));
+
+    lst_n nod = node._nod;
+
+    iblk_tp elms = blk_alloc(igmem, nod->_siz * sizeof(iblk_t), IGMEM_SIZ);
+
+    uint8 is_useful = 0, is_constexpr = 1;
+    uint64 i;
+    for (i = 0; i < nod->_siz; i++)
+    {
+        iblk_t elem = visit_nod(res, nod->_elms[i], igmem, ictx);
+
+        if (res->_herr)
+            return elem;
+
+        elms[i] = elem;
+
+        if (IS_USEFUL(elem._prop))
+            is_useful = 1;
+        if (!IS_CONSTEXPR(elem._prop))
+            is_constexpr = 0;
+    }
+
+    lst_i blk = ilst_set(igmem, elms, nod->_siz, res->_data._lst_cnt++);
+
+    if (is_useful)
+    {
+        if (is_constexpr)
+            return iblk_set1(LST_I, blk, SET_PROP(1, 1, 1, 0));
+        return iblk_set1(LST_I, blk, SET_PROP(1, 1, 0, 0));
+    }
+
+    if (is_constexpr)
+        return iblk_set1(LST_I, blk, SET_PROP(0, 1, 1, 0));
+    return iblk_set1(LST_I, blk, SET_PROP(0, 1, 0, 0));
+}
+
+iblk_t visit_tpl(igres_tp res, node_t node, mem_t igmem, ictx_t ictx)
+{
+    if (!node._nod)
+        return iblk_set2(TPL_I, SET_PROP(0, 0, 1, 0));
+
+    tpl_n nod = node._nod;
+
+    iblk_tp elms = blk_alloc(igmem, nod->_siz * sizeof(iblk_t), IGMEM_SIZ);
+
+    uint8 is_useful = 0, is_constexpr = 1;
+    uint64 i;
+    for (i = 0; i < nod->_siz; i++)
+    {
+        iblk_t elem = visit_nod(res, nod->_elms[i], igmem, ictx);
+
+        if (res->_herr)
+            return elem;
+
+        elms[i] = elem;
+
+        if (IS_USEFUL(elem._prop))
+            is_useful = 1;
+        if (!IS_CONSTEXPR(elem._prop))
+            is_constexpr = 0;
+    }
+
+    tpl_i blk = itpl_set(igmem, elms, nod->_siz, res->_data._tpl_cnt++);
+
+    if (is_useful)
+    {
+        if (is_constexpr)
+            return iblk_set1(TPL_I, blk, SET_PROP(1, 1, 1, 0));
+        return iblk_set1(TPL_I, blk, SET_PROP(1, 1, 0, 0));
+    }
+
+    if (is_constexpr)
+        return iblk_set1(TPL_I, blk, SET_PROP(0, 1, 1, 0));
+    return iblk_set1(TPL_I, blk, SET_PROP(0, 1, 0, 0));
+}
+
+iblk_t visit_dct(igres_tp res, node_t node, mem_t igmem, ictx_t ictx)
+{
+    if (!node._nod)
+        return iblk_set2(DCT_I, SET_PROP(0, 0, 1, 0));
+
+    dct_n nod = node._nod;
+
+    iblk_tp keys = blk_alloc(igmem, nod->_siz * sizeof(iblk_t), IGMEM_SIZ);
+    iblk_tp vals = blk_alloc(igmem, nod->_siz * sizeof(iblk_t), IGMEM_SIZ);
+
+    uint8 is_useful = 0, is_constexpr = 1;
+    uint64 i;
+    for (i = 0; i < nod->_siz; i++)
+    {
+        iblk_t key = visit_nod(res, nod->_keys[i], igmem, ictx);
+
+        if (res->_herr)
+            return key;
+
+        keys[i] = key;
+
+        iblk_t val = visit_nod(res, nod->_vals[i], igmem, ictx);
+
+        if (res->_herr)
+            return val;
+
+        vals[i] = val;
+
+        if (IS_USEFUL(key._prop) || IS_USEFUL(val._prop))
+            is_useful = 1;
+        if (!IS_CONSTEXPR(key._prop) || !IS_CONSTEXPR(val._prop))
+            is_constexpr = 0;
+    }
+
+    dct_i blk = idct_set(igmem, keys, vals, nod->_siz, res->_data._dct_cnt++);
+
+    if (is_useful)
+    {
+        if (is_constexpr)
+            return iblk_set1(DCT_I, blk, SET_PROP(1, 1, 1, 0));
+        return iblk_set1(DCT_I, blk, SET_PROP(1, 1, 0, 0));
+    }
+
+    if (is_constexpr)
+        return iblk_set1(DCT_I, blk, SET_PROP(0, 1, 1, 0));
+    return iblk_set1(DCT_I, blk, SET_PROP(0, 1, 0, 0));
 }

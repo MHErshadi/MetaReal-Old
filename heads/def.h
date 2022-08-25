@@ -76,4 +76,6 @@
 
 #define IMAIN_SIZ 128
 
+#define ILST_SIZ 64
+
 #endif /* __DEF__ */

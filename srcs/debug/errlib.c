@@ -16,7 +16,7 @@
         {              \
             cn /= 10;  \
             s++;       \
-        } while (n);   \
+        } while (cn);  \
     } while (0)
 
 ill_chr_t ill_chr_set(uint8 chr, pos_t pos)

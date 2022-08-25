@@ -114,8 +114,10 @@ uint8 main(uint8 argc, strp argv)
 
 clear:
             mem_clear(lmem, LMEM_SIZ);
+
             mem_clear(pmem, PMEM_SIZ);
             stk_clear(pstk, PSTK_SIZ);
+
             mem_clear(igmem, IGMEM_SIZ);
         }
 

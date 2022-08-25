@@ -214,7 +214,7 @@ struct __vra__
     uint8 _opr;
 
     node_t _var;
-    node_t _val; 
+    node_t _val;
 };
 typedef struct __vra__ *vra_n;
 

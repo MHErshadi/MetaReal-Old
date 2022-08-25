@@ -23,9 +23,25 @@ struct __mrir__
 };
 typedef struct __mrir__ mrir_t;
 
+struct __idata__
+{
+    uint64 _int_cnt;
+    uint64 _flt_cnt;
+
+    uint64 _bol_cnt;
+
+    uint64 _str_cnt;
+
+    uint64 _lst_cnt;
+    uint64 _tpl_cnt;
+    uint64 _dct_cnt;
+};
+typedef struct __idata__ idata_t;
+
 struct __igres__
 {
     mrir_t _ir;
+    idata_t _data;
 
     uint8 _herr : 1;
     run_tim_t _error;
