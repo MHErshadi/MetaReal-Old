@@ -1,5 +1,7 @@
 // MetaReal Programming Language version 1.0.0
 
+#include <stddef.h>
+
 #include <mrir/ictx.h>
 
 ictx_t ictx_set1(cstr name, ictx_tp prn, pos_t prn_pos)
@@ -18,6 +20,7 @@ ictx_t ictx_set2(cstr name)
     ictx_t ictx;
 
     ictx._name = name;
+    ictx._prn = NULL;
 
     return ictx;
 }

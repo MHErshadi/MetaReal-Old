@@ -1,28 +1,32 @@
 // MetaReal Programming Language version 1.0.0
 
-#include <mrir/iblk.h>
+#include <mrir/ival.h>
 #include <mem/blk.h>
 #include <def.h>
 
 void iblk_label(iblk_t blk, cstr end);
 
-iblk_t iblk_set1(uint8 typ, ptr blk, uint8 prop)
+iblk_t iblk_set1(uint8 typ, ptr blk, uint8 dtyp, uint64 id, uint8 prop)
 {
     iblk_t iblk;
 
     iblk._typ = typ;
     iblk._blk = blk;
+    iblk._dtyp = dtyp;
+    iblk._id = id;
     iblk._prop = prop;
 
     return iblk;
 }
 
-iblk_t iblk_set2(uint8 typ, uint8 prop)
+iblk_t iblk_set2(uint8 typ, uint8 dtyp, uint64 id, uint8 prop)
 {
     iblk_t iblk;
 
     iblk._typ = typ;
     iblk._blk = NULL;
+    iblk._dtyp = dtyp;
+    iblk._id = id;
     iblk._prop = prop;
 
     return iblk;
@@ -32,6 +36,8 @@ void iblk_print(iblk_t blk, cstr end)
 {
     if (blk._typ == NLL_I)
         return;
+
+    /* */
 
     if (blk._typ == INT_I)
     {
@@ -52,6 +58,12 @@ void iblk_print(iblk_t blk, cstr end)
 
     if (blk._typ == STR_I)
     {
+        if (!blk._blk)
+        {
+            fprintf(STDOUT, "\"\"%s", end);
+            return;
+        }
+
         fprintf(STDOUT, "\"%s\"%s", ((str_i)blk._blk)->_val, end);
         return;
     }
@@ -71,7 +83,7 @@ void iblk_print(iblk_t blk, cstr end)
             if (IS_COMPLEX(ilst->_elms[i]._prop))
                 iblk_print(ilst->_elms[i], ";\n");
 
-        fprintf(STDOUT, "$LST%llu |lst = {", ilst->_id);
+        fprintf(STDOUT, "$LST%llu |lst = {", blk._id);
 
         for (i = 0; i < ilst->_siz; i++)
             iblk_label(ilst->_elms[i], ", ");
@@ -94,7 +106,7 @@ void iblk_print(iblk_t blk, cstr end)
             if (IS_COMPLEX(itpl->_elms[i]._prop))
                 iblk_print(itpl->_elms[i], ";\n");
 
-        fprintf(STDOUT, "$TPL%llu |tpl = {", itpl->_id);
+        fprintf(STDOUT, "$TPL%llu |tpl = {", blk._id);
 
         for (i = 0; i < itpl->_siz; i++)
             iblk_label(itpl->_elms[i], ", ");
@@ -130,7 +142,24 @@ void iblk_print(iblk_t blk, cstr end)
         for (i = 0; i < idct->_siz; i++)
             iblk_label(idct->_vals[i], ", ");
 
-        fprintf(STDOUT, "\b\b};\n$DCT%llu |dct = {$KEYS, $VALS}%s", idct->_id, end);
+        fprintf(STDOUT, "\b\b};\n$DCT%llu |dct = {$KEYS, $VALS}%s", blk._id, end);
+        return;
+    }
+
+    /* */
+
+    if (blk._typ == BOP_I)
+    {
+        bop_i ibop = blk._blk;
+
+        if (IS_COMPLEX(ibop->_op1._prop))
+            iblk_print(ibop->_op1, ";\n");
+        if (IS_COMPLEX(ibop->_op2._prop))
+            iblk_print(ibop->_op2, ";\n");
+
+        fprintf(STDOUT, "$%s%llu = ~%s ", vals_lbl[blk._dtyp], blk._id, ibop->_opr);
+        iblk_label(ibop->_op1, ", ");
+        iblk_label(ibop->_op2, ";\n");
         return;
     }
 }
@@ -163,36 +192,44 @@ str_i istr_set(mem_t igmem, str val, uint64 siz)
     return blk;
 }
 
-lst_i ilst_set(mem_t igmem, iblk_tp elms, uint64 siz, uint64 id)
+lst_i ilst_set(mem_t igmem, iblk_tp elms, uint64 siz)
 {
     lst_i blk = blk_alloc(igmem, sizeof(struct __ilst__), IGMEM_SIZ);
 
     blk->_elms = elms;
     blk->_siz = siz;
-    blk->_id = id;
 
     return blk;
 }
 
-tpl_i itpl_set(mem_t igmem, iblk_tp elms, uint64 siz, uint64 id)
+tpl_i itpl_set(mem_t igmem, iblk_tp elms, uint64 siz)
 {
     tpl_i blk = blk_alloc(igmem, sizeof(struct __itpl__), IGMEM_SIZ);
 
     blk->_elms = elms;
     blk->_siz = siz;
-    blk->_id = id;
 
     return blk;
 }
 
-dct_i idct_set(mem_t igmem, iblk_tp keys, iblk_tp vals, uint64 siz, uint64 id)
+dct_i idct_set(mem_t igmem, iblk_tp keys, iblk_tp vals, uint64 siz)
 {
     dct_i blk = blk_alloc(igmem, sizeof(struct __idct__), IGMEM_SIZ);
 
     blk->_keys = keys;
     blk->_vals = vals;
     blk->_siz = siz;
-    blk->_id = id;
+
+    return blk;
+}
+
+bop_i ibop_set(mem_t igmem, iblk_t op1, iblk_t op2, cstr opr)
+{
+    bop_i blk = blk_alloc(igmem, sizeof(struct __ibop__), IGMEM_SIZ);
+
+    blk->_op1 = op1;
+    blk->_op2 = op2;
+    blk->_opr = opr;
 
     return blk;
 }
@@ -201,6 +238,8 @@ void iblk_label(iblk_t blk, cstr end)
 {
     if (blk._typ == NLL_I)
         return;
+
+    /* */
 
     if (blk._typ == INT_I)
     {
@@ -221,6 +260,12 @@ void iblk_label(iblk_t blk, cstr end)
 
     if (blk._typ == STR_I)
     {
+        if (!blk._blk)
+        {
+            fprintf(STDOUT, "\"\"%s", end);
+            return;
+        }
+
         fprintf(STDOUT, "\"%s\"%s", ((str_i)blk._blk)->_val, end);
         return;
     }
@@ -233,7 +278,7 @@ void iblk_label(iblk_t blk, cstr end)
             return;
         }
 
-        fprintf(STDOUT, "$LST%llu%s", ((lst_i)blk._blk)->_id, end);
+        fprintf(STDOUT, "$LST%llu%s", blk._id, end);
         return;
     }
     if (blk._typ == TPL_I)
@@ -244,7 +289,7 @@ void iblk_label(iblk_t blk, cstr end)
             return;
         }
 
-        fprintf(STDOUT, "$TPL%llu%s", ((tpl_i)blk._blk)->_id, end);
+        fprintf(STDOUT, "$TPL%llu%s", blk._id, end);
         return;
     }
     if (blk._typ == DCT_I)
@@ -255,7 +300,15 @@ void iblk_label(iblk_t blk, cstr end)
             return;
         }
 
-        fprintf(STDOUT, "$DCT%llu%s", ((dct_i)blk._blk)->_id, end);
+        fprintf(STDOUT, "$DCT%llu%s", blk._id, end);
+        return;
+    }
+
+    /* */
+
+    if (blk._typ == BOP_I)
+    {
+        fprintf(STDOUT, "$%s%llu%s", vals_lbl[blk._dtyp], blk._id, end);
         return;
     }
 }

@@ -22,6 +22,7 @@ tok_t tok_set2(uint8 typ, pos_t pss, pos_t pse)
     tok_t tok;
 
     tok._typ = typ;
+    tok._val = NULL;
     tok._pss = pss;
     tok._pse = pse;
 

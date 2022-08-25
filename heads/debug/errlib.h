@@ -5,6 +5,12 @@
 
 #include <mrir/ictx.h>
 
+enum _rte_typ_
+{
+    ILL_OP,
+    DIV_BY_ZERO,
+};
+
 struct __ill_chr__
 {
     uint8 _chr;

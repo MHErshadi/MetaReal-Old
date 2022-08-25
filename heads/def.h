@@ -17,6 +17,8 @@
 #define CMD_MAX_INP 1025
 #define FIL_MAX_INP 8193
 
+#define OPT_LVL 0
+
 /* */
 
 #define RTE_MAX_DET 129

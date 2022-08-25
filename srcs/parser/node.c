@@ -20,6 +20,7 @@ node_t node_set2(uint8 typ, pos_t pss, pos_t pse)
     node_t node;
 
     node._typ = typ;
+    node._nod = NULL;
     node._pss = pss;
     node._pse = pse;
 

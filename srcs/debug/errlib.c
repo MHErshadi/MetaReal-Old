@@ -128,8 +128,9 @@ run_tim_t run_tim_set(uint8 typ, str det, pos_t pss, pos_t pse, ictx_t ictx)
     return error;
 }
 
-static cstr rtyp[1] =
+static cstr rtyp[2] =
 {
+    "IllOp",
     "DivByZero",
 };
 
