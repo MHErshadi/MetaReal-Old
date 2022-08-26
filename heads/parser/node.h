@@ -375,70 +375,70 @@ typedef struct __imp__ *imp_n;
 node_t node_set1(uint8 typ, ptr nod, pos_t pss, pos_t pse);
 node_t node_set2(uint8 typ, pos_t pss, pos_t pse);
 
-body_t body_set(mem_t pmem, node_t nodes);
+body_t body_set(mem_t mem, node_t nodes);
 
-int_n int_set(mem_t pmem, str val, uint64 len);
-flt_n flt_set(mem_t pmem, str val, uint64 len);
+int_n int_set(mem_t mem, str val, uint64 len);
+flt_n flt_set(mem_t mem, str val, uint64 len);
 
-bol_n bol_set(mem_t pmem, uint8 stat);
+bol_n bol_set(mem_t mem, uint8 stat);
 
-str_n str_set(mem_t pmem, str val, uint64 len);
+str_n str_set(mem_t mem, str val, uint64 len);
 
-lst_n lst_set(mem_t pmem, node_tp elms, uint64 siz);
-tpl_n tpl_set(mem_t pmem, node_tp elms, uint64 siz);
-dct_n dct_set(mem_t pmem, node_tp keys, node_tp vals, uint64 siz);
-
-/* */
-
-bop_n bop_set(mem_t pmem, uint8 opr, node_t op1, node_t op2);
-uop_n uop_set(mem_t pmem, uint8 opr, node_t op);
-
-tco_n tco_set(mem_t pmem, node_t cond, node_t op1, node_t op2);
-
-idx_n idx_set(mem_t pmem, node_t arr, node_t idx);
+lst_n lst_set(mem_t mem, node_tp elms, uint64 siz);
+tpl_n tpl_set(mem_t mem, node_tp elms, uint64 siz);
+dct_n dct_set(mem_t mem, node_tp keys, node_tp vals, uint64 siz);
 
 /* */
 
-vas_n vas_set(mem_t pmem, str name, node_t val, uint8 prop);
-vra_n vra_set(mem_t pmem, uint8 opr, node_t var, node_t val);
-vfa_n vfa_set(mem_t pmem, uint8 opr, node_t var);
-vac_n vac_set(mem_t pmem, str name);
+bop_n bop_set(mem_t mem, uint8 opr, node_t op1, node_t op2);
+uop_n uop_set(mem_t mem, uint8 opr, node_t op);
 
-fdf_n fdf_set(mem_t pmem, str name, arg_tp args, uint64 siz, body_t body, uint8 prop);
-fcl_n fcl_set(mem_t pmem, node_t func, arg_tp args, uint64 siz);
+tco_n tco_set(mem_t mem, node_t cond, node_t op1, node_t op2);
 
-cdf_n cdf_set(mem_t pmem, str name, body_t body, uint8 prop);
-
-sdf_n sdf_set(mem_t pmem, str name, body_t body, uint8 prop);
-
-dfc_n dfc_set(mem_t pmem, str name, node_tp args, uint64 siz);
+idx_n idx_set(mem_t mem, node_t arr, node_t idx);
 
 /* */
 
-iff_n iff_set(mem_t pmem, stat_tp stats, uint64 siz, body_t ebody);
+vas_n vas_set(mem_t mem, str name, node_t val, uint8 prop);
+vra_n vra_set(mem_t mem, uint8 opr, node_t var, node_t val);
+vfa_n vfa_set(mem_t mem, uint8 opr, node_t var);
+vac_n vac_set(mem_t mem, str name);
 
-swh_n swh_set(mem_t pmem, node_t val, stat_tp stats, uint64 siz, body_t dbody);
+fdf_n fdf_set(mem_t mem, str name, arg_tp args, uint64 siz, body_t body, uint8 prop);
+fcl_n fcl_set(mem_t mem, node_t func, arg_tp args, uint64 siz);
 
-/* */
+cdf_n cdf_set(mem_t mem, str name, body_t body, uint8 prop);
 
-for_n for_set(mem_t pmem, str var, node_t start, node_t end, node_t step, body_t body);
-fre_n fre_set(mem_t pmem, str var, node_t iter, body_t body);
+sdf_n sdf_set(mem_t mem, str name, body_t body, uint8 prop);
 
-whl_n whl_set(mem_t pmem, node_t cond, body_t body);
-dow_n dow_set(mem_t pmem, body_t body, node_t cond);
-
-lop_n lop_set(mem_t pmem, node_t init, node_t cond, node_t step, body_t body);
-
-/* */
-
-try_n try_set(mem_t pmem, body_t error, stat_tp stats, uint64 siz, body_t fbody);
+dfc_n dfc_set(mem_t mem, str name, node_tp args, uint64 siz);
 
 /* */
 
-ret_n ret_set(mem_t pmem, node_t val);
+iff_n iff_set(mem_t mem, stat_tp stats, uint64 siz, body_t ebody);
+
+swh_n swh_set(mem_t mem, node_t val, stat_tp stats, uint64 siz, body_t dbody);
 
 /* */
 
-imp_n imp_set(mem_t pmem, str lib);
+for_n for_set(mem_t mem, str var, node_t start, node_t end, node_t step, body_t body);
+fre_n fre_set(mem_t mem, str var, node_t iter, body_t body);
+
+whl_n whl_set(mem_t mem, node_t cond, body_t body);
+dow_n dow_set(mem_t mem, body_t body, node_t cond);
+
+lop_n lop_set(mem_t mem, node_t init, node_t cond, node_t step, body_t body);
+
+/* */
+
+try_n try_set(mem_t mem, body_t error, stat_tp stats, uint64 siz, body_t fbody);
+
+/* */
+
+ret_n ret_set(mem_t mem, node_t val);
+
+/* */
+
+imp_n imp_set(mem_t mem, str lib);
 
 #endif /* __NODE__ */

@@ -22,12 +22,12 @@ lres_t lres_fail(ill_chr_t error);
 
 cstr comment(cstr code, uint8 term, pos_tp cpos);
 
-cstr gen_idn(tok_tp tok, mem_t lmem, cstr code, pos_tp cpos);
+cstr gen_idn(tok_tp tok, mem_t mem, cstr code, pos_tp cpos);
 
-cstr gen_num(tok_tp tok, mem_t lmem, cstr code, pos_tp cpos);
+cstr gen_num(tok_tp tok, mem_t mem, cstr code, pos_tp cpos);
 
-cstr gen_str(tok_tp tok, mem_t lmem, cstr code, uint8 term, pos_tp cpos);
-cstr gen_etr(tok_tp tok, mem_t lmem, cstr code, uint8 term, pos_tp cpos, uint8p flg);
+cstr gen_str(tok_tp tok, mem_t mem, cstr code, uint8 term, pos_tp cpos);
+cstr gen_etr(tok_tp tok, mem_t mem, cstr code, uint8 term, pos_tp cpos, uint8p flg);
 
 cstr gen_double(tok_tp tok, cstr code, uint8 typ1, uint8 typ2, uint8 chr, pos_tp cpos);
 cstr gen_triple(tok_tp tok, cstr code, uint8 typ1, uint8 typ2, uint8 typ3, uint8 chr1, uint8 chr2, pos_tp cpos);
@@ -37,7 +37,7 @@ cstr gen_div(tok_tp tok, cstr code, pos_tp cpos);
 cstr gen_lst(tok_tp tok, cstr code, pos_tp cpos);
 cstr gen_grt(tok_tp tok, cstr code, pos_tp cpos);
 
-lres_t lex(cstr code, uint8 term, cstr fn, mem_t lmem)
+lres_t lex(cstr code, uint8 term, cstr fn, mem_t mem)
 {
     tok_tp toks = malloc(TOKS_SIZ * sizeof(tok_t));
 
@@ -100,7 +100,7 @@ lres_t lex(cstr code, uint8 term, cstr fn, mem_t lmem)
         if (*code == '\\')
         {
             uint8 flg = 0;
-            code = gen_etr(&toks[siz++], lmem, code, term, &cpos, &flg);
+            code = gen_etr(&toks[siz++], mem, code, term, &cpos, &flg);
 
             if (flg)
             {
@@ -112,13 +112,13 @@ lres_t lex(cstr code, uint8 term, cstr fn, mem_t lmem)
 
         if ((*code >= 'a' && *code <= 'z') || (*code >= 'A' && *code <= 'Z') || *code == '_')
         {
-            code = gen_idn(&toks[siz++], lmem, code, &cpos);
+            code = gen_idn(&toks[siz++], mem, code, &cpos);
             continue;
         }
 
         if (*code >= '0' && *code <= '9')
         {
-            code = gen_num(&toks[siz++], lmem, code, &cpos);
+            code = gen_num(&toks[siz++], mem, code, &cpos);
             continue;
         }
 
@@ -126,7 +126,7 @@ lres_t lex(cstr code, uint8 term, cstr fn, mem_t lmem)
         {
         case '"':
         case '\'':
-            code = gen_str(&toks[siz++], lmem, code, term, &cpos);
+            code = gen_str(&toks[siz++], mem, code, term, &cpos);
             break;
 
         case '+':
@@ -296,11 +296,11 @@ cstr comment(cstr code, uint8 term, pos_tp cpos)
     return code;
 }
 
-cstr gen_idn(tok_tp tok, mem_t lmem, cstr code, pos_tp cpos)
+cstr gen_idn(tok_tp tok, mem_t mem, cstr code, pos_tp cpos)
 {
     pos_t pss = *cpos;
 
-    str idn = blk_alloc(lmem, GIDN_SIZ, LMEM_SIZ);
+    str idn = blk_alloc(mem, GIDN_SIZ, MEM_SIZ);
     uint64 alc = GIDN_SIZ;
     uint64 siz = 0;
 
@@ -308,7 +308,7 @@ cstr gen_idn(tok_tp tok, mem_t lmem, cstr code, pos_tp cpos)
     {
         if (siz == alc)
         {
-            blk_add(lmem, GIDN_SIZ, LMEM_SIZ);
+            blk_add(mem, GIDN_SIZ, MEM_SIZ);
             alc += GIDN_SIZ;
         }
 
@@ -317,7 +317,7 @@ cstr gen_idn(tok_tp tok, mem_t lmem, cstr code, pos_tp cpos)
     } while ((*code >= 'a' && *code <= 'z') || (*code >= 'A' && *code <= 'Z') || *code == '_');
 
     if (siz == alc)
-        blk_add(lmem, 1, LMEM_SIZ);
+        blk_add(mem, 1, MEM_SIZ);
 
     idn[siz++] = '\0';
 
@@ -326,23 +326,23 @@ cstr gen_idn(tok_tp tok, mem_t lmem, cstr code, pos_tp cpos)
     {
         *tok = tok_set1(IDN_T, idn, 0, pss, *cpos);
 
-        blk_sub(lmem, idn, siz);
+        blk_sub(mem, idn, siz);
     }
     else
     {
         *tok = tok_set2(kwd, pss, *cpos);
 
-        blk_free(lmem, idn);
+        blk_free(mem, idn);
     }
 
     return code;
 }
 
-cstr gen_num(tok_tp tok, mem_t lmem, cstr code, pos_tp cpos)
+cstr gen_num(tok_tp tok, mem_t mem, cstr code, pos_tp cpos)
 {
     pos_t pss = *cpos;
 
-    str num = blk_alloc(lmem, GNUM_SIZ, LMEM_SIZ);
+    str num = blk_alloc(mem, GNUM_SIZ, MEM_SIZ);
     uint64 alc = GNUM_SIZ;
     uint64 siz = 0;
 
@@ -352,7 +352,7 @@ cstr gen_num(tok_tp tok, mem_t lmem, cstr code, pos_tp cpos)
     {
         if (siz == alc)
         {
-            blk_add(lmem, GNUM_SIZ, LMEM_SIZ);
+            blk_add(mem, GNUM_SIZ, MEM_SIZ);
             alc += GNUM_SIZ;
         }
 
@@ -373,7 +373,7 @@ cstr gen_num(tok_tp tok, mem_t lmem, cstr code, pos_tp cpos)
 
         if (siz == alc)
         {
-            blk_add(lmem, GEXP_SIZ, LMEM_SIZ);
+            blk_add(mem, GEXP_SIZ, MEM_SIZ);
             alc += GEXP_SIZ;
         }
 
@@ -384,7 +384,7 @@ cstr gen_num(tok_tp tok, mem_t lmem, cstr code, pos_tp cpos)
         {
             if (siz == alc)
             {
-                blk_add(lmem, GEXP_SIZ, LMEM_SIZ);
+                blk_add(mem, GEXP_SIZ, MEM_SIZ);
                 alc += GEXP_SIZ;
             }
 
@@ -396,7 +396,7 @@ cstr gen_num(tok_tp tok, mem_t lmem, cstr code, pos_tp cpos)
         {
             if (siz == alc)
             {
-                blk_add(lmem, GEXP_SIZ, LMEM_SIZ);
+                blk_add(mem, GEXP_SIZ, MEM_SIZ);
                 alc += GEXP_SIZ;
             }
 
@@ -407,7 +407,7 @@ cstr gen_num(tok_tp tok, mem_t lmem, cstr code, pos_tp cpos)
 
     if (siz == alc)
     {
-        blk_add(lmem, 1, LMEM_SIZ);
+        blk_add(mem, 1, MEM_SIZ);
 
         num[siz++] = '\0';
     }
@@ -415,7 +415,7 @@ cstr gen_num(tok_tp tok, mem_t lmem, cstr code, pos_tp cpos)
     {
         num[siz++] = '\0';
 
-        blk_sub(lmem, num, siz);
+        blk_sub(mem, num, siz);
     }
 
     if (isf)
@@ -426,7 +426,7 @@ cstr gen_num(tok_tp tok, mem_t lmem, cstr code, pos_tp cpos)
     return code;
 }
 
-cstr gen_str(tok_tp tok, mem_t lmem, cstr code, uint8 term, pos_tp cpos)
+cstr gen_str(tok_tp tok, mem_t mem, cstr code, uint8 term, pos_tp cpos)
 {
     pos_t pss = *cpos;
     uint8 quote = *code++;
@@ -441,7 +441,7 @@ cstr gen_str(tok_tp tok, mem_t lmem, cstr code, uint8 term, pos_tp cpos)
         return ++code;
     }
 
-    str str = blk_alloc(lmem, GSTR_SIZ, LMEM_SIZ);
+    str str = blk_alloc(mem, GSTR_SIZ, MEM_SIZ);
     uint64 alc = GSTR_SIZ;
     uint64 siz = 0;
 
@@ -450,7 +450,7 @@ cstr gen_str(tok_tp tok, mem_t lmem, cstr code, uint8 term, pos_tp cpos)
     {
         if (siz == alc)
         {
-            blk_add(lmem, GSTR_SIZ, LMEM_SIZ);
+            blk_add(mem, GSTR_SIZ, MEM_SIZ);
             alc += GSTR_SIZ;
         }
 
@@ -478,7 +478,7 @@ cstr gen_str(tok_tp tok, mem_t lmem, cstr code, uint8 term, pos_tp cpos)
 
     if (siz == alc)
     {
-        blk_add(lmem, 1, LMEM_SIZ);
+        blk_add(mem, 1, MEM_SIZ);
 
         str[siz++] = '\0';
     }
@@ -486,7 +486,7 @@ cstr gen_str(tok_tp tok, mem_t lmem, cstr code, uint8 term, pos_tp cpos)
     {
         str[siz++] = '\0';
 
-        blk_sub(lmem, str, siz);
+        blk_sub(mem, str, siz);
     }
 
     *tok = tok_set1(STR_T, str, siz, pss, *cpos);
@@ -494,7 +494,7 @@ cstr gen_str(tok_tp tok, mem_t lmem, cstr code, uint8 term, pos_tp cpos)
     return ++code;
 }
 
-cstr gen_etr(tok_tp tok, mem_t lmem, cstr code, uint8 term, pos_tp cpos, uint8p flg)
+cstr gen_etr(tok_tp tok, mem_t mem, cstr code, uint8 term, pos_tp cpos, uint8p flg)
 {
     if (*(code + 1) != '"' && *(code + 1) != '\'')
     {
@@ -518,7 +518,7 @@ cstr gen_etr(tok_tp tok, mem_t lmem, cstr code, uint8 term, pos_tp cpos, uint8p 
         return ++code;
     }
 
-    str str = blk_alloc(lmem, GSTR_SIZ, LMEM_SIZ);
+    str str = blk_alloc(mem, GSTR_SIZ, MEM_SIZ);
     uint64 alc = GSTR_SIZ;
     uint64 siz = 0;
 
@@ -526,7 +526,7 @@ cstr gen_etr(tok_tp tok, mem_t lmem, cstr code, uint8 term, pos_tp cpos, uint8p 
     {
         if (siz == alc)
         {
-            blk_add(lmem, GSTR_SIZ, LMEM_SIZ);
+            blk_add(mem, GSTR_SIZ, MEM_SIZ);
             alc += GSTR_SIZ;
         }
 
@@ -541,7 +541,7 @@ cstr gen_etr(tok_tp tok, mem_t lmem, cstr code, uint8 term, pos_tp cpos, uint8p 
 
             if (siz == alc)
             {
-                blk_add(lmem, GSTR_SIZ, LMEM_SIZ);
+                blk_add(mem, GSTR_SIZ, MEM_SIZ);
                 alc += GSTR_SIZ;
             }
 
@@ -556,7 +556,7 @@ cstr gen_etr(tok_tp tok, mem_t lmem, cstr code, uint8 term, pos_tp cpos, uint8p 
 
     if (siz == alc)
     {
-        blk_add(lmem, 1, LMEM_SIZ);
+        blk_add(mem, 1, MEM_SIZ);
 
         str[siz++] = '\0';
     }
@@ -564,7 +564,7 @@ cstr gen_etr(tok_tp tok, mem_t lmem, cstr code, uint8 term, pos_tp cpos, uint8p 
     {
         str[siz++] = '\0';
 
-        blk_sub(lmem, str, siz);
+        blk_sub(mem, str, siz);
     }
 
     *tok = tok_set1(STR_T, str, siz, pss, *cpos);

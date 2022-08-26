@@ -16,6 +16,6 @@ struct __lres__
 };
 typedef struct __lres__ lres_t;
 
-lres_t lex(cstr code, uint8 term, cstr fn, mem_t lmem);
+lres_t lex(cstr code, uint8 term, cstr fn, mem_t mem);
 
 #endif /* __LEXER__ */

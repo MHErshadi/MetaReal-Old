@@ -12,51 +12,51 @@
 
 void pres_fail(pres_tp res, inv_syn_t error);
 
-tok_tp mull(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk); // multi-line-support
-tok_tp dlfc(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk); // dollar-function-support
-tok_tp stmt(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk); // return continue break pass
-tok_tp tupl(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk); // inline-list-support
-tok_tp asgn(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk); // = += -= *= /= %= //= **= &= |= ^= <<= >>=
-tok_tp tern(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk); // ternary-conditional-statement
-tok_tp type(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk); // is are
-tok_tp cont(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk); // in
-tok_tp lior(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk); // || or
-tok_tp lxor(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk); // ^^ xor
-tok_tp land(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk); // && and
-tok_tp bior(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk); // |
-tok_tp bxor(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk); // ^
-tok_tp band(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk); // &
-tok_tp cmp1(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk); // == !=
-tok_tp cmp2(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk); // < > <= >=
-tok_tp shft(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk); // << >>
-tok_tp expr(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk); // + -
-tok_tp term(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk); // * / % //
-tok_tp fact(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk); // +(un) -(un) ~ ! not ++ --
-tok_tp expo(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk); // **
-tok_tp post(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk); // array-subscripting ++(post) --(post) function-call access
-tok_tp core(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk); // statements types ...
+tok_tp mull(pres_tp res, tok_tp toks, mem_t mem, stk_t stk); // multi-line-support
+tok_tp dlfc(pres_tp res, tok_tp toks, mem_t mem, stk_t stk); // dollar-function-support
+tok_tp stmt(pres_tp res, tok_tp toks, mem_t mem, stk_t stk); // return continue break pass
+tok_tp tupl(pres_tp res, tok_tp toks, mem_t mem, stk_t stk); // inline-list-support
+tok_tp asgn(pres_tp res, tok_tp toks, mem_t mem, stk_t stk); // = += -= *= /= %= //= **= &= |= ^= <<= >>=
+tok_tp tern(pres_tp res, tok_tp toks, mem_t mem, stk_t stk); // ternary-conditional-statement
+tok_tp type(pres_tp res, tok_tp toks, mem_t mem, stk_t stk); // is are
+tok_tp cont(pres_tp res, tok_tp toks, mem_t mem, stk_t stk); // in
+tok_tp lior(pres_tp res, tok_tp toks, mem_t mem, stk_t stk); // || or
+tok_tp lxor(pres_tp res, tok_tp toks, mem_t mem, stk_t stk); // ^^ xor
+tok_tp land(pres_tp res, tok_tp toks, mem_t mem, stk_t stk); // && and
+tok_tp bior(pres_tp res, tok_tp toks, mem_t mem, stk_t stk); // |
+tok_tp bxor(pres_tp res, tok_tp toks, mem_t mem, stk_t stk); // ^
+tok_tp band(pres_tp res, tok_tp toks, mem_t mem, stk_t stk); // &
+tok_tp cmp1(pres_tp res, tok_tp toks, mem_t mem, stk_t stk); // == !=
+tok_tp cmp2(pres_tp res, tok_tp toks, mem_t mem, stk_t stk); // < > <= >=
+tok_tp shft(pres_tp res, tok_tp toks, mem_t mem, stk_t stk); // << >>
+tok_tp expr(pres_tp res, tok_tp toks, mem_t mem, stk_t stk); // + -
+tok_tp term(pres_tp res, tok_tp toks, mem_t mem, stk_t stk); // * / % //
+tok_tp fact(pres_tp res, tok_tp toks, mem_t mem, stk_t stk); // +(un) -(un) ~ ! not ++ --
+tok_tp expo(pres_tp res, tok_tp toks, mem_t mem, stk_t stk); // **
+tok_tp post(pres_tp res, tok_tp toks, mem_t mem, stk_t stk); // array-subscripting ++(post) --(post) function-call access
+tok_tp core(pres_tp res, tok_tp toks, mem_t mem, stk_t stk); // statements types ...
 
-tok_tp hand_var(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk);
-tok_tp hand_lst(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk);
-tok_tp hand_dct(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk);
-tok_tp hand_fdf(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk);
-tok_tp hand_fcl(node_t func, pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk);
-tok_tp hand_cdf(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk);
-tok_tp hand_sdf(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk);
-tok_tp hand_iff(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk);
-tok_tp hand_swh(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk);
-tok_tp hand_for(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk);
-tok_tp hand_fre(str var, pos_t pss, pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk);
-tok_tp hand_whl(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk);
-tok_tp hand_dow(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk);
-tok_tp hand_lop(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk);
-tok_tp hand_try(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk);
+tok_tp hand_var(pres_tp res, tok_tp toks, mem_t mem, stk_t stk);
+tok_tp hand_lst(pres_tp res, tok_tp toks, mem_t mem, stk_t stk);
+tok_tp hand_dct(pres_tp res, tok_tp toks, mem_t mem, stk_t stk);
+tok_tp hand_fdf(pres_tp res, tok_tp toks, mem_t mem, stk_t stk);
+tok_tp hand_fcl(node_t func, pres_tp res, tok_tp toks, mem_t mem, stk_t stk);
+tok_tp hand_cdf(pres_tp res, tok_tp toks, mem_t mem, stk_t stk);
+tok_tp hand_sdf(pres_tp res, tok_tp toks, mem_t mem, stk_t stk);
+tok_tp hand_iff(pres_tp res, tok_tp toks, mem_t mem, stk_t stk);
+tok_tp hand_swh(pres_tp res, tok_tp toks, mem_t mem, stk_t stk);
+tok_tp hand_for(pres_tp res, tok_tp toks, mem_t mem, stk_t stk);
+tok_tp hand_fre(str var, pos_t pss, pres_tp res, tok_tp toks, mem_t mem, stk_t stk);
+tok_tp hand_whl(pres_tp res, tok_tp toks, mem_t mem, stk_t stk);
+tok_tp hand_dow(pres_tp res, tok_tp toks, mem_t mem, stk_t stk);
+tok_tp hand_lop(pres_tp res, tok_tp toks, mem_t mem, stk_t stk);
+tok_tp hand_try(pres_tp res, tok_tp toks, mem_t mem, stk_t stk);
 
 tok_tp gen_prop(uint8p props, tok_tp toks);
-tok_tp gen_body(body_tp body, uint64 alt, pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk);
-tok_tp gen_case(body_tp body, uint64 alt, pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk);
+tok_tp gen_body(body_tp body, uint64 alt, pres_tp res, tok_tp toks, mem_t mem, stk_t stk);
+tok_tp gen_case(body_tp body, uint64 alt, pres_tp res, tok_tp toks, mem_t mem, stk_t stk);
 
-pres_t parse(tok_tp toks, mem_t pmem, stk_t pstk)
+pres_t parse(tok_tp toks, mem_t mem, stk_t stk)
 {
     pres_t res;
     res._herr = 0;
@@ -65,7 +65,7 @@ pres_t parse(tok_tp toks, mem_t pmem, stk_t pstk)
     if (!res._nodes)
         mem_error(NODS_SIZ * sizeof(node_t));
 
-    toks = mull(&res, toks, pmem, pstk);
+    toks = mull(&res, toks, mem, stk);
 
     if (!res._herr && toks->_typ != EOF_T)
     {
@@ -85,7 +85,7 @@ void pres_fail(pres_tp res, inv_syn_t error)
     res->_herr = 1;
 }
 
-tok_tp mull(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp mull(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
     uint64 alc = NODS_SIZ;
     uint64 siz = 0;
@@ -105,13 +105,13 @@ tok_tp mull(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
                 mem_error(alc * sizeof(node_t));
         }
 
-        toks = dlfc(res, toks, pmem, pstk);
+        toks = dlfc(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
         siz++;
         res->_nodes++;
-    } while ((toks - 1)->_typ == NLN_T || (toks - 1)->_typ == SEM_T);
+    } while ((toks - 1)->_typ == NLN_T || toks->_typ == SEM_T);
 
     res->_nodes -= siz;
 
@@ -125,7 +125,7 @@ tok_tp mull(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     return toks;
 }
 
-tok_tp dlfc(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp dlfc(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
     if (toks->_typ == DLR_T)
     {
@@ -145,18 +145,18 @@ tok_tp dlfc(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
 
         adv_nln1(toks);
 
-        toks = asgn(res, toks, pmem, pstk);
+        toks = asgn(res, toks, mem, stk);
         if (res->_herr)
         {
             res->_herr = 0;
 
-            dfc_n nod = dfc_set(pmem, name, NULL, 0);
+            dfc_n nod = dfc_set(mem, name, NULL, 0);
 
             *res->_nodes = node_set1(DFC_N, nod, pss, pse);
             return toks;
         }
 
-        ptrp b_args = ptr_alloc(pstk, DFC_ARG_SIZ * sizeof(node_t), PSTK_SIZ);
+        ptrp b_args = ptr_alloc(stk, DFC_ARG_SIZ * sizeof(node_t), STK_SIZ);
         node_tp args = *b_args;
 
         uint64 alc = DFC_ARG_SIZ;
@@ -169,7 +169,7 @@ tok_tp dlfc(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
             toks++;
             adv_nln1(toks);
 
-            toks = asgn(res, toks, pmem, pstk);
+            toks = asgn(res, toks, mem, stk);
             if (res->_herr)
                 return toks;
 
@@ -182,16 +182,16 @@ tok_tp dlfc(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         if (siz != alc)
             args = ptr_realloc(b_args, siz * sizeof(node_t));
 
-        dfc_n nod = dfc_set(pmem, name, args, siz);
+        dfc_n nod = dfc_set(mem, name, args, siz);
 
         *res->_nodes = node_set1(DFC_N, nod, pss, res->_nodes->_pse);
         return toks;
     }
 
-    return stmt(res, toks, pmem, pstk);
+    return stmt(res, toks, mem, stk);
 }
 
-tok_tp stmt(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp stmt(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
     if (toks->_typ == RET_K)
     {
@@ -201,7 +201,7 @@ tok_tp stmt(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         toks++;
         adv_nln1(toks);
 
-        tok_tp tmp = tupl(res, toks, pmem, pstk);
+        tok_tp tmp = tupl(res, toks, mem, stk);
         if (res->_herr)
         {
             res->_herr = 0;
@@ -211,7 +211,7 @@ tok_tp stmt(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         }
         toks = tmp;
 
-        ret_n nod = ret_set(pmem, *res->_nodes);
+        ret_n nod = ret_set(mem, *res->_nodes);
 
         *res->_nodes = node_set1(RET_N, nod, pss, res->_nodes->_pse);
         return toks;
@@ -246,18 +246,18 @@ tok_tp stmt(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         return toks;
     }
 
-    return tupl(res, toks, pmem, pstk);
+    return tupl(res, toks, mem, stk);
 }
 
-tok_tp tupl(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp tupl(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
-    toks = asgn(res, toks, pmem, pstk);
+    toks = asgn(res, toks, mem, stk);
     if (res->_herr)
         return toks;
 
     if (toks->_typ == CMA_T)
     {
-        ptrp b_elms = ptr_alloc(pstk, TUPL_SIZ * sizeof(node_t), PSTK_SIZ);
+        ptrp b_elms = ptr_alloc(stk, TUPL_SIZ * sizeof(node_t), STK_SIZ);
         node_tp elms = *b_elms;
 
         uint64 alc = TUPL_SIZ;
@@ -269,7 +269,7 @@ tok_tp tupl(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
             toks++;
             adv_nln1(toks);
 
-            toks = asgn(res, toks, pmem, pstk);
+            toks = asgn(res, toks, mem, stk);
             if (res->_herr)
             {
                 res->_herr = 0;
@@ -277,7 +277,7 @@ tok_tp tupl(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
                 if (siz != alc)
                     elms = ptr_realloc(b_elms, siz * sizeof(node_t));
 
-                tpl_n nod = tpl_set(pmem, elms, siz);
+                tpl_n nod = tpl_set(mem, elms, siz);
 
                 *res->_nodes = node_set1(TPL_N, nod, elms->_pss, res->_nodes->_pse);
                 return toks;
@@ -292,7 +292,7 @@ tok_tp tupl(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         if (siz != alc)
             elms = ptr_realloc(b_elms, siz * sizeof(node_t));
 
-        tpl_n nod = tpl_set(pmem, elms, siz);
+        tpl_n nod = tpl_set(mem, elms, siz);
 
         *res->_nodes = node_set1(TPL_N, nod, elms->_pss, res->_nodes->_pse);
         return toks;
@@ -301,12 +301,12 @@ tok_tp tupl(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     return toks;
 }
 
-tok_tp asgn(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp asgn(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
     if (toks->_typ == VAR_K)
-        return hand_var(res, toks, pmem, pstk);
+        return hand_var(res, toks, mem, stk);
 
-    toks = tern(res, toks, pmem, pstk);
+    toks = tern(res, toks, mem, stk);
     if (res->_herr)
         return toks;
 
@@ -318,11 +318,11 @@ tok_tp asgn(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
 
         adv_nln1(toks);
 
-        toks = tupl(res, toks, pmem, pstk);
+        toks = tupl(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
-        vra_n nod = vra_set(pmem, opr, var, *res->_nodes);
+        vra_n nod = vra_set(mem, opr, var, *res->_nodes);
 
         *res->_nodes = node_set1(VRA_N, nod, var._pss, res->_nodes->_pse);
         return toks;
@@ -331,9 +331,9 @@ tok_tp asgn(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     return toks;
 }
 
-tok_tp tern(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp tern(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
-    toks = type(res, toks, pmem, pstk);
+    toks = type(res, toks, mem, stk);
     if (res->_herr)
         return toks;
 
@@ -344,7 +344,7 @@ tok_tp tern(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         toks++;
         adv_nln1(toks);
 
-        toks = asgn(res, toks, pmem, pstk);
+        toks = asgn(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
@@ -359,11 +359,11 @@ tok_tp tern(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         toks++;
         adv_nln1(toks);
 
-        toks = asgn(res, toks, pmem, pstk);
+        toks = asgn(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
-        tco_n nod = tco_set(pmem, cond, op1, *res->_nodes);
+        tco_n nod = tco_set(mem, cond, op1, *res->_nodes);
 
         *res->_nodes = node_set1(TCO_N, nod, cond._pss, res->_nodes->_pse);
         return toks;
@@ -372,9 +372,9 @@ tok_tp tern(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     return toks;
 }
 
-tok_tp type(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp type(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
-    toks = cont(res, toks, pmem, pstk);
+    toks = cont(res, toks, mem, stk);
     if (res->_herr)
         return toks;
 
@@ -386,11 +386,11 @@ tok_tp type(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
 
         adv_nln1(toks);
 
-        toks = cont(res, toks, pmem, pstk);
+        toks = cont(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
-        bop_n nod = bop_set(pmem, op, op1, *res->_nodes);
+        bop_n nod = bop_set(mem, op, op1, *res->_nodes);
         op1 = node_set1(BOP_N, nod, op1._pss, res->_nodes->_pse);
     }
 
@@ -398,9 +398,9 @@ tok_tp type(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     return toks;
 }
 
-tok_tp cont(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp cont(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
-    toks = lior(res, toks, pmem, pstk);
+    toks = lior(res, toks, mem, stk);
     if (res->_herr)
         return toks;
 
@@ -411,11 +411,11 @@ tok_tp cont(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         toks++;
         adv_nln1(toks);
 
-        toks = lior(res, toks, pmem, pstk);
+        toks = lior(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
-        bop_n nod = bop_set(pmem, INN_K, op1, *res->_nodes);
+        bop_n nod = bop_set(mem, INN_K, op1, *res->_nodes);
         op1 = node_set1(BOP_N, nod, op1._pss, res->_nodes->_pse);
     }
 
@@ -423,9 +423,9 @@ tok_tp cont(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     return toks;
 }
 
-tok_tp lior(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp lior(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
-    toks = lxor(res, toks, pmem, pstk);
+    toks = lxor(res, toks, mem, stk);
     if (res->_herr)
         return toks;
 
@@ -436,11 +436,11 @@ tok_tp lior(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         toks++;
         adv_nln1(toks);
 
-        toks = lxor(res, toks, pmem, pstk);
+        toks = lxor(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
-        bop_n nod = bop_set(pmem, IOR_T, op1, *res->_nodes);
+        bop_n nod = bop_set(mem, IOR_T, op1, *res->_nodes);
         op1 = node_set1(BOP_N, nod, op1._pss, res->_nodes->_pse);
     }
 
@@ -448,9 +448,9 @@ tok_tp lior(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     return toks;
 }
 
-tok_tp lxor(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp lxor(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
-    toks = land(res, toks, pmem, pstk);
+    toks = land(res, toks, mem, stk);
     if (res->_herr)
         return toks;
 
@@ -461,11 +461,11 @@ tok_tp lxor(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         toks++;
         adv_nln1(toks);
 
-        toks = land(res, toks, pmem, pstk);
+        toks = land(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
-        bop_n nod = bop_set(pmem, XOR_T, op1, *res->_nodes);
+        bop_n nod = bop_set(mem, XOR_T, op1, *res->_nodes);
         op1 = node_set1(BOP_N, nod, op1._pss, res->_nodes->_pse);
     }
 
@@ -473,9 +473,9 @@ tok_tp lxor(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     return toks;
 }
 
-tok_tp land(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp land(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
-    toks = bior(res, toks, pmem, pstk);
+    toks = bior(res, toks, mem, stk);
     if (res->_herr)
         return toks;
 
@@ -486,11 +486,11 @@ tok_tp land(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         toks++;
         adv_nln1(toks);
 
-        toks = bior(res, toks, pmem, pstk);
+        toks = bior(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
-        bop_n nod = bop_set(pmem, AND_T, op1, *res->_nodes);
+        bop_n nod = bop_set(mem, AND_T, op1, *res->_nodes);
         op1 = node_set1(BOP_N, nod, op1._pss, res->_nodes->_pse);
     }
 
@@ -498,9 +498,9 @@ tok_tp land(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     return toks;
 }
 
-tok_tp bior(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp bior(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
-    toks = bxor(res, toks, pmem, pstk);
+    toks = bxor(res, toks, mem, stk);
     if (res->_herr)
         return toks;
 
@@ -511,11 +511,11 @@ tok_tp bior(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         toks++;
         adv_nln1(toks);
 
-        toks = bxor(res, toks, pmem, pstk);
+        toks = bxor(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
-        bop_n nod = bop_set(pmem, BIO_T, op1, *res->_nodes);
+        bop_n nod = bop_set(mem, BIO_T, op1, *res->_nodes);
         op1 = node_set1(BOP_N, nod, op1._pss, res->_nodes->_pse);
     }
 
@@ -523,9 +523,9 @@ tok_tp bior(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     return toks;
 }
 
-tok_tp bxor(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp bxor(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
-    toks = band(res, toks, pmem, pstk);
+    toks = band(res, toks, mem, stk);
     if (res->_herr)
         return toks;
 
@@ -536,11 +536,11 @@ tok_tp bxor(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         toks++;
         adv_nln1(toks);
 
-        toks = band(res, toks, pmem, pstk);
+        toks = band(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
-        bop_n nod = bop_set(pmem, BXO_T, op1, *res->_nodes);
+        bop_n nod = bop_set(mem, BXO_T, op1, *res->_nodes);
         op1 = node_set1(BOP_N, nod, op1._pss, res->_nodes->_pse);
     }
 
@@ -548,9 +548,9 @@ tok_tp bxor(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     return toks;
 }
 
-tok_tp band(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp band(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
-    toks = cmp1(res, toks, pmem, pstk);
+    toks = cmp1(res, toks, mem, stk);
     if (res->_herr)
         return toks;
 
@@ -561,11 +561,11 @@ tok_tp band(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         toks++;
         adv_nln1(toks);
 
-        toks = cmp1(res, toks, pmem, pstk);
+        toks = cmp1(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
-        bop_n nod = bop_set(pmem, BAN_T, op1, *res->_nodes);
+        bop_n nod = bop_set(mem, BAN_T, op1, *res->_nodes);
         op1 = node_set1(BOP_N, nod, op1._pss, res->_nodes->_pse);
     }
 
@@ -573,9 +573,9 @@ tok_tp band(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     return toks;
 }
 
-tok_tp cmp1(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp cmp1(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
-    toks = cmp2(res, toks, pmem, pstk);
+    toks = cmp2(res, toks, mem, stk);
     if (res->_herr)
         return toks;
 
@@ -587,11 +587,11 @@ tok_tp cmp1(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
 
         adv_nln1(toks);
 
-        toks = cmp2(res, toks, pmem, pstk);
+        toks = cmp2(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
-        bop_n nod = bop_set(pmem, op, op1, *res->_nodes);
+        bop_n nod = bop_set(mem, op, op1, *res->_nodes);
         op1 = node_set1(BOP_N, nod, op1._pss, res->_nodes->_pse);
     }
 
@@ -599,9 +599,9 @@ tok_tp cmp1(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     return toks;
 }
 
-tok_tp cmp2(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp cmp2(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
-    toks = shft(res, toks, pmem, pstk);
+    toks = shft(res, toks, mem, stk);
     if (res->_herr)
         return toks;
 
@@ -613,11 +613,11 @@ tok_tp cmp2(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
 
         adv_nln1(toks);
 
-        toks = shft(res, toks, pmem, pstk);
+        toks = shft(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
-        bop_n nod = bop_set(pmem, op, op1, *res->_nodes);
+        bop_n nod = bop_set(mem, op, op1, *res->_nodes);
         op1 = node_set1(BOP_N, nod, op1._pss, res->_nodes->_pse);
     }
 
@@ -625,9 +625,9 @@ tok_tp cmp2(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     return toks;
 }
 
-tok_tp shft(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp shft(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
-    toks = expr(res, toks, pmem, pstk);
+    toks = expr(res, toks, mem, stk);
     if (res->_herr)
         return toks;
 
@@ -639,11 +639,11 @@ tok_tp shft(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
 
         adv_nln1(toks);
 
-        toks = expr(res, toks, pmem, pstk);
+        toks = expr(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
-        bop_n nod = bop_set(pmem, op, op1, *res->_nodes);
+        bop_n nod = bop_set(mem, op, op1, *res->_nodes);
         op1 = node_set1(BOP_N, nod, op1._pss, res->_nodes->_pse);
     }
 
@@ -651,9 +651,9 @@ tok_tp shft(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     return toks;
 }
 
-tok_tp expr(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp expr(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
-    toks = term(res, toks, pmem, pstk);
+    toks = term(res, toks, mem, stk);
     if (res->_herr)
         return toks;
 
@@ -665,11 +665,11 @@ tok_tp expr(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
 
         adv_nln1(toks);
 
-        toks = term(res, toks, pmem, pstk);
+        toks = term(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
-        bop_n nod = bop_set(pmem, op, op1, *res->_nodes);
+        bop_n nod = bop_set(mem, op, op1, *res->_nodes);
         op1 = node_set1(BOP_N, nod, op1._pss, res->_nodes->_pse);
     }
 
@@ -677,9 +677,9 @@ tok_tp expr(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     return toks;
 }
 
-tok_tp term(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp term(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
-    toks = fact(res, toks, pmem, pstk);
+    toks = fact(res, toks, mem, stk);
     if (res->_herr)
         return toks;
 
@@ -691,11 +691,11 @@ tok_tp term(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
 
         adv_nln1(toks);
 
-        toks = fact(res, toks, pmem, pstk);
+        toks = fact(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
-        bop_n nod = bop_set(pmem, op, op1, *res->_nodes);
+        bop_n nod = bop_set(mem, op, op1, *res->_nodes);
         op1 = node_set1(BOP_N, nod, op1._pss, res->_nodes->_pse);
     }
 
@@ -703,7 +703,7 @@ tok_tp term(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     return toks;
 }
 
-tok_tp fact(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp fact(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
     if (toks->_typ == ADD_T || toks->_typ == SUB_T ||
         toks->_typ == BNT_T ||
@@ -714,11 +714,11 @@ tok_tp fact(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
 
         adv_nln1(toks);
 
-        toks = fact(res, toks, pmem, pstk);
+        toks = fact(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
-        uop_n nod = uop_set(pmem, opr, *res->_nodes);
+        uop_n nod = uop_set(mem, opr, *res->_nodes);
 
         *res->_nodes = node_set1(UOP_N, nod, pss, res->_nodes->_pse);
         return toks;
@@ -731,22 +731,22 @@ tok_tp fact(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
 
         adv_nln1(toks);
 
-        toks = fact(res, toks, pmem, pstk);
+        toks = fact(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
-        vfa_n nod = vfa_set(pmem, opr, *res->_nodes);
+        vfa_n nod = vfa_set(mem, opr, *res->_nodes);
 
         *res->_nodes = node_set1(VFA_N, nod, pss, res->_nodes->_pse);
         return toks;
     }
 
-    return expo(res, toks, pmem, pstk);
+    return expo(res, toks, mem, stk);
 }
 
-tok_tp expo(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp expo(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
-    toks = post(res, toks, pmem, pstk);
+    toks = post(res, toks, mem, stk);
     if (res->_herr)
         return toks;
 
@@ -757,11 +757,11 @@ tok_tp expo(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         toks++;
         adv_nln1(toks);
 
-        toks = fact(res, toks, pmem, pstk);
+        toks = fact(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
-        bop_n nod = bop_set(pmem, POW_T, op1, *res->_nodes);
+        bop_n nod = bop_set(mem, POW_T, op1, *res->_nodes);
         op1 = node_set1(BOP_N, nod, op1._pss, res->_nodes->_pse);
     }
 
@@ -769,9 +769,9 @@ tok_tp expo(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     return toks;
 }
 
-tok_tp post(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp post(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
-    toks = core(res, toks, pmem, pstk);
+    toks = core(res, toks, mem, stk);
     if (res->_herr)
         return toks;
 
@@ -782,7 +782,7 @@ tok_tp post(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         toks++;
         adv_nln1(toks);
 
-        toks = tupl(res, toks, pmem, pstk);
+        toks = tupl(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
@@ -792,7 +792,7 @@ tok_tp post(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
             return toks;
         }
 
-        idx_n nod = idx_set(pmem, arr, *res->_nodes);
+        idx_n nod = idx_set(mem, arr, *res->_nodes);
 
         *res->_nodes = node_set1(IDX_N, nod, arr._pss, toks->_pse);
 
@@ -804,7 +804,7 @@ tok_tp post(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
 
     if (toks->_typ == INC_T || toks->_typ == DEC_T)
     {
-        vfa_n nod = vfa_set(pmem, toks->_typ == DEC_T ? 2 : 0, *res->_nodes);
+        vfa_n nod = vfa_set(mem, toks->_typ == DEC_T ? 2 : 0, *res->_nodes);
 
         *res->_nodes = node_set1(VFA_N, nod, res->_nodes->_pss, toks->_pse);
 
@@ -815,7 +815,7 @@ tok_tp post(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     }
 
     if (toks->_typ == LPR_T)
-        return hand_fcl(*res->_nodes, res, toks, pmem, pstk);
+        return hand_fcl(*res->_nodes, res, toks, mem, stk);
 
     if (toks->_typ == DOT_T)
     {
@@ -826,11 +826,11 @@ tok_tp post(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
             toks++;
             adv_nln1(toks);
 
-            toks = post(res, toks, pmem, pstk);
+            toks = post(res, toks, mem, stk);
             if (res->_herr)
                 return toks;
 
-            bop_n nod = bop_set(pmem, DOT_T, op1, *res->_nodes);
+            bop_n nod = bop_set(mem, DOT_T, op1, *res->_nodes);
             op1 = node_set1(BOP_N, nod, op1._pss, res->_nodes->_pse);
         } while (toks->_typ == POW_T);
 
@@ -841,7 +841,7 @@ tok_tp post(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     return toks;
 }
 
-tok_tp core(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp core(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
     if (toks->_typ == LPR_T)
     {
@@ -849,7 +849,7 @@ tok_tp core(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
 
         adv_nln1(toks);
 
-        toks = dlfc(res, toks, pmem, pstk);
+        toks = dlfc(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
@@ -871,7 +871,7 @@ tok_tp core(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
 
     if (toks->_typ == INT_T)
     {
-        int_n nod = int_set(pmem, toks->_val, toks->_len);
+        int_n nod = int_set(mem, toks->_val, toks->_len);
 
         *res->_nodes = node_set1(INT_N, nod, toks->_pss, toks->_pse);
 
@@ -882,7 +882,7 @@ tok_tp core(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     }
     if (toks->_typ == FLT_T)
     {
-        flt_n nod = flt_set(pmem, toks->_val, toks->_len);
+        flt_n nod = flt_set(mem, toks->_val, toks->_len);
 
         *res->_nodes = node_set1(FLT_N, nod, toks->_pss, toks->_pse);
 
@@ -894,7 +894,7 @@ tok_tp core(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
 
     if (toks->_typ == TRU_K)
     {
-        bol_n nod = bol_set(pmem, 1);
+        bol_n nod = bol_set(mem, 1);
 
         *res->_nodes = node_set1(BOL_N, nod, toks->_pss, toks->_pse);
 
@@ -905,7 +905,7 @@ tok_tp core(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     }
     if (toks->_typ == FLS_K)
     {
-        bol_n nod = bol_set(pmem, 0);
+        bol_n nod = bol_set(mem, 0);
 
         *res->_nodes = node_set1(BOL_N, nod, toks->_pss, toks->_pse);
 
@@ -927,7 +927,7 @@ tok_tp core(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
             return toks;
         }
 
-        str_n nod = str_set(pmem, toks->_val, toks->_len);
+        str_n nod = str_set(mem, toks->_val, toks->_len);
 
         *res->_nodes = node_set1(STR_N, nod, toks->_pss, toks->_pse);
 
@@ -938,15 +938,15 @@ tok_tp core(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     }
 
     if (toks->_typ == LSB_T)
-        return hand_lst(res, toks, pmem, pstk);
+        return hand_lst(res, toks, mem, stk);
     if (toks->_typ == LCB_T)
-        return hand_dct(res, toks, pmem, pstk);
+        return hand_dct(res, toks, mem, stk);
 
     /* */
 
     if (toks->_typ == IDN_T)
     {
-        vac_n nod = vac_set(pmem, toks->_val);
+        vac_n nod = vac_set(mem, toks->_val);
 
         *res->_nodes = node_set1(VAC_N, nod, toks->_pss, toks->_pse);
 
@@ -957,39 +957,39 @@ tok_tp core(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     }
 
     if (toks->_typ == FUN_K)
-        return hand_fdf(res, toks, pmem, pstk);
+        return hand_fdf(res, toks, mem, stk);
 
     if (toks->_typ == CLS_K)
-        return hand_cdf(res, toks, pmem, pstk);
+        return hand_cdf(res, toks, mem, stk);
 
     if (toks->_typ == STT_K)
-        return hand_sdf(res, toks, pmem, pstk);
+        return hand_sdf(res, toks, mem, stk);
 
     /* */
 
     if (toks->_typ == IFF_K)
-        return hand_iff(res, toks, pmem, pstk);
+        return hand_iff(res, toks, mem, stk);
 
     if (toks->_typ == SWH_K)
-        return hand_swh(res, toks, pmem, pstk);
+        return hand_swh(res, toks, mem, stk);
 
     /* */
 
     if (toks->_typ == FOR_K)
-        return hand_for(res, toks, pmem, pstk);
+        return hand_for(res, toks, mem, stk);
 
     if (toks->_typ == WHL_K)
-        return hand_whl(res, toks, pmem, pstk);
+        return hand_whl(res, toks, mem, stk);
     if (toks->_typ == DOO_K)
-        return hand_dow(res, toks, pmem, pstk);
+        return hand_dow(res, toks, mem, stk);
 
     if (toks->_typ == LOP_K)
-        return hand_lop(res, toks, pmem, pstk);
+        return hand_lop(res, toks, mem, stk);
 
     /* */
 
     if (toks->_typ == TRY_K)
-        return hand_try(res, toks, pmem, pstk);
+        return hand_try(res, toks, mem, stk);
 
     /* */
 
@@ -1005,7 +1005,7 @@ tok_tp core(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
             return toks;
         }
 
-        imp_n nod = imp_set(pmem, toks->_val);
+        imp_n nod = imp_set(mem, toks->_val);
 
         *res->_nodes = node_set1(IMP_N, nod, pss, toks++->_pse);
 
@@ -1018,7 +1018,7 @@ tok_tp core(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     return toks;
 }
 
-tok_tp hand_var(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp hand_var(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
     pos_t pss = toks++->_pss;
 
@@ -1042,7 +1042,7 @@ tok_tp hand_var(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         node_t val;
         val._typ = EOF_N;
 
-        vas_n nod = vas_set(pmem, name, val, prop);
+        vas_n nod = vas_set(mem, name, val, prop);
 
         *res->_nodes = node_set1(VAS_N, nod, pss, (toks - 1)->_pse);
         return toks;
@@ -1051,17 +1051,17 @@ tok_tp hand_var(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     toks++;
     adv_nln1(toks);
 
-    toks = tupl(res, toks, pmem, pstk);
+    toks = tupl(res, toks, mem, stk);
     if (res->_herr)
         return toks;
 
-    vas_n nod = vas_set(pmem, name, *res->_nodes, prop);
+    vas_n nod = vas_set(mem, name, *res->_nodes, prop);
 
     *res->_nodes = node_set1(VAS_N, nod, pss, res->_nodes->_pse);
     return toks;
 }
 
-tok_tp hand_lst(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp hand_lst(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
     pos_t pss = toks++->_pss;
 
@@ -1076,13 +1076,13 @@ tok_tp hand_lst(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         return toks;
     }
 
-    ptrp b_elms = ptr_alloc(pstk, LIST_SIZ * sizeof(node_t), PSTK_SIZ);
+    ptrp b_elms = ptr_alloc(stk, LIST_SIZ * sizeof(node_t), STK_SIZ);
     node_tp elms = *b_elms;
 
     uint64 alc = LIST_SIZ;
     uint64 siz = 1;
 
-    toks = asgn(res, toks, pmem, pstk);
+    toks = asgn(res, toks, mem, stk);
     if (res->_herr)
         return toks;
 
@@ -1093,7 +1093,7 @@ tok_tp hand_lst(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         toks++;
         adv_nln1(toks);
 
-        toks = asgn(res, toks, pmem, pstk);
+        toks = asgn(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
@@ -1112,7 +1112,7 @@ tok_tp hand_lst(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     if (siz != alc)
         elms = ptr_realloc(b_elms, siz * sizeof(node_t));
 
-    lst_n nod = lst_set(pmem, elms, siz);
+    lst_n nod = lst_set(mem, elms, siz);
 
     *res->_nodes = node_set1(LST_N, nod, pss, toks++->_pse);
 
@@ -1121,7 +1121,7 @@ tok_tp hand_lst(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     return toks;
 }
 
-tok_tp hand_dct(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp hand_dct(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
     pos_t pss = toks++->_pss;
 
@@ -1136,16 +1136,16 @@ tok_tp hand_dct(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         return toks;
     }
 
-    ptrp b_keys = ptr_alloc(pstk, DICT_SIZ * sizeof(node_t), PSTK_SIZ);
+    ptrp b_keys = ptr_alloc(stk, DICT_SIZ * sizeof(node_t), STK_SIZ);
     node_tp keys = *b_keys;
 
-    ptrp b_vals = ptr_alloc(pstk, DICT_SIZ * sizeof(node_t), PSTK_SIZ);
+    ptrp b_vals = ptr_alloc(stk, DICT_SIZ * sizeof(node_t), STK_SIZ);
     node_tp vals = *b_vals;
 
     uint64 alc = LIST_SIZ;
     uint64 siz = 1;
     
-    toks = asgn(res, toks, pmem, pstk);
+    toks = asgn(res, toks, mem, stk);
     if (res->_herr)
         return toks;
 
@@ -1160,7 +1160,7 @@ tok_tp hand_dct(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     toks++;
     adv_nln1(toks);
 
-    toks = asgn(res, toks, pmem, pstk);
+    toks = asgn(res, toks, mem, stk);
     if (res->_herr)
         return toks;
 
@@ -1171,7 +1171,7 @@ tok_tp hand_dct(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         toks++;
         adv_nln1(toks);
 
-        toks = asgn(res, toks, pmem, pstk);
+        toks = asgn(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
@@ -1192,7 +1192,7 @@ tok_tp hand_dct(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         toks++;
         adv_nln1(toks);
 
-        toks = asgn(res, toks, pmem, pstk);
+        toks = asgn(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
@@ -1212,7 +1212,7 @@ tok_tp hand_dct(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         vals = ptr_realloc(b_vals, siz * sizeof(node_t));
     }
 
-    dct_n nod = dct_set(pmem, keys, vals, siz);
+    dct_n nod = dct_set(mem, keys, vals, siz);
 
     *res->_nodes = node_set1(DCT_N, nod, pss, toks++->_pse);
 
@@ -1221,7 +1221,7 @@ tok_tp hand_dct(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     return toks;
 }
 
-tok_tp hand_fdf(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp hand_fdf(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
     pos_t pss = toks++->_pss;
     pos_t pse;
@@ -1262,7 +1262,7 @@ tok_tp hand_fdf(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
 
     if (toks->_typ != RPR_T)
     {
-        ptrp b_args = ptr_alloc(pstk, FUN_ARG_SIZ * sizeof(arg_t), PSTK_SIZ);
+        ptrp b_args = ptr_alloc(stk, FUN_ARG_SIZ * sizeof(arg_t), STK_SIZ);
         args = *b_args;
 
         uint64 alc = FUN_ARG_SIZ;
@@ -1286,7 +1286,7 @@ tok_tp hand_fdf(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
             toks++;
             adv_nln1(toks);
 
-            toks = asgn(res, toks, pmem, pstk);
+            toks = asgn(res, toks, mem, stk);
             if (res->_herr)
                 return toks;
 
@@ -1318,7 +1318,7 @@ tok_tp hand_fdf(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
                 toks++;
                 adv_nln1(toks);
 
-                toks = asgn(res, toks, pmem, pstk);
+                toks = asgn(res, toks, mem, stk);
                 if (res->_herr)
                     return toks;
 
@@ -1350,11 +1350,11 @@ tok_tp hand_fdf(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         toks++;
         adv_nln1(toks);
 
-        toks = dlfc(res, toks, pmem, pstk);
+        toks = dlfc(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
-        body = body_set(pmem, *res->_nodes);
+        body = body_set(mem, *res->_nodes);
         pse = res->_nodes->_pse;
     }
     else
@@ -1365,7 +1365,7 @@ tok_tp hand_fdf(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
             return toks;
         }
 
-        toks = gen_body(&body, FUN_BOD_SIZ, res, ++toks, pmem, pstk);
+        toks = gen_body(&body, FUN_BOD_SIZ, res, ++toks, mem, stk);
         if (res->_herr)
             return toks;
 
@@ -1380,20 +1380,20 @@ tok_tp hand_fdf(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         adv_nln1(toks);
     }
 
-    fdf_n nod = fdf_set(pmem, name, args, siz, body, prop);
+    fdf_n nod = fdf_set(mem, name, args, siz, body, prop);
 
     *res->_nodes = node_set1(FDF_N, nod, pss, pse);
     return toks;
 }
 
-tok_tp hand_fcl(node_t func, pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp hand_fcl(node_t func, pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
     toks++;
     adv_nln1(toks);
 
     if (toks->_typ == RPR_T)
     {
-        fcl_n nod = fcl_set(pmem, func, NULL, 0);
+        fcl_n nod = fcl_set(mem, func, NULL, 0);
 
         *res->_nodes = node_set1(FCL_N, nod, func._pss, toks++->_pse);
 
@@ -1402,7 +1402,7 @@ tok_tp hand_fcl(node_t func, pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         return toks;
     }
 
-    ptrp b_args = ptr_alloc(pstk, FUN_ARG_SIZ * sizeof(arg_t), PSTK_SIZ);
+    ptrp b_args = ptr_alloc(stk, FUN_ARG_SIZ * sizeof(arg_t), STK_SIZ);
     arg_tp args = *b_args;
 
     uint64 alc = FUN_ARG_SIZ;
@@ -1432,7 +1432,7 @@ tok_tp hand_fcl(node_t func, pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     else
         args->_name = NULL;
 
-    toks = asgn(res, toks, pmem, pstk);
+    toks = asgn(res, toks, mem, stk);
     if (res->_herr)
         return toks;
 
@@ -1470,7 +1470,7 @@ tok_tp hand_fcl(node_t func, pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         else
             args[siz]._name = NULL;
 
-        toks = asgn(res, toks, pmem, pstk);
+        toks = asgn(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
@@ -1486,7 +1486,7 @@ tok_tp hand_fcl(node_t func, pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     if (siz != alc)
         args = ptr_realloc(b_args, siz * sizeof(arg_t));
 
-    fcl_n nod = fcl_set(pmem, func, args, siz);
+    fcl_n nod = fcl_set(mem, func, args, siz);
 
     *res->_nodes = node_set1(FCL_N, nod, func._pss, toks++->_pse);
 
@@ -1495,7 +1495,7 @@ tok_tp hand_fcl(node_t func, pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     return toks;
 }
 
-tok_tp hand_cdf(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp hand_cdf(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
     pos_t pss = toks++->_pss;
 
@@ -1528,7 +1528,7 @@ tok_tp hand_cdf(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
 
     body_t body;
 
-    toks = gen_body(&body, CLS_BOD_SIZ, res, ++toks, pmem, pstk);
+    toks = gen_body(&body, CLS_BOD_SIZ, res, ++toks, mem, stk);
     if (res->_herr)
         return toks;
 
@@ -1538,7 +1538,7 @@ tok_tp hand_cdf(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         return toks;
     }
 
-    cdf_n nod = cdf_set(pmem, name, body, prop);
+    cdf_n nod = cdf_set(mem, name, body, prop);
 
     *res->_nodes = node_set1(CDF_N, nod, pss, toks++->_pse);
 
@@ -1547,7 +1547,7 @@ tok_tp hand_cdf(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     return toks;
 }
 
-tok_tp hand_sdf(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp hand_sdf(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
     pos_t pss = toks++->_pss;
 
@@ -1580,7 +1580,7 @@ tok_tp hand_sdf(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
 
     body_t body;
 
-    toks = gen_body(&body, STT_BOD_SIZ, res, ++toks, pmem, pstk);
+    toks = gen_body(&body, STT_BOD_SIZ, res, ++toks, mem, stk);
     if (res->_herr)
         return toks;
 
@@ -1590,7 +1590,7 @@ tok_tp hand_sdf(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         return toks;
     }
 
-    sdf_n nod = sdf_set(pmem, name, body, prop);
+    sdf_n nod = sdf_set(mem, name, body, prop);
 
     *res->_nodes = node_set1(SDF_N, nod, pss, toks++->_pse);
 
@@ -1599,12 +1599,12 @@ tok_tp hand_sdf(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     return toks;
 }
 
-tok_tp hand_iff(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp hand_iff(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
     pos_t pss = toks++->_pss;
     pos_t pse;
 
-    ptrp b_stats = ptr_alloc(pstk, IFF_CND_SIZ * sizeof(stat_t), PSTK_SIZ);
+    ptrp b_stats = ptr_alloc(stk, IFF_CND_SIZ * sizeof(stat_t), STK_SIZ);
     stat_tp stats = *b_stats;
 
     uint64 alc = IFF_CND_SIZ;
@@ -1612,7 +1612,7 @@ tok_tp hand_iff(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
 
     adv_nln1(toks);
 
-    toks = tupl(res, toks, pmem, pstk);
+    toks = tupl(res, toks, mem, stk);
     if (res->_herr)
         return toks;
 
@@ -1623,11 +1623,11 @@ tok_tp hand_iff(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         toks++;
         adv_nln1(toks);
 
-        toks = dlfc(res, toks, pmem, pstk);
+        toks = dlfc(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
-        stats->_body = body_set(pmem, *res->_nodes);
+        stats->_body = body_set(mem, *res->_nodes);
         pse = res->_nodes->_pse;
     }
     else
@@ -1638,7 +1638,7 @@ tok_tp hand_iff(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
             return toks;
         }
 
-        toks = gen_body(&stats->_body, IFF_BOD_SIZ, res, ++toks, pmem, pstk);
+        toks = gen_body(&stats->_body, IFF_BOD_SIZ, res, ++toks, mem, stk);
         if (res->_herr)
             return toks;
 
@@ -1661,7 +1661,7 @@ tok_tp hand_iff(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         toks++;
         adv_nln1(toks);
 
-        toks = tupl(res, toks, pmem, pstk);
+        toks = tupl(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
@@ -1672,11 +1672,11 @@ tok_tp hand_iff(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
             toks++;
             adv_nln1(toks);
 
-            toks = dlfc(res, toks, pmem, pstk);
+            toks = dlfc(res, toks, mem, stk);
             if (res->_herr)
                 return toks;
 
-            stats[siz++]._body = body_set(pmem, *res->_nodes);
+            stats[siz++]._body = body_set(mem, *res->_nodes);
             pse = res->_nodes->_pse;
             continue;
         }
@@ -1687,7 +1687,7 @@ tok_tp hand_iff(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
             return toks;
         }
 
-        toks = gen_body(&stats[siz++]._body, IFF_BOD_SIZ, res, ++toks, pmem, pstk);
+        toks = gen_body(&stats[siz++]._body, IFF_BOD_SIZ, res, ++toks, mem, stk);
         if (res->_herr)
             return toks;
 
@@ -1714,11 +1714,11 @@ tok_tp hand_iff(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
             toks++;
             adv_nln1(toks);
 
-            toks = dlfc(res, toks, pmem, pstk);
+            toks = dlfc(res, toks, mem, stk);
             if (res->_herr)
                 return toks;
 
-            ebody = body_set(pmem, *res->_nodes);
+            ebody = body_set(mem, *res->_nodes);
             pse = res->_nodes->_pse;
         }
         else
@@ -1729,7 +1729,7 @@ tok_tp hand_iff(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
                 return toks;
             }
 
-            toks = gen_body(&ebody, IFF_BOD_SIZ, res, ++toks, pmem, pstk);
+            toks = gen_body(&ebody, IFF_BOD_SIZ, res, ++toks, mem, stk);
             if (res->_herr)
                 return toks;
 
@@ -1750,19 +1750,19 @@ tok_tp hand_iff(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     if (siz != alc)
         stats = ptr_realloc(b_stats, siz * sizeof(stat_t));
 
-    iff_n nod = iff_set(pmem, stats, siz, ebody);
+    iff_n nod = iff_set(mem, stats, siz, ebody);
 
     *res->_nodes = node_set1(IFF_N, nod, pss, pse);
     return toks;
 }
 
-tok_tp hand_swh(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp hand_swh(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
     pos_t pss = toks++->_pss;
 
     adv_nln1(toks);
 
-    toks = tupl(res, toks, pmem, pstk);
+    toks = tupl(res, toks, mem, stk);
     if (res->_herr)
         return toks;
 
@@ -1783,7 +1783,7 @@ tok_tp hand_swh(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
 
     if (toks->_typ == CAS_K)
     {
-        ptrp b_stats = ptr_alloc(pstk, SWH_CAS_SIZ * sizeof(stat_t), PSTK_SIZ);
+        ptrp b_stats = ptr_alloc(stk, SWH_CAS_SIZ * sizeof(stat_t), STK_SIZ);
         stats = *b_stats;
 
         uint64 alc = SWH_CAS_SIZ;
@@ -1793,7 +1793,7 @@ tok_tp hand_swh(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
             toks++;
             adv_nln1(toks);
             
-            toks = tupl(res, toks, pmem, pstk);
+            toks = tupl(res, toks, mem, stk);
             if (res->_herr)
                 return toks;
 
@@ -1808,7 +1808,7 @@ tok_tp hand_swh(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
                 return toks;
             }
 
-            toks = gen_case(&stats[siz++]._body, SWH_BOD_SIZ, res, ++toks, pmem, pstk);
+            toks = gen_case(&stats[siz++]._body, SWH_BOD_SIZ, res, ++toks, mem, stk);
             if (res->_herr)
                 return toks;
         } while (toks->_typ == CAS_K);
@@ -1830,7 +1830,7 @@ tok_tp hand_swh(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
             return toks;
         }
 
-        toks = gen_body(&dbody, SWH_BOD_SIZ, res, ++toks, pmem, pstk);
+        toks = gen_body(&dbody, SWH_BOD_SIZ, res, ++toks, mem, stk);
         if (res->_herr)
             return toks;
     }
@@ -1843,7 +1843,7 @@ tok_tp hand_swh(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         return toks;
     }
 
-    swh_n nod = swh_set(pmem, val, stats, siz, dbody);
+    swh_n nod = swh_set(mem, val, stats, siz, dbody);
 
     *res->_nodes = node_set1(SWH_N, nod, pss, toks++->_pse);
 
@@ -1852,7 +1852,7 @@ tok_tp hand_swh(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     return toks;
 }
 
-tok_tp hand_for(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp hand_for(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
     pos_t pss = toks++->_pss;
     pos_t pse;
@@ -1870,7 +1870,7 @@ tok_tp hand_for(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     adv_nln1(toks);
 
     if (toks->_typ == INN_K)
-        return hand_fre(var, pss, res, ++toks, pmem, pstk);
+        return hand_fre(var, pss, res, ++toks, mem, stk);
 
     if (toks->_typ != ASN_T)
     {
@@ -1887,7 +1887,7 @@ tok_tp hand_for(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         start._typ = EOF_N;
     else
     {
-        toks = tupl(res, toks, pmem, pstk);
+        toks = tupl(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
@@ -1903,7 +1903,7 @@ tok_tp hand_for(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     toks++;
     adv_nln1(toks);
 
-    toks = tupl(res, toks, pmem, pstk);
+    toks = tupl(res, toks, mem, stk);
     if (res->_herr)
         return toks;
 
@@ -1916,7 +1916,7 @@ tok_tp hand_for(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         toks++;
         adv_nln1(toks);
 
-        toks = tupl(res, toks, pmem, pstk);
+        toks = tupl(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
@@ -1932,11 +1932,11 @@ tok_tp hand_for(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         toks++;
         adv_nln1(toks);
 
-        toks = dlfc(res, toks, pmem, pstk);
+        toks = dlfc(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
-        body = body_set(pmem, *res->_nodes);
+        body = body_set(mem, *res->_nodes);
         pse = res->_nodes->_pse;
     }
     else
@@ -1947,7 +1947,7 @@ tok_tp hand_for(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
             return toks;
         }
 
-        toks = gen_body(&body, FOR_BOD_SIZ, res, ++toks, pmem, pstk);
+        toks = gen_body(&body, FOR_BOD_SIZ, res, ++toks, mem, stk);
         if (res->_herr)
             return toks;
 
@@ -1962,19 +1962,19 @@ tok_tp hand_for(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         adv_nln1(toks);
     }
 
-    for_n nod = for_set(pmem, var, start, end, step, body);
+    for_n nod = for_set(mem, var, start, end, step, body);
 
     *res->_nodes = node_set1(FOR_N, nod, pss, pse);
     return toks;
 }
 
-tok_tp hand_fre(str var, pos_t pss, pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp hand_fre(str var, pos_t pss, pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
     pos_t pse;
 
     adv_nln1(toks);
 
-    toks = tupl(res, toks, pmem, pstk);
+    toks = tupl(res, toks, mem, stk);
     if (res->_herr)
         return toks;
 
@@ -1987,11 +1987,11 @@ tok_tp hand_fre(str var, pos_t pss, pres_tp res, tok_tp toks, mem_t pmem, stk_t 
         toks++;
         adv_nln1(toks);
 
-        toks = dlfc(res, toks, pmem, pstk);
+        toks = dlfc(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
-        body = body_set(pmem, *res->_nodes);
+        body = body_set(mem, *res->_nodes);
         pse = res->_nodes->_pse;
     }
     else
@@ -2002,7 +2002,7 @@ tok_tp hand_fre(str var, pos_t pss, pres_tp res, tok_tp toks, mem_t pmem, stk_t 
             return toks;
         }
 
-        toks = gen_body(&body, FRE_BOD_SIZ, res, ++toks, pmem, pstk);
+        toks = gen_body(&body, FRE_BOD_SIZ, res, ++toks, mem, stk);
         if (res->_herr)
             return toks;
 
@@ -2017,20 +2017,20 @@ tok_tp hand_fre(str var, pos_t pss, pres_tp res, tok_tp toks, mem_t pmem, stk_t 
         adv_nln1(toks);
     }
 
-    fre_n nod = fre_set(pmem, var, iter, body);
+    fre_n nod = fre_set(mem, var, iter, body);
 
     *res->_nodes = node_set1(FRE_N, nod, pss, pse);
     return toks;
 }
 
-tok_tp hand_whl(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp hand_whl(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
     pos_t pss = toks++->_pss;
     pos_t pse;
 
     adv_nln1(toks);
 
-    toks = tupl(res, toks, pmem, pstk);
+    toks = tupl(res, toks, mem, stk);
     if (res->_herr)
         return toks;
 
@@ -2043,11 +2043,11 @@ tok_tp hand_whl(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         toks++;
         adv_nln1(toks);
 
-        toks = dlfc(res, toks, pmem, pstk);
+        toks = dlfc(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
-        body = body_set(pmem, *res->_nodes);
+        body = body_set(mem, *res->_nodes);
         pse = res->_nodes->_pse;
     }
     else
@@ -2058,7 +2058,7 @@ tok_tp hand_whl(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
             return toks;
         }
 
-        toks = gen_body(&body, WHL_BOD_SIZ, res, ++toks, pmem, pstk);
+        toks = gen_body(&body, WHL_BOD_SIZ, res, ++toks, mem, stk);
         if (res->_herr)
             return toks;
 
@@ -2073,13 +2073,13 @@ tok_tp hand_whl(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         adv_nln1(toks);
     }
 
-    whl_n nod = whl_set(pmem, cond, body);
+    whl_n nod = whl_set(mem, cond, body);
 
     *res->_nodes = node_set1(WHL_N, nod, pss, pse);
     return toks;
 }
 
-tok_tp hand_dow(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp hand_dow(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
     pos_t pss = toks++->_pss;
 
@@ -2092,11 +2092,11 @@ tok_tp hand_dow(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         toks++;
         adv_nln1(toks);
 
-        toks = dlfc(res, toks, pmem, pstk);
+        toks = dlfc(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
-        body = body_set(pmem, *res->_nodes);
+        body = body_set(mem, *res->_nodes);
     }
     else
     {
@@ -2106,7 +2106,7 @@ tok_tp hand_dow(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
             return toks;
         }
 
-        toks = gen_body(&body, DOW_BOD_SIZ, res, ++toks, pmem, pstk);
+        toks = gen_body(&body, DOW_BOD_SIZ, res, ++toks, mem, stk);
         if (res->_herr)
             return toks;
 
@@ -2129,17 +2129,17 @@ tok_tp hand_dow(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     toks++;
     adv_nln1(toks);
 
-    toks = tupl(res, toks, pmem, pstk);
+    toks = tupl(res, toks, mem, stk);
     if (res->_herr)
         return toks;
 
-    dow_n nod = dow_set(pmem, body, *res->_nodes);
+    dow_n nod = dow_set(mem, body, *res->_nodes);
 
     *res->_nodes = node_set1(DOW_N, nod, pss, res->_nodes->_pse);
     return toks;
 }
 
-tok_tp hand_lop(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp hand_lop(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
     pos_t pss = toks++->_pss;
     pos_t pse;
@@ -2152,7 +2152,7 @@ tok_tp hand_lop(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         init._typ = EOF_N;
     else
     {
-        toks = asgn(res, toks, pmem, pstk);
+        toks = asgn(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
@@ -2174,7 +2174,7 @@ tok_tp hand_lop(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         cond._typ = EOF_N;
     else
     {
-        toks = asgn(res, toks, pmem, pstk);
+        toks = asgn(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
@@ -2200,18 +2200,18 @@ tok_tp hand_lop(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         toks++;
         adv_nln1(toks);
 
-        toks = dlfc(res, toks, pmem, pstk);
+        toks = dlfc(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
-        body = body_set(pmem, *res->_nodes);
+        body = body_set(mem, *res->_nodes);
         pse = res->_nodes->_pse;
     }
     else if (toks->_typ == LCB_T)
     {
         step._typ = EOF_N;
 
-        toks = gen_body(&body, LOP_BOD_SIZ, res, ++toks, pmem, pstk);
+        toks = gen_body(&body, LOP_BOD_SIZ, res, ++toks, mem, stk);
         if (res->_herr)
             return toks;
 
@@ -2227,7 +2227,7 @@ tok_tp hand_lop(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     }
     else
     {
-        toks = asgn(res, toks, pmem, pstk);
+        toks = asgn(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
@@ -2238,11 +2238,11 @@ tok_tp hand_lop(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
             toks++;
             adv_nln1(toks);
 
-            toks = dlfc(res, toks, pmem, pstk);
+            toks = dlfc(res, toks, mem, stk);
             if (res->_herr)
                 return toks;
 
-            body = body_set(pmem, *res->_nodes);
+            body = body_set(mem, *res->_nodes);
             pse = res->_nodes->_pse;
         }
         else
@@ -2253,7 +2253,7 @@ tok_tp hand_lop(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
                 return toks;
             }
 
-            toks = gen_body(&body, LOP_BOD_SIZ, res, ++toks, pmem, pstk);
+            toks = gen_body(&body, LOP_BOD_SIZ, res, ++toks, mem, stk);
             if (res->_herr)
                 return toks;
 
@@ -2269,13 +2269,13 @@ tok_tp hand_lop(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         }
     }
 
-    lop_n nod = lop_set(pmem, init, cond, step, body);
+    lop_n nod = lop_set(mem, init, cond, step, body);
 
     *res->_nodes = node_set1(LOP_N, nod, pss, pse);
     return toks;
 }
 
-tok_tp hand_try(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp hand_try(pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
     pos_t pss = toks++->_pss;
     pos_t pse;
@@ -2289,11 +2289,11 @@ tok_tp hand_try(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
         toks++;
         adv_nln1(toks);
 
-        toks = dlfc(res, toks, pmem, pstk);
+        toks = dlfc(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
-        error = body_set(pmem, *res->_nodes);
+        error = body_set(mem, *res->_nodes);
         pse = res->_nodes->_pse;
     }
     else
@@ -2304,7 +2304,7 @@ tok_tp hand_try(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
             return toks;
         }
 
-        toks = gen_body(&error, TRY_BOD_SIZ, res, ++toks, pmem, pstk);
+        toks = gen_body(&error, TRY_BOD_SIZ, res, ++toks, mem, stk);
         if (res->_herr)
             return toks;
 
@@ -2325,7 +2325,7 @@ tok_tp hand_try(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
 
     if (toks->_typ == EXP_K)
     {
-        ptrp b_stats = ptr_alloc(pstk, TRY_EXP_SIZ * sizeof(stat_t), PSTK_SIZ);
+        ptrp b_stats = ptr_alloc(stk, TRY_EXP_SIZ * sizeof(stat_t), STK_SIZ);
         stats = *b_stats;
 
         uint64 alc = TRY_EXP_SIZ;
@@ -2335,7 +2335,7 @@ tok_tp hand_try(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
             toks++;
             adv_nln1(toks);
 
-            toks = tupl(res, toks, pmem, pstk);
+            toks = tupl(res, toks, mem, stk);
             if (res->_herr)
                 return toks;
 
@@ -2349,11 +2349,11 @@ tok_tp hand_try(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
                 toks++;
                 adv_nln1(toks);
 
-                toks = dlfc(res, toks, pmem, pstk);
+                toks = dlfc(res, toks, mem, stk);
                 if (res->_herr)
                     return toks;
 
-                stats[siz++]._body = body_set(pmem, *res->_nodes);
+                stats[siz++]._body = body_set(mem, *res->_nodes);
 
                 pse = res->_nodes->_pse;
                 continue;
@@ -2365,7 +2365,7 @@ tok_tp hand_try(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
                 return toks;
             }
 
-            toks = gen_body(&stats[siz++]._body, TRY_BOD_SIZ, res, ++toks, pmem, pstk);
+            toks = gen_body(&stats[siz++]._body, TRY_BOD_SIZ, res, ++toks, mem, stk);
             if (res->_herr)
                 return toks;
 
@@ -2396,11 +2396,11 @@ tok_tp hand_try(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
             toks++;
             adv_nln1(toks);
 
-            toks = dlfc(res, toks, pmem, pstk);
+            toks = dlfc(res, toks, mem, stk);
             if (res->_herr)
                 return toks;
 
-            fbody = body_set(pmem, *res->_nodes);
+            fbody = body_set(mem, *res->_nodes);
             pse = res->_nodes->_pse;
         }
         else
@@ -2411,7 +2411,7 @@ tok_tp hand_try(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
                 return toks;
             }
 
-            toks = gen_body(&fbody, TRY_BOD_SIZ, res, ++toks, pmem, pstk);
+            toks = gen_body(&fbody, TRY_BOD_SIZ, res, ++toks, mem, stk);
             if (res->_herr)
 
             if (toks->_typ != RCB_T)
@@ -2428,7 +2428,7 @@ tok_tp hand_try(pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
     else
         fbody._siz = 0;
 
-    try_n nod = try_set(pmem, error, stats, siz, fbody);
+    try_n nod = try_set(mem, error, stats, siz, fbody);
 
     *res->_nodes = node_set1(TRY_N, nod, pss, pse);
     return toks;
@@ -2511,9 +2511,9 @@ tok_tp gen_prop(uint8p prop, tok_tp toks)
     }
 }
 
-tok_tp gen_body(body_tp body, uint64 alt, pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp gen_body(body_tp body, uint64 alt, pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
-    ptrp b_nodes = ptr_alloc(pstk, alt * sizeof(node_t), PSTK_SIZ);
+    ptrp b_nodes = ptr_alloc(stk, alt * sizeof(node_t), STK_SIZ);
     body->_nodes = *b_nodes;
 
     uint64 alc = alt;
@@ -2529,17 +2529,17 @@ tok_tp gen_body(body_tp body, uint64 alt, pres_tp res, tok_tp toks, mem_t pmem, 
         if (body->_siz == alc)
             body->_nodes = ptr_realloc(b_nodes, (alc += alt) * sizeof(node_t));
 
-        toks = dlfc(res, toks, pmem, pstk);
+        toks = dlfc(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
         body->_nodes[body->_siz++] = *res->_nodes;
-    } while ((toks - 1)->_typ == NLN_T || (toks - 1)->_typ == SEM_T);
+    } while ((toks - 1)->_typ == NLN_T || toks->_typ == SEM_T);
 
     if (!body->_siz)
     {
         free(body->_nodes);
-        pstk->_cnt--;
+        stk->_cnt--;
 
         return toks;
     }
@@ -2550,9 +2550,9 @@ tok_tp gen_body(body_tp body, uint64 alt, pres_tp res, tok_tp toks, mem_t pmem, 
     return toks;
 }
 
-tok_tp gen_case(body_tp body, uint64 alt, pres_tp res, tok_tp toks, mem_t pmem, stk_t pstk)
+tok_tp gen_case(body_tp body, uint64 alt, pres_tp res, tok_tp toks, mem_t mem, stk_t stk)
 {
-    ptrp b_nodes = ptr_alloc(pstk, alt * sizeof(node_t), PSTK_SIZ);
+    ptrp b_nodes = ptr_alloc(stk, alt * sizeof(node_t), STK_SIZ);
     body->_nodes = *b_nodes;
 
     uint64 alc = alt;
@@ -2568,17 +2568,17 @@ tok_tp gen_case(body_tp body, uint64 alt, pres_tp res, tok_tp toks, mem_t pmem, 
         if (body->_siz == alc)
             body->_nodes = ptr_realloc(b_nodes, (alc += alt) * sizeof(node_t));
 
-        toks = dlfc(res, toks, pmem, pstk);
+        toks = dlfc(res, toks, mem, stk);
         if (res->_herr)
             return toks;
 
         body->_nodes[body->_siz++] = *res->_nodes;
-    } while ((toks - 1)->_typ == NLN_T || (toks - 1)->_typ == SEM_T);
+    } while ((toks - 1)->_typ == NLN_T || toks->_typ == SEM_T);
 
     if (!body->_siz)
     {
         free(body->_nodes);
-        pstk->_cnt--;
+        stk->_cnt--;
 
         return toks;
     }

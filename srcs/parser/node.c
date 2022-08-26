@@ -27,11 +27,11 @@ node_t node_set2(uint8 typ, pos_t pss, pos_t pse)
     return node;
 }
 
-body_t body_set(mem_t pmem, node_t nodes)
+body_t body_set(mem_t mem, node_t nodes)
 {
     body_t body;
 
-    body._nodes = blk_alloc(pmem, sizeof(node_t), PMEM_SIZ);
+    body._nodes = blk_alloc(mem, sizeof(node_t), MEM_SIZ);
 
     *body._nodes = nodes;
     body._siz = 1;
@@ -39,9 +39,9 @@ body_t body_set(mem_t pmem, node_t nodes)
     return body;
 }
 
-int_n int_set(mem_t pmem, str val, uint64 len)
+int_n int_set(mem_t mem, str val, uint64 len)
 {
-    int_n nod = blk_alloc(pmem, sizeof(struct __int__), PMEM_SIZ);
+    int_n nod = blk_alloc(mem, sizeof(struct __int__), MEM_SIZ);
 
     nod->_val = val;
     nod->_len = len;
@@ -49,9 +49,9 @@ int_n int_set(mem_t pmem, str val, uint64 len)
     return nod;
 }
 
-flt_n flt_set(mem_t pmem, str val, uint64 len)
+flt_n flt_set(mem_t mem, str val, uint64 len)
 {
-    flt_n nod = blk_alloc(pmem, sizeof(struct __flt__), PMEM_SIZ);
+    flt_n nod = blk_alloc(mem, sizeof(struct __flt__), MEM_SIZ);
 
     nod->_val = val;
     nod->_len = len;
@@ -59,18 +59,18 @@ flt_n flt_set(mem_t pmem, str val, uint64 len)
     return nod;
 }
 
-bol_n bol_set(mem_t pmem, uint8 stat)
+bol_n bol_set(mem_t mem, uint8 stat)
 {
-    bol_n nod = blk_alloc(pmem, sizeof(struct __bol__), PMEM_SIZ);
+    bol_n nod = blk_alloc(mem, sizeof(struct __bol__), MEM_SIZ);
 
     nod->_stat = stat;
 
     return nod;
 }
 
-str_n str_set(mem_t pmem, str val, uint64 len)
+str_n str_set(mem_t mem, str val, uint64 len)
 {
-    str_n nod = blk_alloc(pmem, sizeof(struct __str__), PMEM_SIZ);
+    str_n nod = blk_alloc(mem, sizeof(struct __str__), MEM_SIZ);
 
     nod->_val = val;
     nod->_len = len;
@@ -78,9 +78,9 @@ str_n str_set(mem_t pmem, str val, uint64 len)
     return nod;
 }
 
-lst_n lst_set(mem_t pmem, node_tp elms, uint64 siz)
+lst_n lst_set(mem_t mem, node_tp elms, uint64 siz)
 {
-    lst_n nod = blk_alloc(pmem, sizeof(struct __lst__), PMEM_SIZ);
+    lst_n nod = blk_alloc(mem, sizeof(struct __lst__), MEM_SIZ);
 
     nod->_elms = elms;
     nod->_siz = siz;
@@ -88,9 +88,9 @@ lst_n lst_set(mem_t pmem, node_tp elms, uint64 siz)
     return nod;
 }
 
-tpl_n tpl_set(mem_t pmem, node_tp elms, uint64 siz)
+tpl_n tpl_set(mem_t mem, node_tp elms, uint64 siz)
 {
-    tpl_n nod = blk_alloc(pmem, sizeof(struct __tpl__), PMEM_SIZ);
+    tpl_n nod = blk_alloc(mem, sizeof(struct __tpl__), MEM_SIZ);
 
     nod->_elms = elms;
     nod->_siz = siz;
@@ -98,9 +98,9 @@ tpl_n tpl_set(mem_t pmem, node_tp elms, uint64 siz)
     return nod;
 }
 
-dct_n dct_set(mem_t pmem, node_tp keys, node_tp vals, uint64 siz)
+dct_n dct_set(mem_t mem, node_tp keys, node_tp vals, uint64 siz)
 {
-    dct_n nod = blk_alloc(pmem, sizeof(struct __dct__), PMEM_SIZ);
+    dct_n nod = blk_alloc(mem, sizeof(struct __dct__), MEM_SIZ);
 
     nod->_keys = keys;
     nod->_vals = vals;
@@ -109,9 +109,9 @@ dct_n dct_set(mem_t pmem, node_tp keys, node_tp vals, uint64 siz)
     return nod;
 }
 
-bop_n bop_set(mem_t pmem, uint8 opr, node_t op1, node_t op2)
+bop_n bop_set(mem_t mem, uint8 opr, node_t op1, node_t op2)
 {
-    bop_n nod = blk_alloc(pmem, sizeof(struct __bop__), PMEM_SIZ);
+    bop_n nod = blk_alloc(mem, sizeof(struct __bop__), MEM_SIZ);
 
     nod->_opr = opr;
     nod->_op1 = op1;
@@ -120,9 +120,9 @@ bop_n bop_set(mem_t pmem, uint8 opr, node_t op1, node_t op2)
     return nod;
 }
 
-uop_n uop_set(mem_t pmem, uint8 opr, node_t op)
+uop_n uop_set(mem_t mem, uint8 opr, node_t op)
 {
-    uop_n nod = blk_alloc(pmem, sizeof(struct __uop__), PMEM_SIZ);
+    uop_n nod = blk_alloc(mem, sizeof(struct __uop__), MEM_SIZ);
 
     nod->_opr = opr;
     nod->_op = op;
@@ -130,9 +130,9 @@ uop_n uop_set(mem_t pmem, uint8 opr, node_t op)
     return nod;
 }
 
-tco_n tco_set(mem_t pmem, node_t cond, node_t op1, node_t op2)
+tco_n tco_set(mem_t mem, node_t cond, node_t op1, node_t op2)
 {
-    tco_n nod = blk_alloc(pmem, sizeof(struct __tco__), PMEM_SIZ);
+    tco_n nod = blk_alloc(mem, sizeof(struct __tco__), MEM_SIZ);
 
     nod->_cond = cond;
     nod->_op1 = op1;
@@ -141,9 +141,9 @@ tco_n tco_set(mem_t pmem, node_t cond, node_t op1, node_t op2)
     return nod;
 }
 
-idx_n idx_set(mem_t pmem, node_t arr, node_t idx)
+idx_n idx_set(mem_t mem, node_t arr, node_t idx)
 {
-    idx_n nod = blk_alloc(pmem, sizeof(struct __idx__), PMEM_SIZ);
+    idx_n nod = blk_alloc(mem, sizeof(struct __idx__), MEM_SIZ);
 
     nod->_arr = arr;
     nod->_idx = idx;
@@ -151,9 +151,9 @@ idx_n idx_set(mem_t pmem, node_t arr, node_t idx)
     return nod;
 }
 
-vas_n vas_set(mem_t pmem, str name, node_t val, uint8 prop)
+vas_n vas_set(mem_t mem, str name, node_t val, uint8 prop)
 {
-    vas_n nod = blk_alloc(pmem, sizeof(struct __vas__), PMEM_SIZ);
+    vas_n nod = blk_alloc(mem, sizeof(struct __vas__), MEM_SIZ);
 
     nod->_name = name;
     nod->_val = val;
@@ -162,9 +162,9 @@ vas_n vas_set(mem_t pmem, str name, node_t val, uint8 prop)
     return nod;
 }
 
-vra_n vra_set(mem_t pmem, uint8 opr, node_t var, node_t val)
+vra_n vra_set(mem_t mem, uint8 opr, node_t var, node_t val)
 {
-    vra_n nod = blk_alloc(pmem, sizeof(struct __vra__), PMEM_SIZ);
+    vra_n nod = blk_alloc(mem, sizeof(struct __vra__), MEM_SIZ);
 
     nod->_opr = opr;
     nod->_var = var;
@@ -173,9 +173,9 @@ vra_n vra_set(mem_t pmem, uint8 opr, node_t var, node_t val)
     return nod;
 }
 
-vfa_n vfa_set(mem_t pmem, uint8 opr, node_t var)
+vfa_n vfa_set(mem_t mem, uint8 opr, node_t var)
 {
-    vfa_n nod = blk_alloc(pmem, sizeof(struct __vfa__), PMEM_SIZ);
+    vfa_n nod = blk_alloc(mem, sizeof(struct __vfa__), MEM_SIZ);
 
     nod->_opr = opr;
     nod->_var = var;
@@ -183,18 +183,18 @@ vfa_n vfa_set(mem_t pmem, uint8 opr, node_t var)
     return nod;
 }
 
-vac_n vac_set(mem_t pmem, str name)
+vac_n vac_set(mem_t mem, str name)
 {
-    vac_n nod = blk_alloc(pmem, sizeof(struct __vac__), PMEM_SIZ);
+    vac_n nod = blk_alloc(mem, sizeof(struct __vac__), MEM_SIZ);
 
     nod->_name = name;
 
     return nod;
 }
 
-fdf_n fdf_set(mem_t pmem, str name, arg_tp args, uint64 siz, body_t body, uint8 prop)
+fdf_n fdf_set(mem_t mem, str name, arg_tp args, uint64 siz, body_t body, uint8 prop)
 {
-    fdf_n nod = blk_alloc(pmem, sizeof(struct __fdf__), PMEM_SIZ);
+    fdf_n nod = blk_alloc(mem, sizeof(struct __fdf__), MEM_SIZ);
 
     nod->_name = name;
     nod->_args = args;
@@ -205,9 +205,9 @@ fdf_n fdf_set(mem_t pmem, str name, arg_tp args, uint64 siz, body_t body, uint8 
     return nod;
 }
 
-fcl_n fcl_set(mem_t pmem, node_t func, arg_tp args, uint64 siz)
+fcl_n fcl_set(mem_t mem, node_t func, arg_tp args, uint64 siz)
 {
-    fcl_n nod = blk_alloc(pmem, sizeof(struct __fcl__), PMEM_SIZ);
+    fcl_n nod = blk_alloc(mem, sizeof(struct __fcl__), MEM_SIZ);
 
     nod->_func = func;
     nod->_args = args;
@@ -216,9 +216,9 @@ fcl_n fcl_set(mem_t pmem, node_t func, arg_tp args, uint64 siz)
     return nod;
 }
 
-cdf_n cdf_set(mem_t pmem, str name, body_t body, uint8 prop)
+cdf_n cdf_set(mem_t mem, str name, body_t body, uint8 prop)
 {
-    cdf_n nod = blk_alloc(pmem, sizeof(struct __cdf__), PMEM_SIZ);
+    cdf_n nod = blk_alloc(mem, sizeof(struct __cdf__), MEM_SIZ);
 
     nod->_name = name;
     nod->_body = body;
@@ -227,9 +227,9 @@ cdf_n cdf_set(mem_t pmem, str name, body_t body, uint8 prop)
     return nod;
 }
 
-sdf_n sdf_set(mem_t pmem, str name, body_t body, uint8 prop)
+sdf_n sdf_set(mem_t mem, str name, body_t body, uint8 prop)
 {
-    sdf_n nod = blk_alloc(pmem, sizeof(struct __sdf__), PMEM_SIZ);
+    sdf_n nod = blk_alloc(mem, sizeof(struct __sdf__), MEM_SIZ);
 
     nod->_name = name;
     nod->_body = body;
@@ -238,9 +238,9 @@ sdf_n sdf_set(mem_t pmem, str name, body_t body, uint8 prop)
     return nod;
 }
 
-dfc_n dfc_set(mem_t pmem, str name, node_tp args, uint64 siz)
+dfc_n dfc_set(mem_t mem, str name, node_tp args, uint64 siz)
 {
-    dfc_n nod = blk_alloc(pmem, sizeof(struct __dfc__), PMEM_SIZ);
+    dfc_n nod = blk_alloc(mem, sizeof(struct __dfc__), MEM_SIZ);
 
     nod->_name = name;
     nod->_args = args;
@@ -249,9 +249,9 @@ dfc_n dfc_set(mem_t pmem, str name, node_tp args, uint64 siz)
     return nod;
 }
 
-iff_n iff_set(mem_t pmem, stat_tp stats, uint64 siz, body_t ebody)
+iff_n iff_set(mem_t mem, stat_tp stats, uint64 siz, body_t ebody)
 {
-    iff_n nod = blk_alloc(pmem, sizeof(struct __iff__), PMEM_SIZ);
+    iff_n nod = blk_alloc(mem, sizeof(struct __iff__), MEM_SIZ);
 
     nod->_stats = stats;
     nod->_siz = siz;
@@ -260,9 +260,9 @@ iff_n iff_set(mem_t pmem, stat_tp stats, uint64 siz, body_t ebody)
     return nod;
 }
 
-swh_n swh_set(mem_t pmem, node_t val, stat_tp stats, uint64 siz, body_t dbody)
+swh_n swh_set(mem_t mem, node_t val, stat_tp stats, uint64 siz, body_t dbody)
 {
-    swh_n nod = blk_alloc(pmem, sizeof(struct __swh__), PMEM_SIZ);
+    swh_n nod = blk_alloc(mem, sizeof(struct __swh__), MEM_SIZ);
 
     nod->_val = val;
     nod->_stats = stats;
@@ -272,9 +272,9 @@ swh_n swh_set(mem_t pmem, node_t val, stat_tp stats, uint64 siz, body_t dbody)
     return nod;
 }
 
-for_n for_set(mem_t pmem, str var, node_t start, node_t end, node_t step, body_t body)
+for_n for_set(mem_t mem, str var, node_t start, node_t end, node_t step, body_t body)
 {
-    for_n nod = blk_alloc(pmem, sizeof(struct __for__), PMEM_SIZ);
+    for_n nod = blk_alloc(mem, sizeof(struct __for__), MEM_SIZ);
 
     nod->_var = var;
     nod->_start = start;
@@ -285,9 +285,9 @@ for_n for_set(mem_t pmem, str var, node_t start, node_t end, node_t step, body_t
     return nod;
 }
 
-fre_n fre_set(mem_t pmem, str var, node_t iter, body_t body)
+fre_n fre_set(mem_t mem, str var, node_t iter, body_t body)
 {
-    fre_n nod = blk_alloc(pmem, sizeof(struct __fre__), PMEM_SIZ);
+    fre_n nod = blk_alloc(mem, sizeof(struct __fre__), MEM_SIZ);
 
     nod->_var = var;
     nod->_iter = iter;
@@ -296,9 +296,9 @@ fre_n fre_set(mem_t pmem, str var, node_t iter, body_t body)
     return nod;
 }
 
-whl_n whl_set(mem_t pmem, node_t cond, body_t body)
+whl_n whl_set(mem_t mem, node_t cond, body_t body)
 {
-    whl_n nod = blk_alloc(pmem, sizeof(struct __whl__), PMEM_SIZ);
+    whl_n nod = blk_alloc(mem, sizeof(struct __whl__), MEM_SIZ);
 
     nod->_cond = cond;
     nod->_body = body;
@@ -306,9 +306,9 @@ whl_n whl_set(mem_t pmem, node_t cond, body_t body)
     return nod;
 }
 
-dow_n dow_set(mem_t pmem, body_t body, node_t cond)
+dow_n dow_set(mem_t mem, body_t body, node_t cond)
 {
-    dow_n nod = blk_alloc(pmem, sizeof(struct __dow__), PMEM_SIZ);
+    dow_n nod = blk_alloc(mem, sizeof(struct __dow__), MEM_SIZ);
 
     nod->_body = body;
     nod->_cond = cond;
@@ -316,9 +316,9 @@ dow_n dow_set(mem_t pmem, body_t body, node_t cond)
     return nod;
 }
 
-lop_n lop_set(mem_t pmem, node_t init, node_t cond, node_t step, body_t body)
+lop_n lop_set(mem_t mem, node_t init, node_t cond, node_t step, body_t body)
 {
-    lop_n nod = blk_alloc(pmem, sizeof(struct __lop__), PMEM_SIZ);
+    lop_n nod = blk_alloc(mem, sizeof(struct __lop__), MEM_SIZ);
 
     nod->_init = init;
     nod->_cond = cond;
@@ -328,9 +328,9 @@ lop_n lop_set(mem_t pmem, node_t init, node_t cond, node_t step, body_t body)
     return nod;
 }
 
-try_n try_set(mem_t pmem, body_t error, stat_tp stats, uint64 siz, body_t fbody)
+try_n try_set(mem_t mem, body_t error, stat_tp stats, uint64 siz, body_t fbody)
 {
-    try_n nod = blk_alloc(pmem, sizeof(struct __try__), PMEM_SIZ);
+    try_n nod = blk_alloc(mem, sizeof(struct __try__), MEM_SIZ);
 
     nod->_error = error;
     nod->_stats = stats;
@@ -340,18 +340,18 @@ try_n try_set(mem_t pmem, body_t error, stat_tp stats, uint64 siz, body_t fbody)
     return nod;
 }
 
-ret_n ret_set(mem_t pmem, node_t val)
+ret_n ret_set(mem_t mem, node_t val)
 {
-    ret_n nod = blk_alloc(pmem, sizeof(struct __ret__), PMEM_SIZ);
+    ret_n nod = blk_alloc(mem, sizeof(struct __ret__), MEM_SIZ);
 
     nod->_val = val;
 
     return nod;
 }
 
-imp_n imp_set(mem_t pmem, str lib)
+imp_n imp_set(mem_t mem, str lib)
 {
-    imp_n nod = blk_alloc(pmem, sizeof(struct __imp__), PMEM_SIZ);
+    imp_n nod = blk_alloc(mem, sizeof(struct __imp__), MEM_SIZ);
 
     nod->_lib = lib;
 

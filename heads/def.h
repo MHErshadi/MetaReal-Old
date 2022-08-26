@@ -17,7 +17,10 @@
 #define CMD_MAX_INP 1025
 #define FIL_MAX_INP 8193
 
-#define OPT_LVL 0
+#define OPT_LVL 1
+
+#define MEM_SIZ 65536
+#define STK_SIZ 2048
 
 /* */
 
@@ -26,7 +29,6 @@
 /* */
 
 #define TOKS_SIZ 2048
-#define LMEM_SIZ 8192
 
 #define KWD_CNT 39
 #define KWD_PAD 128
@@ -39,8 +41,6 @@
 /* */
 
 #define NODS_SIZ 256
-#define PMEM_SIZ 32768
-#define PSTK_SIZ 512
 
 #define TUPL_SIZ 8
 #define LIST_SIZ 8
@@ -73,8 +73,6 @@
 #define TRY_BOD_SIZ 12
 
 /* */
-
-#define IGMEM_SIZ 32768
 
 #define IMAIN_SIZ 128
 

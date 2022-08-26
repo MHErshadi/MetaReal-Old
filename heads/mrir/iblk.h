@@ -27,6 +27,22 @@ enum _iblk_
     BOP_I, // binary operation block
 };
 
+struct __idata__
+{
+    uint64 _int_cnt;
+    uint64 _flt_cnt;
+
+    uint64 _bol_cnt;
+
+    uint64 _str_cnt;
+
+    uint64 _lst_cnt;
+    uint64 _tpl_cnt;
+    uint64 _dct_cnt;
+};
+typedef struct __idata__ idata_t;
+typedef struct __idata__ *idata_tp;
+
 struct __iblk__
 {
     uint8 _typ;
@@ -35,18 +51,16 @@ struct __iblk__
     uint8 _dtyp;
     uint64 _id;
 
-    uint8 _prop; // 0b00000321 (1 : is useful) (2 : is complex) (3 : is constant expression)
+    uint8 _prop; // 0b00000021 (1 : is useful) (2 : is complex)
 };
 typedef struct __iblk__ iblk_t;
 typedef struct __iblk__ *iblk_tp;
 
-#define SET_PROP(is_useful, is_complex, is_constexpr, tail) 0b ## tail ## is_constexpr ## is_complex ## is_useful
+#define SET_PROP(is_useful, is_complex, tail) 0b ## tail ## is_complex ## is_useful
 
 #define IS_USEFUL(x) ((x) & 1)
 #define IS_COMPLEX(x) ((x) >> 1 & 1)
-#define IS_CONSTEXPR(x) ((x) >> 2 & 1)
-
-#define BOOL_STAT(x) ((x) >> 3)
+#define IS_TRUE(x) ((x) >> 2)
 
 struct __iint__
 {
@@ -98,17 +112,17 @@ struct __ibop__
 };
 typedef struct __ibop__ *bop_i;
 
-iblk_t iblk_set1(uint8 typ, ptr blk, uint8 dtyp, uint64 id, uint8 prop);
-iblk_t iblk_set2(uint8 typ, uint8 dtyp, uint64 id, uint8 prop);
+iblk_t iblk_set1(uint8 typ, ptr blk, uint8 dtyp, uint8 prop);
+iblk_t iblk_set2(uint8 typ, uint8 dtyp, uint8 prop);
 
-void iblk_print(iblk_t blk, cstr end);
+void iblk_print(idata_tp data, iblk_tp blk, cstr end);
 
-int_i iint_set(mem_t igmem, uint64 val);
-flt_i iflt_set(mem_t igmem, dec64 val);
-str_i istr_set(mem_t igmem, str val, uint64 siz);
-lst_i ilst_set(mem_t igmem, iblk_tp elms, uint64 siz);
-tpl_i itpl_set(mem_t igmem, iblk_tp elms, uint64 siz);
-dct_i idct_set(mem_t igmem, iblk_tp keys, iblk_tp vals, uint64 siz);
-bop_i ibop_set(mem_t igmem, iblk_t op1, iblk_t op2, cstr opr);
+int_i iint_set(mem_t mem, uint64 val);
+flt_i iflt_set(mem_t mem, dec64 val);
+str_i istr_set(mem_t mem, str val, uint64 siz);
+lst_i ilst_set(mem_t mem, iblk_tp elms, uint64 siz);
+tpl_i itpl_set(mem_t mem, iblk_tp elms, uint64 siz);
+dct_i idct_set(mem_t mem, iblk_tp keys, iblk_tp vals, uint64 siz);
+bop_i ibop_set(mem_t mem, iblk_t op1, iblk_t op2, cstr opr);
 
 #endif /* __IBLK__ */
