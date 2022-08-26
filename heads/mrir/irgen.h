@@ -23,21 +23,6 @@ struct __mrir__
 };
 typedef struct __mrir__ mrir_t;
 
-struct __idata__
-{
-    uint64 _int_cnt;
-    uint64 _flt_cnt;
-
-    uint64 _bol_cnt;
-
-    uint64 _str_cnt;
-
-    uint64 _lst_cnt;
-    uint64 _tpl_cnt;
-    uint64 _dct_cnt;
-};
-typedef struct __idata__ idata_t;
-
 struct __igres__
 {
     mrir_t _ir;
@@ -49,11 +34,11 @@ struct __igres__
 typedef struct __igres__ igres_t;
 typedef struct __igres__ *igres_tp;
 
-igres_t irgen(node_tp nodes, mem_t igmem, ictx_t ictx);
+igres_t irgen(node_tp nodes, mem_t mem, ictx_t ictx);
 
 void igres_fail(igres_tp res, run_tim_t error);
 
-void mrir_print(mrir_t ir);
+void mrir_print(idata_tp data, mrir_t ir);
 void mrir_free(mrir_t ir);
 
 #endif /* __IRGEN__ */

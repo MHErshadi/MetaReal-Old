@@ -10,35 +10,27 @@
 #include <debug/crash.h>
 #include <info.h>
 
-#define code_init(c, s, lm, pm, ps, igm, ic) \
-    do                                       \
-    {                                        \
-        c = malloc(s);                       \
-                                             \
-        if (!c)                              \
-            mem_error(s);                    \
-                                             \
-        mem_alloc(lm, LMEM_SIZ);             \
-                                             \
-        mem_alloc(pm, PMEM_SIZ);             \
-        stk_alloc(ps, PSTK_SIZ);             \
-                                             \
-        mem_alloc(igm, IGMEM_SIZ);           \
-                                             \
-        ic = ictx_set2(ROOT_ICTX);           \
-    } while (0)
-
-#define code_free(c, lm, pm, ps, igm) \
+#define code_init(c, s, mem, stk, ic) \
     do                                \
     {                                 \
-        free(c);                      \
+        c = malloc(s);                \
                                       \
-        free(lm->_mem);               \
+        if (!c)                       \
+            mem_error(s);             \
                                       \
-        free(pm->_mem);               \
-        stk_free(ps);                 \
+        mem_alloc(mem, MEM_SIZ);      \
+        stk_alloc(stk, STK_SIZ);      \
                                       \
-        free(igm->_mem);              \
+        ic = ictx_set2(ROOT_ICTX);    \
+    } while (0)
+
+#define code_free(c, mem, stk) \
+    do                         \
+    {                          \
+        free(c);               \
+                               \
+        free(mem->_mem);       \
+        stk_free(stk);         \
     } while (0)
 
 void terminate(int sig);
@@ -55,12 +47,12 @@ uint8 main(uint8 argc, strp argv)
 
         str code;
 
-        mem_t lmem, pmem, igmem;
-        stk_t pstk;
+        mem_t mem;
+        stk_t stk;
 
         ictx_t ictx;
 
-        code_init(code, CMD_MAX_INP, lmem, pmem, pstk, igmem, ictx);
+        code_init(code, CMD_MAX_INP, mem, stk, ictx);
 
         while (1)
         {
@@ -83,7 +75,7 @@ uint8 main(uint8 argc, strp argv)
                 continue;
             code[strlen(code) - 1] = '\0';
 
-            lres_t lres = lex(code, '\0', STDIN_NAM, lmem);
+            lres_t lres = lex(code, '\0', STDIN_NAM, mem);
 
             if (lres._herr)
             {
@@ -91,7 +83,7 @@ uint8 main(uint8 argc, strp argv)
                 goto clear;
             }
 
-            pres_t pres = parse(lres._toks, pmem, pstk);
+            pres_t pres = parse(lres._toks, mem, stk);
 
             if (pres._herr)
             {
@@ -99,7 +91,7 @@ uint8 main(uint8 argc, strp argv)
                 goto clear;
             }
 
-            igres_t igres = irgen(pres._nodes, igmem, ictx);
+            igres_t igres = irgen(pres._nodes, mem, ictx);
 
             if (igres._herr)
             {
@@ -108,20 +100,16 @@ uint8 main(uint8 argc, strp argv)
             }
 
             putc('\n', STDOUT);
-            mrir_print(igres._ir);
+            mrir_print(&igres._data, igres._ir);
             putc('\n', STDOUT);
             mrir_free(igres._ir);
 
 clear:
-            mem_clear(lmem, LMEM_SIZ);
-
-            mem_clear(pmem, PMEM_SIZ);
-            stk_clear(pstk, PSTK_SIZ);
-
-            mem_clear(igmem, IGMEM_SIZ);
+            mem_clear(mem, MEM_SIZ);
+            stk_clear(stk, STK_SIZ);
         }
 
-        code_free(code, lmem, pmem, pstk, igmem);
+        code_free(code, mem, stk);
         return 0;
     }
 
@@ -135,12 +123,12 @@ clear:
 
         str code;
 
-        mem_t lmem, pmem, igmem;
-        stk_t pstk;
+        mem_t mem;
+        stk_t stk;
 
         ictx_t ictx;
 
-        code_init(code, FIL_MAX_INP, lmem, pmem, pstk, igmem, ictx);
+        code_init(code, FIL_MAX_INP, mem, stk, ictx);
 
         uint64 siz = 0;
         while (fgets(code + siz, FIL_MAX_INP - siz, file))
@@ -151,7 +139,7 @@ clear:
             goto free;
         code[strlen(code) - 1] = '\0';
 
-        lres_t lres = lex(code, '\0', STDIN_NAM, lmem);
+        lres_t lres = lex(code, '\0', STDIN_NAM, mem);
 
         if (lres._herr)
         {
@@ -159,7 +147,7 @@ clear:
             goto free;
         }
 
-        pres_t pres = parse(lres._toks, pmem, pstk);
+        pres_t pres = parse(lres._toks, mem, stk);
 
         if (pres._herr)
         {
@@ -167,7 +155,7 @@ clear:
             goto free;
         }
 
-        igres_t igres = irgen(pres._nodes, igmem, ictx);
+        igres_t igres = irgen(pres._nodes, mem, ictx);
 
         if (igres._herr)
         {
@@ -175,13 +163,13 @@ clear:
             goto free;
         }
 
-        mrir_print(igres._ir);
+        mrir_print(&igres._data, igres._ir);
         mrir_free(igres._ir);
 
 free:
         fclose(file);
 
-        code_free(code, lmem, pmem, pstk, igmem);
+        code_free(code, mem, stk);
         return 0;
     }
 

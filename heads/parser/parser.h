@@ -16,6 +16,6 @@ struct __pres__
 typedef struct __pres__ pres_t;
 typedef struct __pres__ *pres_tp;
 
-pres_t parse(tok_tp toks, mem_t pmem, stk_t pstk);
+pres_t parse(tok_tp toks, mem_t mem, stk_t stk);
 
 #endif /* __PARSER__ */
