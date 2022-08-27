@@ -64,7 +64,7 @@ typedef struct __iblk__ *iblk_tp;
 
 struct __iint__
 {
-    uint64 _val;
+    int64 _val;
 };
 typedef struct __iint__ *int_i;
 
@@ -115,9 +115,12 @@ typedef struct __ibop__ *bop_i;
 iblk_t iblk_set1(uint8 typ, ptr blk, uint8 dtyp, uint8 prop);
 iblk_t iblk_set2(uint8 typ, uint8 dtyp, uint8 prop);
 
+uint8 iblk_cmp(iblk_t op1, iblk_t op2);
+uint8 iblkp_contains(iblk_tp blks, uint64 siz, iblk_t blk, uint64p pos);
+
 void iblk_print(idata_tp data, iblk_tp blk, cstr end);
 
-int_i iint_set(mem_t mem, uint64 val);
+int_i iint_set(mem_t mem, int64 val);
 flt_i iflt_set(mem_t mem, dec64 val);
 str_i istr_set(mem_t mem, str val, uint64 siz);
 lst_i ilst_set(mem_t mem, iblk_tp elms, uint64 siz);
