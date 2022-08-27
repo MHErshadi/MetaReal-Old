@@ -1,6 +1,11 @@
 // MetaReal Programming Language version 1.0.0
 
+#include <string.h>
+
 #include <mrir/ival.h>
+#include <mrir/ilst.h>
+#include <mrir/itpl.h>
+#include <mrir/idct.h>
 #include <mem/blk.h>
 #include <def.h>
 
@@ -32,6 +37,46 @@ iblk_t iblk_set2(uint8 typ, uint8 dtyp, uint8 prop)
     iblk._prop = prop;
 
     return iblk;
+}
+
+uint8 iblk_cmp(iblk_t op1, iblk_t op2)
+{
+    if (op1._dtyp != op2._dtyp)
+        return 0;
+
+    switch (op1._dtyp)
+    {
+    case INT_V:
+        return ((int_i)op1._blk)->_val == ((int_i)op2._blk)->_val;
+    case FLT_V:
+        return ((flt_i)op1._blk)->_val == ((flt_i)op2._blk)->_val;
+    case BOL_V:
+        return IS_TRUE(op1._prop) == IS_TRUE(op2._prop);
+    case STR_V:
+        return !strcmp(((str_i)op1._blk)->_val, ((str_i)op2._blk)->_val);
+    case LST_V:
+        return ilst_equal(op1._blk, op2._blk);
+    case TPL_V:
+        return itpl_equal(op1._blk, op2._blk);
+    case DCT_V:
+        return idct_equal(op1._blk, op2._blk);
+    }
+}
+
+uint8 iblkp_contains(iblk_tp blks, uint64 siz, iblk_t blk, uint64p pos)
+{
+    if (!siz)
+        return 0;
+
+    uint64 i;
+    for (i = 0; i < siz; i++)
+        if (iblk_cmp(blks[i], blk))
+        {
+            if (pos)
+                *pos = i;
+            return 1;
+        }
+    return 0;
 }
 
 void iblk_print(idata_tp data, iblk_tp blk, cstr end)
@@ -176,7 +221,7 @@ void iblk_print(idata_tp data, iblk_tp blk, cstr end)
     }
 }
 
-int_i iint_set(mem_t mem, uint64 val)
+int_i iint_set(mem_t mem, int64 val)
 {
     int_i blk = blk_alloc(mem, sizeof(struct __iint__), MEM_SIZ);
 

@@ -57,7 +57,7 @@ static const uint8 vals_len[7] = {7, 5, 7, 6, 4, 5, 10};
 
 iblk_t ival_add(igres_tp res, iblk_t op1, iblk_t op2, mem_t mem, ictx_t ictx, pos_t pss, pos_t pse);
 
-uint64 conv_int(cstr val, uint64 len, uint8p flg);
+int64 conv_int(cstr val, uint64 len, uint8p flg);
 dec64 conv_dec(cstr val, uint64 len, uint8p flg);
 
 #endif /* __IVAL__ */

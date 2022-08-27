@@ -103,7 +103,7 @@ void mrir_print(idata_tp data, mrir_t ir)
         uint64 i;
         for (i = 0; i < ir._msiz; i++)
         {
-            if (OPT_LVL)
+            if (!OPT_LVL)
             {
                 if (IS_USEFUL(ir._main[i]._prop))
                 {
@@ -330,14 +330,19 @@ iblk_t visit_dct(igres_tp res, node_t node, mem_t mem, ictx_t ictx)
         if (res->_herr)
             return key;
 
-        keys[i] = key;
-
         iblk_t val = visit_nod(res, nod->_vals[i], mem, ictx);
 
         if (res->_herr)
             return val;
 
-        vals[i] = val;
+        uint64 pos;
+        if (!iblkp_contains(keys, i, key, &pos))
+        {
+            keys[i] = key;
+            vals[i] = val;
+        }
+        else
+            vals[pos] = val;
 
         if (IS_USEFUL(key._prop) || IS_USEFUL(val._prop))
             is_useful = 1;
