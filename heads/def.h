@@ -17,7 +17,7 @@
 #define CMD_MAX_INP 1025
 #define FIL_MAX_INP 8193
 
-#define OPT_LVL 1
+#define OPT_LVL 0
 
 #define MEM_SIZ 65536
 #define STK_SIZ 2048

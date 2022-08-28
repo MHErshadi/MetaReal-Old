@@ -5,7 +5,9 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/heads",
-                "${workspaceFolder}/libs/heads"
+                "${workspaceFolder}/libs/heads",
+                "${workspaceFolder}/libs/heads/memory",
+                "${workspaceFolder}/libs/heads/mstring"
             ],
             "defines": [
                 "_DEBUG",
