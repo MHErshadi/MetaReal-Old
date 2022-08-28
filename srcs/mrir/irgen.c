@@ -103,7 +103,7 @@ void mrir_print(idata_tp data, mrir_t ir)
         uint64 i;
         for (i = 0; i < ir._msiz; i++)
         {
-            if (!OPT_LVL)
+            if (OPT_LVL)
             {
                 if (IS_USEFUL(ir._main[i]._prop))
                 {

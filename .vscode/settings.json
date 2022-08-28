@@ -25,6 +25,9 @@
         "irgen.h": "c",
         "ival.h": "c",
         "mstr.h": "c",
-        "stddef.h": "c"
+        "stddef.h": "c",
+        "memory.h": "c",
+        "block.h": "c",
+        "mstring.h": "c"
     }
 }
