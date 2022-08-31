@@ -1,27 +1,25 @@
 // MetaReal Programming Language version 1.0.0
 // MetaReal Memory Library version 1.0.0
 
-#include <block.h>
+#include <fblock.h>
 #include <stdlib.h>
 
-void heap_free(heap_t heap, ablock_p block)
+void heap_free(heap_t heap, ptr block)
 {
+    uint64p cast = block;
+    cast--;
+
+    uint8p dcast = (uint8p)cast;
+
     if (!heap->_fblock)
     {
-        heap->_fblock = set_fblock(block->_pos, block->_size, NULL);
-
-        if (block->_prev)
-            block->_prev->_next = block->_next;
-        if (block->_next)
-            block->_next->_prev = block->_prev;
-
-        free(block);
+        heap->_fblock = set_fblock(dcast, *cast, NULL);
         return;
     }
 
     fblock_p prev = NULL;
     fblock_p next = heap->_fblock;
-    while (next->_pos < block->_pos && next->_next)
+    while (next->_pos < dcast && next->_next)
     {
         prev = next;
         next = next->_next;
@@ -29,43 +27,31 @@ void heap_free(heap_t heap, ablock_p block)
 
     if (!prev)
     {
-        if (block->_pos + block->_size == next->_pos)
+        if (dcast + *cast == next->_pos)
         {
-            next->_pos = block->_pos;
-            next->_size += block->_size;
+            next->_pos = dcast;
+            next->_size += *cast;
         }
         else
-            heap->_fblock = set_fblock(block->_pos, block->_size, next);
+            heap->_fblock = set_fblock(dcast, *cast, next);
 
-        if (block->_prev)
-            block->_prev->_next = block->_next;
-        if (block->_next)
-            block->_next->_prev = block->_prev;
-
-        free(block);
         return;
     }
-    if (next->_pos < block->_pos)
+    if (next->_pos < dcast)
     {
-        if (next->_pos + next->_size == block->_pos)
-            next->_size += block->_size;
+        if (next->_pos + next->_size == dcast)
+            next->_size += *cast;
         else
-            next->_next = set_fblock(block->_pos, block->_size, NULL);
+            next->_next = set_fblock(dcast, *cast, NULL);
 
-        if (block->_prev)
-            block->_prev->_next = block->_next;
-        if (block->_next)
-            block->_next->_prev = block->_prev;
-
-        free(block);
         return;
     }
 
-    if (prev->_pos + prev->_size == block->_pos)
+    if (prev->_pos + prev->_size == dcast)
     {
-        prev->_size += block->_size;
+        prev->_size += *cast;
 
-        if (block->_pos + block->_size == next->_pos)
+        if (dcast + *cast == next->_pos)
         {
             prev->_size += next->_size;
             prev->_next = next->_next;
@@ -73,35 +59,15 @@ void heap_free(heap_t heap, ablock_p block)
             free(next);
         }
 
-        if (block->_prev)
-            block->_prev->_next = block->_next;
-        if (block->_next)
-            block->_next->_prev = block->_prev;
-
-        free(block);
         return;
     }
 
-    if (block->_pos + block->_size == next->_pos)
+    if (dcast + *cast == next->_pos)
     {
-        next->_pos = block->_pos;
-        next->_size += block->_size;
-
-        if (block->_prev)
-            block->_prev->_next = block->_next;
-        if (block->_next)
-            block->_next->_prev = block->_prev;
-
-        free(block);
+        next->_pos = dcast;
+        next->_size += *cast;
         return;
     }
 
-    prev->_next = set_fblock(block->_pos, block->_size, next);
-
-    if (block->_prev)
-        block->_prev->_next = block->_next;
-    if (block->_next)
-        block->_next->_prev = block->_prev;
-
-    free(block);
+    prev->_next = set_fblock(dcast, *cast, next);
 }

@@ -1,124 +1,120 @@
 // MetaReal Programming Language version 1.0.0
 
-#include <stdlib.h>
-
 #include <lexer/lexer.h>
-#include <mem/blk.h>
-#include <debug/crash.h>
+#include <stdlib.h>
+#include <crash.h>
 
-#define tok_set(t)                            \
-    do                                        \
-    {                                         \
-        pss = cpos;                           \
-                                              \
-        pos_adv(cpos);                        \
-        code++;                               \
-                                              \
-        toks[siz++] = tok_set2(t, pss, cpos); \
+#define token_set(t)                                \
+    do                                              \
+    {                                               \
+        poss = cpos;                                \
+                                                    \
+        cpos._index++;                              \
+        code++;                                     \
+                                                    \
+        tokens[size++] = token_set2(t, poss, cpos); \
     } while (0)
 
-lres_t lres_succ(tok_tp toks);
-lres_t lres_fail(ill_chr_t error);
+lres_t lres_success(token_p tokens);
+lres_t lres_fail(illegal_char_t error);
 
-cstr comment(cstr code, uint8 term, pos_tp cpos);
+cstr comment(cstr code, uint8 terminator, pos_p cpos);
 
-cstr gen_idn(tok_tp tok, mem_t mem, cstr code, pos_tp cpos);
+cstr gen_identifier(token_p token, stack_t stack, cstr code, pos_p cpos);
 
-cstr gen_num(tok_tp tok, mem_t mem, cstr code, pos_tp cpos);
+cstr gen_number(token_p token, stack_t stack, cstr code, pos_p cpos);
 
-cstr gen_str(tok_tp tok, mem_t mem, cstr code, uint8 term, pos_tp cpos);
-cstr gen_etr(tok_tp tok, mem_t mem, cstr code, uint8 term, pos_tp cpos, uint8p flg);
+cstr gen_str(token_p token, stack_t stack, cstr code, uint8 terminator, pos_p cpos);
+cstr gen_escape_str(token_p token, stack_t stack, cstr code, uint8 terminator, pos_p cpos, uint8p flag);
 
-cstr gen_double(tok_tp tok, cstr code, uint8 typ1, uint8 typ2, uint8 chr, pos_tp cpos);
-cstr gen_triple(tok_tp tok, cstr code, uint8 typ1, uint8 typ2, uint8 typ3, uint8 chr1, uint8 chr2, pos_tp cpos);
+cstr gen_double(token_p token, cstr code, uint8 type1, uint8 type2, uint8 chr, pos_p cpos);
+cstr gen_triple(token_p token, cstr code, uint8 type1, uint8 type2, uint8 type3, uint8 chr1, uint8 chr2, pos_p cpos);
 
-cstr gen_mul(tok_tp tok, cstr code, pos_tp cpos);
-cstr gen_div(tok_tp tok, cstr code, pos_tp cpos);
-cstr gen_lst(tok_tp tok, cstr code, pos_tp cpos);
-cstr gen_grt(tok_tp tok, cstr code, pos_tp cpos);
+cstr gen_multiply(token_p token, cstr code, pos_p cpos);
+cstr gen_divide(token_p token, cstr code, pos_p cpos);
+cstr gen_less(token_p token, cstr code, pos_p cpos);
+cstr gen_greater(token_p token, cstr code, pos_p cpos);
 
-lres_t lex(cstr code, uint8 term, cstr fn, mem_t mem)
+lres_t lex(cstr code, uint8 terminator, cstr file_name, stack_t stack)
 {
-    tok_tp toks = malloc(TOKS_SIZ * sizeof(tok_t));
+    token_p tokens = malloc(TOKENS_SIZE * sizeof(token_t));
+    if (!tokens)
+        alloc_error(TOKENS_SIZE * sizeof(token_t));
 
-    if (!toks)
-        mem_error(TOKS_SIZ * sizeof(tok_t));
+    uint64 alloc = TOKENS_SIZE;
+    uint64 size = 0;
 
-    uint64 alc = TOKS_SIZ;
-    uint64 siz = 0;
+    pos_t poss;
+    pos_t cpos = pos_set(0, 0, file_name);
 
-    pos_t pss;
-    pos_t cpos = pos_set(0, 0, fn);
-
-    while (*code != term)
+    while (*code != terminator)
     {
-        if (siz == alc)
+        if (size == alloc)
         {
-            toks = realloc(toks, (alc += TOKS_SIZ) * sizeof(tok_t));
-
-            if (!toks)
-                mem_error(alc * sizeof(tok_t));
+            tokens = realloc(tokens, (alloc += TOKENS_SIZE) * sizeof(token_t));
+            if (!tokens)
+                alloc_error(alloc * sizeof(token_t));
         }
 
         if (*code == ' ' || *code == '\t')
         {
-            pos_adv(cpos);
+            cpos._index++;
             code++;
             continue;
         }
 
         if (*code == '#')
         {
-            code = comment(code, term, &cpos);
+            code = comment(code, terminator, &cpos);
             continue;
         }
 
         if (*code == '\n')
         {
-            pss = cpos;
+            poss = cpos;
 
-            pos_jmp(cpos);
+            pos_jump(cpos);
             code++;
 
-            if (toks[siz - 1]._typ == NLN_T)
+            if (tokens[size - 1]._type == NEWLINE_T)
                 continue;
 
-            toks[siz++] = tok_set2(NLN_T, pss, cpos);
+            tokens[size++] = token_set2(NEWLINE_T, poss, cpos);
             continue;
         }
         if (*code == ';')
         {
-            pss = cpos;
+            poss = cpos;
 
-            pos_adv(cpos);
+            cpos._index++;
             code++;
 
-            toks[siz++] = tok_set2(SEM_T, pss, cpos);
+            tokens[size++] = token_set2(SEMICOLON_T, poss, cpos);
             continue;
         }
 
         if (*code == '\\')
         {
-            uint8 flg = 0;
-            code = gen_etr(&toks[siz++], mem, code, term, &cpos, &flg);
+            uint8 flag = 0;
+            code = gen_escape_str(&tokens[size++], stack, code, terminator, &cpos, &flag);
 
-            if (flg)
+            if (flag)
             {
-                free(toks);
-                return lres_fail(ill_chr_set(*code, cpos));
+                free(tokens);
+                return lres_fail(illegal_char_set(*code, cpos));
             }
             continue;
         }
 
         if ((*code >= 'a' && *code <= 'z') || (*code >= 'A' && *code <= 'Z') || *code == '_')
         {
-            code = gen_idn(&toks[siz++], mem, code, &cpos);
+            code = gen_identifier(&tokens[size++], stack, code, &cpos);
             continue;
         }
 
         if (*code >= '0' && *code <= '9')
         {
-            code = gen_num(&toks[siz++], mem, code, &cpos);
+            code = gen_number(&tokens[size++], stack, code, &cpos);
             continue;
         }
 
@@ -126,617 +122,589 @@ lres_t lex(cstr code, uint8 term, cstr fn, mem_t mem)
         {
         case '"':
         case '\'':
-            code = gen_str(&toks[siz++], mem, code, term, &cpos);
+            code = gen_str(&tokens[size++], stack, code, terminator, &cpos);
             break;
 
         case '+':
-            code = gen_triple(&toks[siz++], code, ADD_T, ADE_T, INC_T, '=', '+', &cpos);
+            code = gen_triple(&tokens[size++], code, ADD_T, ADD_EQ_T, INCREMENT_T, '=', '+', &cpos);
             break;
         case '-':
-            code = gen_triple(&toks[siz++], code, SUB_T, SBE_T, DEC_T, '=', '-', &cpos);
+            code = gen_triple(&tokens[size++], code, SUBTRACT_T, SUBTRACT_EQ_T, DECREMENT_T, '=', '-', &cpos);
             break;
         case '*':
-            code = gen_mul(&toks[siz++], code, &cpos);
+            code = gen_multiply(&tokens[size++], code, &cpos);
             break;
         case '/':
-            code = gen_div(&toks[siz++], code, &cpos);
+            code = gen_divide(&tokens[size++], code, &cpos);
             break;
         case '%':
-            code = gen_double(&toks[siz++], code, MOD_T, MDE_T, '=', &cpos);
+            code = gen_double(&tokens[size++], code, MODULO_T, MODULO_EQ_T, '=', &cpos);
             break;
 
         case '&':
-            code = gen_triple(&toks[siz++], code, BAN_T, AND_T, BAE_T, '&', '=', &cpos);
+            code = gen_triple(&tokens[size++], code, B_AND_T, AND_T, B_AND_EQ_T, '&', '=', &cpos);
             break;
         case '|':
-            code = gen_triple(&toks[siz++], code, BIO_T, IOR_T, BIE_T, '|', '=', &cpos);
+            code = gen_triple(&tokens[size++], code, B_IOR_T, IOR_T, B_IOR_EQ_T, '|', '=', &cpos);
             break;
         case '^':
-            code = gen_triple(&toks[siz++], code, BXO_T, XOR_T, BXE_T, '^', '=', &cpos);
+            code = gen_triple(&tokens[size++], code, B_XOR_T, XOR_T, B_XOR_EQ_T, '^', '=', &cpos);
             break;
 
         case '~':
-            tok_set(BNT_T);
+            token_set(B_NOT_T);
             break;
 
         case '<':
-            code = gen_lst(&toks[siz++], code, &cpos);
+            code = gen_less(&tokens[size++], code, &cpos);
             break;
         case '>':
-            code = gen_grt(&toks[siz++], code, &cpos);
+            code = gen_greater(&tokens[size++], code, &cpos);
             break;
         case '=':
-            code = gen_double(&toks[siz++], code, ASN_T, EQU_T, '=', &cpos);
+            code = gen_double(&tokens[size++], code, ASSIGN_T, EQUAL_T, '=', &cpos);
             break;
 
         case '!':
-            code = gen_double(&toks[siz++], code, NOT_T, NEQ_T, '=', &cpos);
+            code = gen_double(&tokens[size++], code, NOT_T, NEQUAL_T, '=', &cpos);
             break;
 
         case '(':
-            tok_set(LPR_T);
+            token_set(LPAREN_T);
             break;
         case ')':
-            tok_set(RPR_T);
+            token_set(RPAREN_T);
             break;
 
         case '{':
-            tok_set(LCB_T);
+            token_set(LCURLY_BRACE_T);
             break;
         case '}':
-            tok_set(RCB_T);
+            token_set(RCURLY_BRACE_T);
             break;
 
         case '[':
-            tok_set(LSB_T);
+            token_set(LSQUARE_BRACE_T);
             break;
         case ']':
-            tok_set(RSB_T);
+            token_set(RSQUARE_BRACE_T);
             break;
 
         case '.':
-            tok_set(DOT_T);
+            token_set(DOT_T);
             break;
         case ':':
-            tok_set(COL_T);
+            token_set(COLON_T);
             break;
 
         case '?':
-            tok_set(QUE_T);
+            token_set(QUESTION_T);
             break;
         case '$':
-            tok_set(DLR_T);
+            token_set(DOLLAR_T);
             break;
         case ',':
-            tok_set(CMA_T);
+            token_set(COMMA_T);
             break;
         default:
-            free(toks);
-            return lres_fail(ill_chr_set(*code, cpos));
+            free(tokens);
+            return lres_fail(illegal_char_set(*code, cpos));
         }
     }
 
-    toks = realloc(toks, (siz + 1) * sizeof(tok_t));
+    if (alloc != size + 1)
+    {
+        tokens = realloc(tokens, (size + 1) * sizeof(token_t));
+        if (!tokens)
+            alloc_error((size + 1) * sizeof(token_t));
+    }
 
-    if (!toks)
-        mem_error((siz + 1) * sizeof(tok_t));
+    poss = cpos;
+    cpos._index++;
 
-    pss = cpos;
-    pos_adv(cpos);
+    tokens[size] = token_set2(EOF_T, poss, cpos);
 
-    toks[siz] = tok_set2(EOF_T, pss, cpos);
-
-    return lres_succ(toks);
+    return lres_success(tokens);
 }
 
-lres_t lres_succ(tok_tp toks)
+lres_t lres_success(token_p tokens)
 {
     lres_t res;
 
-    res._toks = toks;
-    res._herr = 0;
+    res._tokens = tokens;
+    res._has_error = 0;
 
     return res;
 }
 
-lres_t lres_fail(ill_chr_t error)
+lres_t lres_fail(illegal_char_t error)
 {
     lres_t res;
 
     res._error = error;
-    res._herr = 1;
+    res._has_error = 1;
 
     return res;
 }
 
-cstr comment(cstr code, uint8 term, pos_tp cpos)
+cstr comment(cstr code, uint8 terminator, pos_p cpos)
 {
-    posp_adv(cpos);
+    cpos->_index++;
     code++;
 
     if (*code == '*')
     {
-        posp_adv(cpos);
+        cpos->_index++;
         code++;
 
-        while (*code != term)
+        while (*code != terminator)
         {
             if (*code == '*')
             {
-                posp_adv(cpos);
+                cpos->_index++;
                 code++;
 
                 if (*code == '#')
                 {
-                    posp_adv(cpos);
+                    cpos->_index++;
                     return ++code;
                 }
             }
 
             if (*code++ == '\n')
-                posp_jmp(cpos);
+                posp_jump(cpos);
             else
-                posp_adv(cpos);
+                cpos->_index++;
         }
 
         return code;
     }
 
-    while (*code != term)
+    while (*code != terminator)
     {
         if (*code++ == '\n')
         {
-            posp_jmp(cpos);
+            posp_jump(cpos);
             return code;
         }
 
-        posp_adv(cpos);
+        cpos->_index++;
     }
 
     return code;
 }
 
-cstr gen_idn(tok_tp tok, mem_t mem, cstr code, pos_tp cpos)
+cstr gen_identifier(token_p token, stack_t stack, cstr code, pos_p cpos)
 {
-    pos_t pss = *cpos;
+    pos_t poss = *cpos;
 
-    str idn = blk_alloc(mem, GIDN_SIZ, MEM_SIZ);
-    uint64 alc = GIDN_SIZ;
-    uint64 siz = 0;
+    str identifier = stack_alloc(stack, IDENTIFIER_SIZE);
+
+    uint64 alloc = IDENTIFIER_SIZE;
+    uint64 size = 0;
 
     do
     {
-        if (siz == alc)
+        if (size == alloc)
         {
-            blk_add(mem, GIDN_SIZ, MEM_SIZ);
-            alc += GIDN_SIZ;
+            stack_increase(stack, IDENTIFIER_SIZE);
+            alloc += IDENTIFIER_SIZE;
         }
 
-        idn[siz++] = *code++;
-        posp_adv(cpos);
+        identifier[size++] = *code++;
+        cpos->_index++;
     } while ((*code >= 'a' && *code <= 'z') || (*code >= 'A' && *code <= 'Z') || *code == '_');
 
-    if (siz == alc)
-        blk_add(mem, 1, MEM_SIZ);
+    if (size == alloc)
+        stack_increase(stack, 1);
 
-    idn[siz++] = '\0';
+    identifier[size++] = '\0';
 
-    uint8 kwd = is_kwd(idn);
-    if (kwd == 255)
+    uint8 keyword = is_keyword(identifier);
+    if (keyword == 255)
     {
-        *tok = tok_set1(IDN_T, idn, 0, pss, *cpos);
+        *token = token_set1(IDENTIFIER_T, identifier, 0, poss, *cpos);
 
-        blk_sub(mem, idn, siz);
+        if (size != alloc)
+            stack_shrink(stack, identifier, size);
     }
     else
     {
-        *tok = tok_set2(kwd, pss, *cpos);
+        *token = token_set2(keyword, poss, *cpos);
 
-        blk_free(mem, idn);
+        stack_free(stack, identifier);
     }
 
     return code;
 }
 
-cstr gen_num(tok_tp tok, mem_t mem, cstr code, pos_tp cpos)
+cstr gen_number(token_p token, stack_t stack, cstr code, pos_p cpos)
 {
-    pos_t pss = *cpos;
+    pos_t poss = *cpos;
 
-    str num = blk_alloc(mem, GNUM_SIZ, MEM_SIZ);
-    uint64 alc = GNUM_SIZ;
-    uint64 siz = 0;
+    str number = stack_alloc(stack, NUMBER_SIZE);
 
-    uint8 isf = 0;
+    uint64 alloc = NUMBER_SIZE;
+    uint64 size = 0;
 
+    uint8 is_float = 0;
     do
     {
-        if (siz == alc)
+        if (size == alloc)
         {
-            blk_add(mem, GNUM_SIZ, MEM_SIZ);
-            alc += GNUM_SIZ;
+            stack_increase(stack, NUMBER_SIZE);
+            alloc += NUMBER_SIZE;
         }
 
         if (*code == '.')
         {
-            if (isf)
+            if (is_float)
                 break;
-            isf = 1;
+            is_float = 1;
         }
 
-        num[siz++] = *code++;
-        posp_adv(cpos);
+        number[size++] = *code++;
+        cpos->_index++;
     } while ((*code >= '0' && *code <= '9') || *code == '.');
 
-    if (*code == 'e')
+    if (size == alloc)
     {
-        isf = 1;
+        stack_increase(stack, 1);
 
-        if (siz == alc)
-        {
-            blk_add(mem, GEXP_SIZ, MEM_SIZ);
-            alc += GEXP_SIZ;
-        }
-
-        num[siz++] = *code++;
-        posp_adv(cpos);
-
-        if (*code == '+' || *code == '-')
-        {
-            if (siz == alc)
-            {
-                blk_add(mem, GEXP_SIZ, MEM_SIZ);
-                alc += GEXP_SIZ;
-            }
-
-            num[siz++] = *code++;
-            posp_adv(cpos);
-        }
-
-        while (*code >= '0' && *code <= '9')
-        {
-            if (siz == alc)
-            {
-                blk_add(mem, GEXP_SIZ, MEM_SIZ);
-                alc += GEXP_SIZ;
-            }
-
-            num[siz++] = *code++;
-            posp_adv(cpos);
-        }
-    }
-
-    if (siz == alc)
-    {
-        blk_add(mem, 1, MEM_SIZ);
-
-        num[siz++] = '\0';
+        number[size++] = '\0';
     }
     else
     {
-        num[siz++] = '\0';
+        number[size++] = '\0';
 
-        blk_sub(mem, num, siz);
+        if (size != alloc)
+            stack_shrink(stack, number, size);
     }
 
-    if (isf)
-        *tok = tok_set1(FLT_T, num, siz, pss, *cpos);
+    if (is_float)
+        *token = token_set1(FLOAT_T, number, size, poss, *cpos);
     else
-        *tok = tok_set1(INT_T, num, siz, pss, *cpos);
+        *token = token_set1(INT_T, number, size, poss, *cpos);
 
     return code;
 }
 
-cstr gen_str(tok_tp tok, mem_t mem, cstr code, uint8 term, pos_tp cpos)
+cstr gen_str(token_p token, stack_t stack, cstr code, uint8 terminator, pos_p cpos)
 {
-    pos_t pss = *cpos;
+    pos_t poss = *cpos;
+
     uint8 quote = *code++;
-    posp_adv(cpos);
+    cpos->_index++;
 
     if (*code == quote)
     {
-        posp_adv(cpos);
+        cpos->_index++;
 
-        *tok = tok_set2(STR_T, pss, *cpos);
+        *token = token_set2(STR_T, poss, *cpos);
 
         return ++code;
     }
 
-    str str = blk_alloc(mem, GSTR_SIZ, MEM_SIZ);
-    uint64 alc = GSTR_SIZ;
-    uint64 siz = 0;
+    str str = stack_alloc(stack, STRING_SIZE);
 
-    uint8 spc_chr = 0;
-    while ((*code != quote || spc_chr) && *code != term)
+    uint64 alloc = STRING_SIZE;
+    uint64 size = 0;
+
+    uint8 escape_chr = 0;
+    while ((*code != quote || escape_chr) && *code != terminator)
     {
-        if (siz == alc)
+        if (size == alloc)
         {
-            blk_add(mem, GSTR_SIZ, MEM_SIZ);
-            alc += GSTR_SIZ;
+            stack_increase(stack, STRING_SIZE);
+            alloc += STRING_SIZE;
         }
 
-        if (*code == '\\' && !spc_chr)
+        if (*code == '\\' && !escape_chr)
         {
-            spc_chr = 1;
+            escape_chr = 1;
 
-            posp_adv(cpos);
+            cpos->_index++;
 
-            str[siz++] = *code++;
+            str[size++] = *code++;
             continue;
         }
 
-        spc_chr = 0;
+        escape_chr = 0;
 
         if (*code == '\n')
-            posp_jmp(cpos);
+            posp_jump(cpos);
         else
-            posp_adv(cpos);
+            cpos->_index++;
 
-        str[siz++] = *code++;
+        str[size++] = *code++;
     }
 
-    posp_adv(cpos);
+    cpos->_index++;
 
-    if (siz == alc)
+    if (size == alloc)
     {
-        blk_add(mem, 1, MEM_SIZ);
+        stack_increase(stack, 1);
 
-        str[siz++] = '\0';
+        str[size++] = '\0';
     }
     else
     {
-        str[siz++] = '\0';
+        str[size++] = '\0';
 
-        blk_sub(mem, str, siz);
+        if (size != alloc)
+            stack_shrink(stack, str, size);
     }
 
-    *tok = tok_set1(STR_T, str, siz, pss, *cpos);
+    *token = token_set1(STR_T, str, size, poss, *cpos);
 
     return ++code;
 }
 
-cstr gen_etr(tok_tp tok, mem_t mem, cstr code, uint8 term, pos_tp cpos, uint8p flg)
+cstr gen_escape_str(token_p token, stack_t stack, cstr code, uint8 terminator, pos_p cpos, uint8p flag)
 {
     if (*(code + 1) != '"' && *(code + 1) != '\'')
     {
-        *flg = 1;
+        *flag = 1;
         return code;
     }
 
-    pos_t pss = *cpos;
-    posp_adv(cpos);
+    pos_t poss = *cpos;
+    cpos->_index++;
     code++;
 
     uint8 quote = *code++;
-    posp_adv(cpos);
+    cpos->_index++;
 
     if (*code == quote)
     {
-        posp_adv(cpos);
+        cpos->_index++;
 
-        *tok = tok_set2(STR_T, pss, *cpos);
+        *token = token_set2(STR_T, poss, *cpos);
 
         return ++code;
     }
 
-    str str = blk_alloc(mem, GSTR_SIZ, MEM_SIZ);
-    uint64 alc = GSTR_SIZ;
-    uint64 siz = 0;
+    str str = stack_alloc(stack, STRING_SIZE);
 
-    while (*code != quote && *code != term)
+    uint64 alloc = STRING_SIZE;
+    uint64 size = 0;
+
+    while (*code != quote && *code != terminator)
     {
-        if (siz == alc)
+        if (size == alloc)
         {
-            blk_add(mem, GSTR_SIZ, MEM_SIZ);
-            alc += GSTR_SIZ;
+            stack_increase(stack, STRING_SIZE);
+            alloc += STRING_SIZE;
         }
 
         if (*code == '\n')
-            posp_jmp(cpos);
+            posp_jump(cpos);
         else
-            posp_adv(cpos);
+            cpos->_index++;
 
         if (*code == '\\')
         {
-            str[siz++] = *code++;
+            str[size++] = *code++;
 
-            if (siz == alc)
+            if (size == alloc)
             {
-                blk_add(mem, GSTR_SIZ, MEM_SIZ);
-                alc += GSTR_SIZ;
+                stack_increase(stack, STRING_SIZE);
+                alloc += STRING_SIZE;
             }
 
-            str[siz++] = '\\';
+            str[size++] = '\\';
             continue;
         }
 
-        str[siz++] = *code++;
+        str[size++] = *code++;
     }
 
-    posp_adv(cpos);
+    cpos->_index++;
 
-    if (siz == alc)
+    if (size == alloc)
     {
-        blk_add(mem, 1, MEM_SIZ);
+        stack_increase(stack, 1);
 
-        str[siz++] = '\0';
+        str[size++] = '\0';
     }
     else
     {
-        str[siz++] = '\0';
+        str[size++] = '\0';
 
-        blk_sub(mem, str, siz);
+        if (size != alloc)
+            stack_shrink(stack, str, size);
     }
 
-    *tok = tok_set1(STR_T, str, siz, pss, *cpos);
+    *token = token_set1(STR_T, str, size, poss, *cpos);
 
     return ++code;
 }
 
-cstr gen_double(tok_tp tok, cstr code, uint8 typ1, uint8 typ2, uint8 chr, pos_tp cpos)
+cstr gen_double(token_p token, cstr code, uint8 type1, uint8 type2, uint8 chr, pos_p cpos)
 {
-    pos_t pss = *cpos;
-    posp_adv(cpos);
+    pos_t poss = *cpos;
+    cpos->_index++;
 
     if (*++code == chr)
     {
-        posp_adv(cpos);
+        cpos->_index++;
 
-        *tok = tok_set2(typ2, pss, *cpos);
+        *token = token_set2(type2, poss, *cpos);
         return ++code;
     }
 
-    *tok = tok_set2(typ1, pss, *cpos);
+    *token = token_set2(type1, poss, *cpos);
     return code;
 }
 
-cstr gen_triple(tok_tp tok, cstr code, uint8 typ1, uint8 typ2, uint8 typ3, uint8 chr1, uint8 chr2, pos_tp cpos)
+cstr gen_triple(token_p token, cstr code, uint8 type1, uint8 type2, uint8 type3, uint8 chr1, uint8 chr2, pos_p cpos)
 {
-    pos_t pss = *cpos;
-    posp_adv(cpos);
+    pos_t poss = *cpos;
+    cpos->_index++;
 
     if (*++code == chr1)
     {
-        posp_adv(cpos);
+        cpos->_index++;
 
-        *tok = tok_set2(typ2, pss, *cpos);
+        *token = token_set2(type2, poss, *cpos);
         return ++code;
     }
     if (*code == chr2)
     {
-        posp_adv(cpos);
+        cpos->_index++;
 
-        *tok = tok_set2(typ3, pss, *cpos);
+        *token = token_set2(type3, poss, *cpos);
         return ++code;
     }
 
-    *tok = tok_set2(typ1, pss, *cpos);
+    *token = token_set2(type1, poss, *cpos);
     return code;
 }
 
-cstr gen_mul(tok_tp tok, cstr code, pos_tp cpos)
+cstr gen_multiply(token_p token, cstr code, pos_p cpos)
 {
-    pos_t pss = *cpos;
-    posp_adv(cpos);
+    pos_t poss = *cpos;
+    cpos->_index++;
 
     if (*++code == '=')
     {
-        posp_adv(cpos);
+        cpos->_index++;
 
-        *tok = tok_set2(MLE_T, pss, *cpos);
+        *token = token_set2(MULTIPLY_EQ_T, poss, *cpos);
         return ++code;
     }
     if (*code == '*')
     {
-        posp_adv(cpos);
+        cpos->_index++;
 
         if (*++code == '=')
         {
-            posp_adv(cpos);
+            cpos->_index++;
 
-            *tok = tok_set2(PWE_T, pss, *cpos);
+            *token = token_set2(POWER_EQ_T, poss, *cpos);
             return ++code;
         }
 
-        *tok = tok_set2(POW_T, pss, *cpos);
+        *token = token_set2(POWER_T, poss, *cpos);
         return code;
     }
 
-    *tok = tok_set2(MUL_T, pss, *cpos);
+    *token = token_set2(MULTIPLY_T, poss, *cpos);
     return code;
 }
 
-cstr gen_div(tok_tp tok, cstr code, pos_tp cpos)
+cstr gen_divide(token_p token, cstr code, pos_p cpos)
 {
-    pos_t pss = *cpos;
-    posp_adv(cpos);
+    pos_t poss = *cpos;
+    cpos->_index++;
 
     if (*++code == '=')
     {
-        posp_adv(cpos);
+        cpos->_index++;
 
-        *tok = tok_set2(DVE_T, pss, *cpos);
+        *token = token_set2(DIVIDE_EQ_T, poss, *cpos);
         return ++code;
     }
     if (*code == '/')
     {
-        posp_adv(cpos);
+        cpos->_index++;
 
         if (*++code == '=')
         {
-            posp_adv(cpos);
+            cpos->_index++;
 
-            *tok = tok_set2(QTE_T, pss, *cpos);
+            *token = token_set2(QUOTIENT_EQ_T, poss, *cpos);
             return ++code;
         }
 
-        *tok = tok_set2(QOT_T, pss, *cpos);
+        *token = token_set2(QUOTIENT_T, poss, *cpos);
         return code;
     }
 
-    *tok = tok_set2(DIV_T, pss, *cpos);
+    *token = token_set2(DIVIDE_T, poss, *cpos);
     return code;
 }
 
-cstr gen_lst(tok_tp tok, cstr code, pos_tp cpos)
+cstr gen_less(token_p token, cstr code, pos_p cpos)
 {
-    pos_t pss = *cpos;
-    posp_adv(cpos);
+    pos_t poss = *cpos;
+    cpos->_index++;
 
     if (*++code == '=')
     {
-        posp_adv(cpos);
+        cpos->_index++;
 
-        *tok = tok_set2(LTE_T, pss, *cpos);
+        *token = token_set2(LESS_EQUAL_T, poss, *cpos);
         return ++code;
     }
     if (*code == '<')
     {
-        posp_adv(cpos);
+        cpos->_index++;
 
         if (*++code == '=')
         {
-            posp_adv(cpos);
+            cpos->_index++;
 
-            *tok = tok_set2(LSE_T, pss, *cpos);
+            *token = token_set2(LSHIFT_EQ_T, poss, *cpos);
             return ++code;
         }
 
-        *tok = tok_set2(LSH_T, pss, *cpos);
+        *token = token_set2(LSHIFT_T, poss, *cpos);
         return code;
     }
 
-    *tok = tok_set2(LST_T, pss, *cpos);
+    *token = token_set2(LESS_T, poss, *cpos);
     return code;
 }
 
-cstr gen_grt(tok_tp tok, cstr code, pos_tp cpos)
+cstr gen_greater(token_p token, cstr code, pos_p cpos)
 {
-    pos_t pss = *cpos;
-    posp_adv(cpos);
+    pos_t poss = *cpos;
+    cpos->_index++;
 
     if (*++code == '=')
     {
-        posp_adv(cpos);
+        cpos->_index++;
 
-        *tok = tok_set2(GTE_T, pss, *cpos);
+        *token = token_set2(GREATER_EQUAL_T, poss, *cpos);
         return ++code;
     }
     if (*code == '>')
     {
-        posp_adv(cpos);
+        cpos->_index++;
 
         if (*++code == '=')
         {
-            posp_adv(cpos);
+            cpos->_index++;
 
-            *tok = tok_set2(RSE_T, pss, *cpos);
+            *token = token_set2(RSHIFT_EQ_T, poss, *cpos);
             return ++code;
         }
 
-        *tok = tok_set2(RSH_T, pss, *cpos);
+        *token = token_set2(RSHIFT_T, poss, *cpos);
         return code;
     }
 
-    *tok = tok_set2(GRT_T, pss, *cpos);
+    *token = token_set2(GREATER_T, poss, *cpos);
     return code;
 }

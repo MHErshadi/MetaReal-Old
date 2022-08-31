@@ -1,70 +1,43 @@
 // MetaReal Programming Language version 1.0.0
 // MetaReal Memory Library version 1.0.0
 
-#include <block.h>
+#include <fblock.h>
 #include <stdlib.h>
 #include <crash.h>
 
-ptr heap_expand(heap_t heap, ablock_p block, uint64 size, uint64 alt_size)
+ptr heap_expand(heap_t heap, ptr block, uint64 size)
 {
-    uint64 add = size - block->_size;
-
     if (!heap->_fblock)
-    {
-        increase_heap(heap, alt_size);
+        heap_alloc_error(heap);
 
-        while (size > heap->_fblock->_size)
-            increase_heap(heap, alt_size);
+    uint64p cast = block;
+    cast--;
 
-        if (size == heap->_fblock->_size)
-        {
-            uint64 i;
-            for (i = 0; i < block->_size; i++)
-                heap->_fblock->_pos[i] = block->_pos[i];
-
-            free(heap->_fblock);
-            heap->_fblock = set_fblock(block->_pos, block->_size, NULL);
-
-            block->_pos = heap->_fblock->_pos;
-            block->_size = size;
-            return block->_pos;
-        }
-
-        uint64 i;
-        for (i = 0; i < block->_size; i++)
-            heap->_fblock->_pos[i] = block->_pos[i];
-
-        block->_pos = heap->_fblock->_pos;
-        block->_size = size;
-
-        heap->_fblock->_pos += add;
-        heap->_fblock->_size -= add;
-        heap->_fblock = set_fblock(block->_pos, block->_size, heap->_fblock);
-
-        return block->_pos;
-    }
+    uint8p dcast = (uint8p)cast;
 
     fblock_p prev = NULL;
     fblock_p next = heap->_fblock;
-    while (next->_pos < block->_pos && next->_next)
+    while (next->_pos < dcast && next->_next)
     {
         prev = next;
         next = next->_next;
     }
 
-    if (block->_pos + block->_size == next->_pos)
+    if (dcast + *cast == next->_pos)
     {
+        uint64 add = size - *cast;
+
         if (add == next->_size)
         {
-            block->_size = size;
-
             if (prev)
                 prev->_next = next->_next;
             else
                 heap->_fblock = next->_next;
             free(next);
 
-            return block->_pos;
+            *cast = size;
+
+            return ++cast;
         }
 
         if (add < next->_size)
@@ -72,37 +45,37 @@ ptr heap_expand(heap_t heap, ablock_p block, uint64 size, uint64 alt_size)
             next->_pos += add;
             next->_size -= add;
 
-            block->_size = size;
+            *cast = size;
 
-            return block->_pos;
+            return ++cast;
         }
 
-        if (prev && prev->_pos + prev->_size == block->_pos)
+        if (prev && prev->_pos + prev->_size == dcast)
         {
-            prev->_size += block->_size + next->_size;
+            prev->_size += *cast + next->_size;
             prev->_next = next->_next;
 
             free(next);
         }
         else
         {
-            next->_pos -= block->_size;
-            next->_size += block->_size;
+            next->_pos -= *cast;
+            next->_size += *cast;
         }
     }
-    else if (prev && prev->_pos + prev->_size == block->_pos)
-        prev->_size += block->_size;
+    else if (prev && prev->_pos + prev->_size == dcast)
+        prev->_size += *cast;
     else
     {
-        if (next->_pos > block->_pos)
+        if (next->_pos > dcast)
         {
             if (prev)
-                prev->_next = set_fblock(block->_pos, block->_size, next);
+                prev->_next = set_fblock(dcast, *cast, next);
             else
-                heap->_fblock = set_fblock(block->_pos, block->_size, next);
+                heap->_fblock = set_fblock(dcast, *cast, next);
         }
         else
-            next->_next = set_fblock(block->_pos, block->_size, NULL);
+            next->_next = set_fblock(dcast, *cast, NULL);
     }
 
     prev = NULL;
@@ -114,57 +87,16 @@ ptr heap_expand(heap_t heap, ablock_p block, uint64 size, uint64 alt_size)
     }
 
     if (fit->_size < size)
-    {
-        increase_heap(heap, alt_size);
-
-        if (fit->_next)
-        {
-            prev = fit;
-            fit = fit->_next;
-        }
-
-        while (size > fit->_size)
-            increase_heap(heap, alt_size);
-
-        if (size == fit->_size)
-        {
-            uint64 i;
-            for (i = 0; i < block->_size; i++)
-                fit->_pos[i] = block->_pos[i];
-
-            block->_pos = fit->_pos;
-            block->_size = size;
-
-            if (prev)
-                prev->_next = NULL;
-            else
-                heap->_fblock = NULL;
-            free(fit);
-
-            return block->_pos;
-        }
-
-        uint64 i;
-        for (i = 0; i < block->_size; i++)
-            fit->_pos[i] = block->_pos[i];
-
-        block->_pos = fit->_pos;
-        block->_size = size;
-
-        fit->_pos += size;
-        fit->_size -= size;
-
-        return block->_pos;
-    }
+        heap_alloc_error(heap);
 
     if (size == fit->_size)
     {
         uint64 i;
-        for (i = 0; i < block->_size; i++)
-            fit->_pos[i] = block->_pos[i];
+        for (i = sizeof(uint64); i < *cast; i++)
+            fit->_pos[i] = dcast[i];
 
-        block->_pos = fit->_pos;
-        block->_size = size;
+        cast = (uint64p)fit->_pos;
+        *cast = size;
 
         if (prev)
             prev->_next = fit->_next;
@@ -172,18 +104,18 @@ ptr heap_expand(heap_t heap, ablock_p block, uint64 size, uint64 alt_size)
             heap->_fblock = fit->_next;
         free(fit);
 
-        return block->_pos;
+        return ++cast;
     }
 
     uint64 i;
-    for (i = 0; i < block->_size; i++)
-        fit->_pos[i] = block->_pos[i];
+    for (i = sizeof(uint64); i < *cast; i++)
+        fit->_pos[i] = dcast[i];
 
-    block->_pos = fit->_pos;
-    block->_size = size;
+    cast = (uint64p)fit->_pos;
+    *cast = size;
 
     fit->_pos += size;
     fit->_size -= size;
 
-    return block->_pos;
+    return ++cast;
 }

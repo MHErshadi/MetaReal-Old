@@ -1,36 +1,34 @@
 // MetaReal Programming Language version 1.0.0
 
-#ifndef __POS__
-#define __POS__
+#ifndef __M_POS__
+#define __M_POS__
 
-#include <type.h>
+#include <ctypes.h>
 
 struct __pos__
 {
-    uint64 _idx;
-    uint64 _ln;
+    uint64 _index;
+    uint64 _line;
 
-    cstr _fn;
+    cstr _file_name;
 };
 typedef struct __pos__ pos_t;
-typedef struct __pos__ *pos_tp;
+typedef struct __pos__ *pos_p;
 
-pos_t pos_set(uint64 idx, uint64 ln, cstr fn);
+pos_t pos_set(uint64 index, uint64 line, cstr file_name);
 
-#define pos_adv(p) p._idx++
-#define pos_jmp(p) \
-    do             \
-    {              \
-        p._idx++;  \
-        p._ln++;   \
-    } while (0)
-
-#define posp_adv(p) p->_idx++
-#define posp_jmp(p) \
+#define pos_jump(p)  \
     do              \
     {               \
-        p->_idx++;  \
-        p->_ln++;   \
+        p._index++; \
+        p._line++;  \
     } while (0)
 
-#endif /* __POS__ */
+#define posp_jump(p)  \
+    do               \
+    {                \
+        p->_index++; \
+        p->_line++;  \
+    } while (0)
+
+#endif /* __M_POS__ */

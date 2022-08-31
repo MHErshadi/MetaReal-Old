@@ -2,13 +2,13 @@
 
 #include <debug/pos.h>
 
-pos_t pos_set(uint64 idx, uint64 ln, cstr fn)
+pos_t pos_set(uint64 index, uint64 line, cstr file_name)
 {
     pos_t pos;
 
-    pos._idx = idx;
-    pos._ln = ln;
-    pos._fn = fn;
+    pos._index = index;
+    pos._line = line;
+    pos._file_name = file_name;
 
     return pos;
 }

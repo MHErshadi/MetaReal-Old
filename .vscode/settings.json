@@ -28,6 +28,12 @@
         "stddef.h": "c",
         "memory.h": "c",
         "block.h": "c",
-        "mstring.h": "c"
+        "mstring.h": "c",
+        "ctypes.h": "c",
+        "token.h": "c",
+        "context.h": "c",
+        "fblock.h": "c",
+        "math.h": "c",
+        "mfloat.h": "c"
     }
 }

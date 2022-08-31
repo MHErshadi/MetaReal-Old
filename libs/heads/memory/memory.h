@@ -19,29 +19,21 @@ struct __stack__
 typedef struct __stack__ stack_t[1];
 
 void alloc_stack(stack_t stack, uint64 size);
-void increase_stack(stack_t stack, uint64 add);
 
-void clear_stack(stack_t stack, uint64 size);
+void clear_stack(stack_t stack);
 void free_stack(stack_t stack);
 
 /* */
 
-ptr stack_alloc(stack_t stack, uint64 size, uint64 alt_size);
+ptr stack_alloc(stack_t stack, uint64 size);
+
+void stack_increase(stack_t stack, uint64 add);
+
+void stack_shrink(stack_t stack, ptr block, uint64 size);
 
 void stack_free(stack_t stack, ptr block);
 
 /* heap */
-
-struct __ablock__
-{
-    uint8p _pos;
-    uint64 _size;
-
-    struct __ablock__ *_prev;
-    struct __ablock__ *_next;
-};
-typedef struct __ablock__ ablock_t;
-typedef struct __ablock__ *ablock_p;
 
 struct __fblock__
 {
@@ -58,27 +50,24 @@ struct __heap__
     uint8p _data;
     uint64 _size;
 
-    ablock_p _ablock;
     fblock_p _fblock;
 };
 typedef struct __heap__ heap_t[1];
 
 void alloc_heap(heap_t heap, uint64 size);
 
-void increase_heap(heap_t heap, uint64 add);
-void clear_heap(heap_t heap, uint64 size);
-
+void clear_heap(heap_t heap);
 void free_heap(heap_t heap);
 
 /* */
 
-ablock_p heap_alloc(heap_t heap, uint64 size, uint64 alt_size);
+ptr heap_alloc(heap_t heap, uint64 size);
 
-ptr heap_increase(heap_t heap, ablock_p block, uint64 add, uint64 alt_size);
+ptr heap_increase(heap_t heap, ptr block, uint64 add);
 
-ptr heap_expand(heap_t heap, ablock_p block, uint64 size, uint64 alt_size);
-void heap_shrink(heap_t heap, ablock_p block, uint64 size);
+ptr heap_expand(heap_t heap, ptr block, uint64 size);
+void heap_shrink(heap_t heap, ptr block, uint64 size);
 
-void heap_free(heap_t heap, ablock_p block);
+void heap_free(heap_t heap, ptr block);
 
 #endif /* __M_MEMORY__ */
