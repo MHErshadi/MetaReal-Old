@@ -1,359 +1,357 @@
 // MetaReal Programming Language version 1.0.0
 
 #include <parser/node.h>
-#include <mem/blk.h>
 
-node_t node_set1(uint8 typ, ptr nod, pos_t pss, pos_t pse)
+node_t node_set1(uint8 type, ptr node, pos_t poss, pos_t pose)
+{
+    node_t node_;
+
+    node_._type = type;
+    node_._node = node;
+    node_._poss = pose;
+    node_._pose = pose;
+
+    return node_;
+}
+
+node_t node_set2(uint8 type, pos_t poss, pos_t pose)
 {
     node_t node;
 
-    node._typ = typ;
-    node._nod = nod;
-    node._pss = pss;
-    node._pse = pse;
+    node._type = type;
+    node._node = NULL;
+    node._poss = poss;
+    node._pose = pose;
 
     return node;
 }
 
-node_t node_set2(uint8 typ, pos_t pss, pos_t pse)
-{
-    node_t node;
-
-    node._typ = typ;
-    node._nod = NULL;
-    node._pss = pss;
-    node._pse = pse;
-
-    return node;
-}
-
-body_t body_set(mem_t mem, node_t nodes)
+body_t body_set(stack_t stack, node_t nodes)
 {
     body_t body;
 
-    body._nodes = blk_alloc(mem, sizeof(node_t), MEM_SIZ);
+    body._nodes = stack_alloc(stack, sizeof(node_t), STACK_SIZE);
 
     *body._nodes = nodes;
-    body._siz = 1;
+    body._size = 1;
 
     return body;
 }
 
-int_n int_set(mem_t mem, str val, uint64 len)
+int_n int_n_set(stack_t stack, str value, uint64 len)
 {
-    int_n nod = blk_alloc(mem, sizeof(struct __int__), MEM_SIZ);
+    int_n node = stack_alloc(stack, sizeof(struct __int__), STACK_SIZE);
 
-    nod->_val = val;
-    nod->_len = len;
+    node->_value = value;
+    node->_len = len;
 
-    return nod;
+    return node;
 }
 
-flt_n flt_set(mem_t mem, str val, uint64 len)
+float_n float_n_set(stack_t stack, str value, uint64 len)
 {
-    flt_n nod = blk_alloc(mem, sizeof(struct __flt__), MEM_SIZ);
+    float_n node = stack_alloc(stack, sizeof(struct __float__), STACK_SIZE);
 
-    nod->_val = val;
-    nod->_len = len;
+    node->_value = value;
+    node->_len = len;
 
-    return nod;
+    return node;
 }
 
-bol_n bol_set(mem_t mem, uint8 stat)
+bool_n bool_n_set(stack_t stack, uint8 stat)
 {
-    bol_n nod = blk_alloc(mem, sizeof(struct __bol__), MEM_SIZ);
+    bool_n node = stack_alloc(stack, sizeof(struct __bool__), STACK_SIZE);
 
-    nod->_stat = stat;
+    node->_stat = stat;
 
-    return nod;
+    return node;
 }
 
-str_n str_set(mem_t mem, str val, uint64 len)
+str_n str_n_set(stack_t stack, str value, uint64 len)
 {
-    str_n nod = blk_alloc(mem, sizeof(struct __str__), MEM_SIZ);
+    str_n node = stack_alloc(stack, sizeof(struct __str__), STACK_SIZE);
 
-    nod->_val = val;
-    nod->_len = len;
+    node->_value = value;
+    node->_len = len;
 
-    return nod;
+    return node;
 }
 
-lst_n lst_set(mem_t mem, node_tp elms, uint64 siz)
+list_n list_n_set(stack_t stack, node_p elements, uint64 size)
 {
-    lst_n nod = blk_alloc(mem, sizeof(struct __lst__), MEM_SIZ);
+    list_n node = stack_alloc(stack, sizeof(struct __list__), STACK_SIZE);
 
-    nod->_elms = elms;
-    nod->_siz = siz;
+    node->_elements = elements;
+    node->_size = size;
 
-    return nod;
+    return node;
 }
 
-tpl_n tpl_set(mem_t mem, node_tp elms, uint64 siz)
+tuple_n tuple_n_set(stack_t stack, node_p elements, uint64 size)
 {
-    tpl_n nod = blk_alloc(mem, sizeof(struct __tpl__), MEM_SIZ);
+    tuple_n node = stack_alloc(stack, sizeof(struct __tuple__), STACK_SIZE);
 
-    nod->_elms = elms;
-    nod->_siz = siz;
+    node->_elements = elements;
+    node->_size = size;
 
-    return nod;
+    return node;
 }
 
-dct_n dct_set(mem_t mem, node_tp keys, node_tp vals, uint64 siz)
+dict_n dict_n_set(stack_t stack, pair_p elements, uint64 size)
 {
-    dct_n nod = blk_alloc(mem, sizeof(struct __dct__), MEM_SIZ);
+    dict_n node = stack_alloc(stack, sizeof(struct __dict__), STACK_SIZE);
 
-    nod->_keys = keys;
-    nod->_vals = vals;
-    nod->_siz = siz;
+    node->_elements = elements;
+    node->_size = size;
 
-    return nod;
+    return node;
 }
 
-bop_n bop_set(mem_t mem, uint8 opr, node_t op1, node_t op2)
+binary_operation_n binary_operation_n_set(stack_t stack, uint8 operator, node_t op1, node_t op2)
 {
-    bop_n nod = blk_alloc(mem, sizeof(struct __bop__), MEM_SIZ);
+    binary_operation_n node = stack_alloc(stack, sizeof(struct __binary_operation__), STACK_SIZE);
 
-    nod->_opr = opr;
-    nod->_op1 = op1;
-    nod->_op2 = op2;
+    node->_operator = operator;
+    node->_op1 = op1;
+    node->_op2 = op2;
 
-    return nod;
+    return node;
 }
 
-uop_n uop_set(mem_t mem, uint8 opr, node_t op)
+unary_operation_n unary_operation_n_set(stack_t stack, uint8 operator, node_t op)
 {
-    uop_n nod = blk_alloc(mem, sizeof(struct __uop__), MEM_SIZ);
+    unary_operation_n node = stack_alloc(stack, sizeof(struct __unary_operation__), STACK_SIZE);
 
-    nod->_opr = opr;
-    nod->_op = op;
+    node->_operator = operator;
+    node->_op = op;
 
-    return nod;
+    return node;
 }
 
-tco_n tco_set(mem_t mem, node_t cond, node_t op1, node_t op2)
+ternary_condition_n ternary_condition_n_set(stack_t stack, node_t condition, node_t op1, node_t op2)
 {
-    tco_n nod = blk_alloc(mem, sizeof(struct __tco__), MEM_SIZ);
+    ternary_condition_n node = stack_alloc(stack, sizeof(struct __ternary_condition__), STACK_SIZE);
 
-    nod->_cond = cond;
-    nod->_op1 = op1;
-    nod->_op2 = op2;
+    node->_condition = condition;
+    node->_op1 = op1;
+    node->_op2 = op2;
 
-    return nod;
+    return node;
 }
 
-idx_n idx_set(mem_t mem, node_t arr, node_t idx)
+subscript_n subscript_n_set(stack_t stack, node_t array, node_t index)
 {
-    idx_n nod = blk_alloc(mem, sizeof(struct __idx__), MEM_SIZ);
+    subscript_n node = stack_alloc(stack, sizeof(struct __subscript__), STACK_SIZE);
 
-    nod->_arr = arr;
-    nod->_idx = idx;
+    node->_array = array;
+    node->_index = index;
 
-    return nod;
+    return node;
 }
 
-vas_n vas_set(mem_t mem, str name, node_t val, uint8 prop)
+var_assign_n var_assign_n_set(stack_t stack, str name, node_t value, uint8 properties)
 {
-    vas_n nod = blk_alloc(mem, sizeof(struct __vas__), MEM_SIZ);
+    var_assign_n node = stack_alloc(stack, sizeof(struct __var_assign__), STACK_SIZE);
 
-    nod->_name = name;
-    nod->_val = val;
-    nod->_prop = prop;
+    node->_name = name;
+    node->_value = value;
+    node->_properties = properties;
 
-    return nod;
+    return node;
 }
 
-vra_n vra_set(mem_t mem, uint8 opr, node_t var, node_t val)
+var_reassign_n var_reassign_n_set(stack_t stack, uint8 operator, node_t var, node_t value)
 {
-    vra_n nod = blk_alloc(mem, sizeof(struct __vra__), MEM_SIZ);
+    var_reassign_n node = stack_alloc(stack, sizeof(struct __var_reassign__), STACK_SIZE);
 
-    nod->_opr = opr;
-    nod->_var = var;
-    nod->_val = val;
+    node->_operator = operator;
+    node->_var = var;
+    node->_value = value;
 
-    return nod;
+    return node;
 }
 
-vfa_n vfa_set(mem_t mem, uint8 opr, node_t var)
+var_fixed_assign_n var_fixed_assign_n_set(stack_t stack, uint8 operator, node_t var)
 {
-    vfa_n nod = blk_alloc(mem, sizeof(struct __vfa__), MEM_SIZ);
+    var_fixed_assign_n node = stack_alloc(stack, sizeof(struct __var_fixed_assign__), STACK_SIZE);
 
-    nod->_opr = opr;
-    nod->_var = var;
+    node->_operator = operator;
+    node->_var = var;
 
-    return nod;
+    return node;
 }
 
-vac_n vac_set(mem_t mem, str name)
+var_access_n var_access_n_set(stack_t stack, str name)
 {
-    vac_n nod = blk_alloc(mem, sizeof(struct __vac__), MEM_SIZ);
+    var_access_n node = stack_alloc(stack, sizeof(struct __var_access__), STACK_SIZE);
 
-    nod->_name = name;
+    node->_name = name;
 
-    return nod;
+    return node;
 }
 
-fdf_n fdf_set(mem_t mem, str name, arg_tp args, uint64 siz, body_t body, uint8 prop)
+func_def_n func_def_n_set(stack_t stack, str name, arg_p args, uint64 size, body_t body, uint8 properties)
 {
-    fdf_n nod = blk_alloc(mem, sizeof(struct __fdf__), MEM_SIZ);
+    func_def_n node = stack_alloc(stack, sizeof(struct __func_def__), STACK_SIZE);
 
-    nod->_name = name;
-    nod->_args = args;
-    nod->_siz = siz;
-    nod->_body = body;
-    nod->_prop = prop;
+    node->_name = name;
+    node->_args = args;
+    node->_size = size;
+    node->_body = body;
+    node->_properties = properties;
 
-    return nod;
+    return node;
 }
 
-fcl_n fcl_set(mem_t mem, node_t func, arg_tp args, uint64 siz)
+func_call_n func_call_n_set(stack_t stack, node_t func, arg_p args, uint64 size)
 {
-    fcl_n nod = blk_alloc(mem, sizeof(struct __fcl__), MEM_SIZ);
+    func_call_n node = stack_alloc(stack, sizeof(struct __func_call__), STACK_SIZE);
 
-    nod->_func = func;
-    nod->_args = args;
-    nod->_siz = siz;
+    node->_func = func;
+    node->_args = args;
+    node->_size = size;
 
-    return nod;
+    return node;
 }
 
-cdf_n cdf_set(mem_t mem, str name, body_t body, uint8 prop)
+class_def_n class_def_n_set(stack_t stack, str name, body_t body, uint8 properties)
 {
-    cdf_n nod = blk_alloc(mem, sizeof(struct __cdf__), MEM_SIZ);
+    class_def_n node = stack_alloc(stack, sizeof(struct __class_def__), STACK_SIZE);
 
-    nod->_name = name;
-    nod->_body = body;
-    nod->_prop = prop;
+    node->_name = name;
+    node->_body = body;
+    node->_properties = properties;
 
-    return nod;
+    return node;
 }
 
-sdf_n sdf_set(mem_t mem, str name, body_t body, uint8 prop)
+struct_def_n struct_def_n_set(stack_t stack, str name, body_t body, uint8 properties)
 {
-    sdf_n nod = blk_alloc(mem, sizeof(struct __sdf__), MEM_SIZ);
+    struct_def_n node = stack_alloc(stack, sizeof(struct __struct_def__), STACK_SIZE);
 
-    nod->_name = name;
-    nod->_body = body;
-    nod->_prop = prop;
+    node->_name = name;
+    node->_body = body;
+    node->_properties = properties;
 
-    return nod;
+    return node;
 }
 
-dfc_n dfc_set(mem_t mem, str name, node_tp args, uint64 siz)
+dollar_func_call_n dollar_func_call_n_set(stack_t stack, str name, node_p args, uint64 size)
 {
-    dfc_n nod = blk_alloc(mem, sizeof(struct __dfc__), MEM_SIZ);
+    dollar_func_call_n node = stack_alloc(stack, sizeof(struct __dollar_func_call__), STACK_SIZE);
 
-    nod->_name = name;
-    nod->_args = args;
-    nod->_siz = siz;
+    node->_name = name;
+    node->_args = args;
+    node->_size = size;
 
-    return nod;
+    return node;
 }
 
-iff_n iff_set(mem_t mem, stat_tp stats, uint64 siz, body_t ebody)
+if_n if_n_set(stack_t stack, stat_p stats, uint64 size, body_t ebody)
 {
-    iff_n nod = blk_alloc(mem, sizeof(struct __iff__), MEM_SIZ);
+    if_n node = stack_alloc(stack, sizeof(struct __if__), STACK_SIZE);
 
-    nod->_stats = stats;
-    nod->_siz = siz;
-    nod->_ebody = ebody;
+    node->_stats = stats;
+    node->_size = size;
+    node->_ebody = ebody;
 
-    return nod;
+    return node;
 }
 
-swh_n swh_set(mem_t mem, node_t val, stat_tp stats, uint64 siz, body_t dbody)
+switch_n switch_n_set(stack_t stack, node_t value, stat_p stats, uint64 size, body_t dbody)
 {
-    swh_n nod = blk_alloc(mem, sizeof(struct __swh__), MEM_SIZ);
+    switch_n node = stack_alloc(stack, sizeof(struct __switch__), STACK_SIZE);
 
-    nod->_val = val;
-    nod->_stats = stats;
-    nod->_siz = siz;
-    nod->_dbody = dbody;
+    node->_value = value;
+    node->_stats = stats;
+    node->_size = size;
+    node->_dbody = dbody;
 
-    return nod;
+    return node;
 }
 
-for_n for_set(mem_t mem, str var, node_t start, node_t end, node_t step, body_t body)
+for_n for_n_set(stack_t stack, str var, node_t start, node_t end, node_t step, body_t body)
 {
-    for_n nod = blk_alloc(mem, sizeof(struct __for__), MEM_SIZ);
+    for_n node = stack_alloc(stack, sizeof(struct __for__), STACK_SIZE);
 
-    nod->_var = var;
-    nod->_start = start;
-    nod->_end = end;
-    nod->_step = step;
-    nod->_body = body;
+    node->_var = var;
+    node->_start = start;
+    node->_end = end;
+    node->_step = step;
+    node->_body = body;
 
-    return nod;
+    return node;
 }
 
-fre_n fre_set(mem_t mem, str var, node_t iter, body_t body)
+foreach_n foreach_n_set(stack_t stack, str var, node_t iterable, body_t body)
 {
-    fre_n nod = blk_alloc(mem, sizeof(struct __fre__), MEM_SIZ);
+    foreach_n node = stack_alloc(stack, sizeof(struct __foreach__), STACK_SIZE);
 
-    nod->_var = var;
-    nod->_iter = iter;
-    nod->_body = body;
+    node->_var = var;
+    node->_iterable = iterable;
+    node->_body = body;
 
-    return nod;
+    return node;
 }
 
-whl_n whl_set(mem_t mem, node_t cond, body_t body)
+while_n while_n_set(stack_t stack, node_t condition, body_t body)
 {
-    whl_n nod = blk_alloc(mem, sizeof(struct __whl__), MEM_SIZ);
+    while_n node = stack_alloc(stack, sizeof(struct __while__), STACK_SIZE);
 
-    nod->_cond = cond;
-    nod->_body = body;
+    node->_condition = condition;
+    node->_body = body;
 
-    return nod;
+    return node;
 }
 
-dow_n dow_set(mem_t mem, body_t body, node_t cond)
+do_while_n do_while_n_set(stack_t stack, body_t body, node_t condition)
 {
-    dow_n nod = blk_alloc(mem, sizeof(struct __dow__), MEM_SIZ);
+    do_while_n node = stack_alloc(stack, sizeof(struct __do_while__), STACK_SIZE);
 
-    nod->_body = body;
-    nod->_cond = cond;
+    node->_body = body;
+    node->_condition = condition;
 
-    return nod;
+    return node;
 }
 
-lop_n lop_set(mem_t mem, node_t init, node_t cond, node_t step, body_t body)
+loop_n loop_n_set(stack_t stack, node_t init, node_t condition, node_t step, body_t body)
 {
-    lop_n nod = blk_alloc(mem, sizeof(struct __lop__), MEM_SIZ);
+    loop_n node = stack_alloc(stack, sizeof(struct __loop__), STACK_SIZE);
 
-    nod->_init = init;
-    nod->_cond = cond;
-    nod->_step = step;
-    nod->_body = body;
+    node->_init = init;
+    node->_condition = condition;
+    node->_step = step;
+    node->_body = body;
 
-    return nod;
+    return node;
 }
 
-try_n try_set(mem_t mem, body_t error, stat_tp stats, uint64 siz, body_t fbody)
+try_n try_n_set(stack_t stack, body_t error, stat_p stats, uint64 size, body_t fbody)
 {
-    try_n nod = blk_alloc(mem, sizeof(struct __try__), MEM_SIZ);
+    try_n node = stack_alloc(stack, sizeof(struct __try__), STACK_SIZE);
 
-    nod->_error = error;
-    nod->_stats = stats;
-    nod->_siz = siz;
-    nod->_fbody = fbody;
+    node->_error = error;
+    node->_stats = stats;
+    node->_size = size;
+    node->_fbody = fbody;
 
-    return nod;
+    return node;
 }
 
-ret_n ret_set(mem_t mem, node_t val)
+return_n return_n_set(stack_t stack, node_t value)
 {
-    ret_n nod = blk_alloc(mem, sizeof(struct __ret__), MEM_SIZ);
+    return_n node = stack_alloc(stack, sizeof(struct __return__), STACK_SIZE);
 
-    nod->_val = val;
+    node->_value = value;
 
-    return nod;
+    return node;
 }
 
-imp_n imp_set(mem_t mem, str lib)
+import_n import_n_set(stack_t stack, str lib)
 {
-    imp_n nod = blk_alloc(mem, sizeof(struct __imp__), MEM_SIZ);
+    import_n node = stack_alloc(stack, sizeof(struct __import__), STACK_SIZE);
 
-    nod->_lib = lib;
+    node->_lib = lib;
 
-    return nod;
+    return node;
 }

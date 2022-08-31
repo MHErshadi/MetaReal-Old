@@ -2,12 +2,13 @@
 // MetaReal Memory Library version 1.0.0
 
 #include <memory.h>
+#include <crash.h>
 #include <stddef.h>
 
-ptr stack_alloc(stack_t stack, uint64 size, uint64 alt_size)
+ptr stack_alloc(stack_t stack, uint64 size)
 {
-    while (size > stack->_free)
-        increase_stack(stack, alt_size);
+    if (stack->_free < size)
+       stack_alloc_error(size); 
 
     ptr block = stack->_break;
 

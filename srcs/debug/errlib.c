@@ -1,27 +1,25 @@
 // MetaReal Programming Language version 1.0.0
 
-#include <stdlib.h>
-#include <stdarg.h>
-#include <string.h>
-
 #include <debug/errlib.h>
-#include <debug/crash.h>
+#include <stdlib.h>
+#include <string.h>
+#include <crash.h>
 #include <def.h>
 
-#define num_cnt(n, s)  \
-    do                 \
-    {                  \
-        uint64 cn = n; \
-        do             \
-        {              \
-            cn /= 10;  \
-            s++;       \
-        } while (cn);  \
+#define num_count(n, s) \
+    do                  \
+    {                   \
+        uint64 cn = n;  \
+        do              \
+        {               \
+            cn /= 10;   \
+            s++;        \
+        } while (cn);   \
     } while (0)
 
-ill_chr_t ill_chr_set(uint8 chr, pos_t pos)
+illegal_char_t illegal_char_set(uint8 chr, pos_t pos)
 {
-    ill_chr_t error;
+    illegal_char_t error;
 
     error._chr = chr;
     error._pos = pos;
@@ -29,187 +27,187 @@ ill_chr_t ill_chr_set(uint8 chr, pos_t pos)
     return error;
 }
 
-void ill_chr_print(ill_chr_t error, cstr code, uint64 siz)
+void illegal_char_print(illegal_char_t error, cstr code, uint64 size)
 {
     fprintf(STDERR, "\nIllegal Character Error: '%c'\n", error._chr);
-    fprintf(STDERR, "File \"%s\", line %llu\n\n", error._pos._fn, error._pos._ln + 1);
+    fprintf(STDERR, "File \"%s\", line %llu\n\n", error._pos._file_name, error._pos._line + 1);
 
-    uint64 s;
-    for (s = error._pos._idx; code[s] != '\n' && s > 0; s--);
-    if (s)
-        s++;
+    uint64 start;
+    for (start = error._pos._index; code[start] != '\n' && start > 0; start--);
+    if (start)
+        start++;
 
-    uint64 e;
-    for (e = error._pos._idx; code[e] != '\n' && e < siz; e++);
+    uint64 end;
+    for (end = error._pos._index; code[end] != '\n' && end < size; end++);
 
     uint64 i;
-    for (i = s; i < e; i++)
+    for (i = start; i < end; i++)
         putc(code[i], STDERR);
     putc('\n', STDERR);
 
-    for (i = s; i < error._pos._idx; i++)
+    for (i = start; i < error._pos._index; i++)
         putc(' ', STDERR);
     fprintf(STDERR, "^\n\n");
 }
 
-inv_syn_t inv_syn_set(cstr det, pos_t pss, pos_t pse)
+invalid_syntax_t invalid_syntax_set(cstr detail, pos_t poss, pos_t pose)
 {
-    inv_syn_t error;
+    invalid_syntax_t error;
 
-    error._det = det;
-    error._pss = pss;
-    error._pse = pse;
+    error._detail = detail;
+    error._poss = poss;
+    error._pose = pose;
 
     return error;
 }
 
-void inv_syn_print(inv_syn_t error, cstr code, uint64 siz)
+void invalid_syntax_print(invalid_syntax_t error, cstr code, uint64 size)
 {
-    if (error._det)
-        fprintf(STDERR, "\nInvalid Syntax Error: %s\n", error._det);
+    if (error._detail)
+        fprintf(STDERR, "\nInvalid Syntax Error: %s\n", error._detail);
     else
         fputs("\nInvalid Syntax Error\n", STDERR);
-    fprintf(STDERR, "File \"%s\", line %llu\n\n", error._pss._fn, error._pss._ln + 1);
+    fprintf(STDERR, "File \"%s\", line %llu\n\n", error._poss._file_name, error._poss._line + 1);
 
-    if (error._pss._ln != error._pse._ln)
+    if (error._poss._line != error._pose._line)
     {
-        uint64 s;
-        for (s = error._pss._idx; code[s] != '\n' && s > 0; s--);
-        if (s)
-            s++;
+        uint64 start;
+        for (start = error._poss._index; code[start] != '\n' && start > 0; start--);
+        if (start)
+            start++;
 
-        uint64 e;
-        for (e = error._pss._idx; code[e] != '\n' && e < siz; e++);
+        uint64 end;
+        for (end = error._poss._index; code[end] != '\n' && end < size; end++);
 
         uint64 i;
-        for (i = s; i < e; i++)
+        for (i = start; i < end; i++)
             putc(code[i], STDERR);
         putc('\n', STDERR);
 
-        for (i = s; i < error._pss._idx; i++)
+        for (i = start; i < error._poss._index; i++)
             putc(' ', STDERR);
-        for (; i < e; i++)
+        for (; i < end; i++)
             putc('^', STDERR);
         fprintf(STDERR, "~\n\n");
 
         return;
     }
 
-    uint64 s;
-    for (s = error._pss._idx; code[s] != '\n' && s > 0; s--);
-    if (s)
-        s++;
+    uint64 start;
+    for (start = error._poss._index; code[start] != '\n' && start > 0; start--);
+    if (start)
+        start++;
 
-    uint64 e;
-    for (e = error._pse._idx; code[e] != '\n' && e < siz; e++);
+    uint64 end;
+    for (end = error._pose._index; code[end] != '\n' && end < size; end++);
 
     uint64 i;
-    for (i = s; i < e; i++)
+    for (i = start; i < end; i++)
         putc(code[i], STDERR);
     putc('\n', STDERR);
 
-    for (i = s; i < error._pss._idx; i++)
+    for (i = start; i < error._poss._index; i++)
         putc(' ', STDERR);
-    for (; i < error._pse._idx; i++)
+    for (; i < error._pose._index; i++)
         putc('^', STDERR);
     fprintf(STDERR, "\n\n");
 }
 
-run_tim_t run_tim_set(uint8 typ, str det, pos_t pss, pos_t pse, ictx_t ictx)
+runtime_t runtime_set(uint8 type, str detail, pos_t poss, pos_t pose, context_t context)
 {
-    run_tim_t error;
+    runtime_t error;
 
-    error._typ = typ;
-    error._det = det;
-    error._pss = pss;
-    error._pse = pse;
-    error._ictx = ictx;
+    error._type = type;
+    error._detail = detail;
+    error._poss = poss;
+    error._pose = pose;
+    error._context = context;
 
     return error;
 }
 
-static cstr rtyp[2] =
+static cstr runtime_error_types_label[2] =
 {
-    "IllOp",
-    "DivByZero",
+    "IllegalOperation",
+    "DivisionByZero",
 };
 
-void run_tim_print(run_tim_t error, cstr code, uint64 siz)
+void runtime_print(runtime_t error, cstr code, uint64 size)
 {
-    fprintf(STDERR, "\nRuntime Error: %s\n", error._det);
-    free(error._det);
+    fprintf(STDERR, "\nRuntime Error: %s\n", error._detail);
+    free(error._detail);
 
-    fprintf(STDERR, "Error Type: %s\n", rtyp[error._typ]);
+    fprintf(STDERR, "Error Type: %s\n", runtime_error_types_label[error._type]);
 
-    ictx_tp ictx = &error._ictx;
-    pos_t pos = error._pss;
+    context_p context = &error._context;
+    pos_t pos = error._poss;
 
-    uint64 len = strlen(pos._fn) + strlen(ictx->_name) + 23;
-    num_cnt(pos._ln + 1, len);
+    uint64 len = strlen(pos._file_name) + strlen(context->_name) + 23;
+    num_count(pos._line + 1, len);
 
-    str trcb = malloc(len);
+    str troubleshoot = malloc(len);
 
-    snprintf(trcb, len, "  File \"%s\", line %llu, in %s\n", pos._fn, pos._ln + 1, ictx->_name);
+    snprintf(troubleshoot, len, "  File \"%s\", line %llu, in %s\n", pos._file_name, pos._line + 1, context->_name);
 
-    while (ictx->_prn)
+    while (context->_parent)
     {
-        pos = ictx->_prn_pos;
-        ictx = ictx->_prn;
+        pos = context->_parent_pos;
+        context = context->_parent;
 
-        len += strlen(pos._fn) + strlen(ictx->_name) + 23;
-        num_cnt(pos._ln + 1, len);
+        len += strlen(pos._file_name) + strlen(context->_name) + 23;
+        num_count(pos._line + 1, len);
 
-        str trcn = malloc(len);
+        str trace = malloc(len);
 
-        snprintf(trcn, len, "  File \"%s\", line %llu, in %s\n%s", pos._fn, pos._ln + 1, ictx->_name, trcb);
+        snprintf(trace, len, "  File \"%s\", line %llu, in %s\n%s", pos._file_name, pos._line + 1, context->_name, troubleshoot);
 
-        free(trcb);
-        trcb = trcn;
+        free(troubleshoot);
+        troubleshoot = trace;
     }
 
-    fprintf(STDERR, "\nTroubleshoot (most recent call last):\n%s", trcb);
-    free(trcb);
+    fprintf(STDERR, "\nTroubleshoot (most recent call last):\n%s", troubleshoot);
+    free(troubleshoot);
 
-    if (error._pss._ln != error._pse._ln)
+    if (error._poss._line != error._pose._line)
     {
-        uint64 s;
-        for (s = error._pss._idx; code[s] != '\n' && s > 0; s--);
-        if (s)
-            s++;
+        uint64 start;
+        for (start = error._poss._index; code[start] != '\n' && start > 0; start--);
+        if (start)
+            start++;
 
-        uint64 e;
-        for (e = error._pss._idx; code[e] != '\n' && e < siz; e++);
+        uint64 end;
+        for (end = error._poss._index; code[end] != '\n' && end < size; end++);
 
         uint64 i;
-        for (i = s; i < e; i++)
+        for (i = start; i < end; i++)
             putc(code[i], STDERR);
         putc('\n', STDERR);
 
-        for (i = s; i < error._pss._idx; i++)
+        for (i = start; i < error._poss._index; i++)
             putc(' ', STDERR);
-        for (; i < e; i++)
+        for (; i < end; i++)
             putc('^', STDERR);
         fprintf(STDERR, "~\n\n");
 
         return;
     }
 
-    uint64 s;
-    for (s = error._pss._idx; code[s] != '\n' && s > 0; s--);
-    if (s)
-        s++;
+    uint64 start;
+    for (start = error._poss._index; code[start] != '\n' && start > 0; start--);
+    if (start)
+        start++;
 
-    uint64 e;
-    for (e = error._pse._idx; code[e] != '\n' && e < siz; e++);
+    uint64 end;
+    for (end = error._pose._index; code[end] != '\n' && end < size; end++);
 
     uint64 i;
-    for (i = s; i < e; i++)
+    for (i = start; i < end; i++)
         putc(code[i], STDERR);
     putc('\n', STDERR);
 
-    for (i = s; i < error._pss._idx; i++)
+    for (i = start; i < error._poss._index; i++)
         putc(' ', STDERR);
-    for (; i < error._pse._idx; i++)
+    for (; i < error._pose._index; i++)
         putc('^', STDERR);
     fprintf(STDERR, "\n\n");
 }

@@ -5,17 +5,8 @@
 #include <stdlib.h>
 #include <crash.h>
 
-void clear_stack(stack_t stack, uint64 size)
+void clear_stack(stack_t stack)
 {
-    if (stack->_size != size)
-    {
-        stack->_data = realloc(stack->_data, size);
-        if (!stack->_data)
-            alloc_error(size);
-
-        stack->_size = size;
-    }
-
     stack->_break = stack->_data;
-    stack->_free = size;
+    stack->_free = stack->_size;
 }

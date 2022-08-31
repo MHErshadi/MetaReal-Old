@@ -10,5 +10,7 @@ void crash(cstr message);
 
 #define file_open_error(address) fcrash("System Error: could not open \"%s\"", address)
 #define alloc_error(size) fcrash("System Error: could not allocate %llu bytes from memory", size)
+#define stack_alloc_error(size) fcrash("System Error: could not allocate %llu bytes from stack", size)
+#define heap_alloc_error(size) fcrash("System Error: could not allocate %llu bytes from heap", size)
 
 #endif /* __M_CRASH__ */

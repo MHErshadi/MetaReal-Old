@@ -7,7 +7,9 @@
                 "${workspaceFolder}/heads",
                 "${workspaceFolder}/libs/heads",
                 "${workspaceFolder}/libs/heads/memory",
-                "${workspaceFolder}/libs/heads/mstring"
+                "${workspaceFolder}/libs/heads/mint",
+                "${workspaceFolder}/libs/heads/mfloat",
+                "${workspaceFolder}/libs/heads/mstr"
             ],
             "defines": [
                 "_DEBUG",

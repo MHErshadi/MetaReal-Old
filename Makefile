@@ -7,12 +7,12 @@ LDIR = libs
 
 SRCS = $(shell find $(SDIR) -name "*.c")
 OBJS = $(patsubst $(SDIR)/%.c, $(ODIR)/%.o, $(SRCS))
-LIBS = $(LDIR)/libstr.a
+LIBS = $(LDIR)/libmint.a $(LDIR)/libmstr.a $(LDIR)/libmemory.a $(LDIR)/libcrash.a
 OUT = metareal.exe
 
 make: lmake $(OUT)
 
-remake: clean rlmake $(OUT)
+remake: clean $(OUT)
 
 $(OUT): $(OBJS)
 	$(CC) -o $(OUT) $(OBJS) $(LIBS)
