@@ -1,6 +1,6 @@
 // MetaReal Programming Language version 1.0.0
 
-#include <array/list.h>
+#include <ir/block.h>
 
 void mlist_repeat(stack_t stack, heap_t heap, mlist_t mlist, uint64 count)
 {

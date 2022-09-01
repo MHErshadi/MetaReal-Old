@@ -3,6 +3,7 @@
 
 #include <fblock.h>
 #include <stddef.h>
+#include <stdio.h>
 
 void heap_shrink(heap_t heap, ptr block, uint64 size)
 {
@@ -48,7 +49,10 @@ void heap_shrink(heap_t heap, ptr block, uint64 size)
         return;
     }
 
-    prev->_next = set_fblock(dcast + size, *cast - size, next);
+    if (prev)
+        prev->_next = set_fblock(dcast + size, *cast - size, next);
+    else
+        heap->_fblock = set_fblock(dcast + size, *cast - size, next);
 
     *cast = size;
 }

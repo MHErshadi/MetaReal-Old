@@ -87,8 +87,8 @@ uint8 main(uint8 argc, strp argv)
             ir_free(gres._ir);
 
 clear:
-            clear_stack(stack, STACK_SIZE);
-            clear_heap(heap, HEAP_SIZE);
+            clear_stack(stack);
+            clear_heap(heap);
         }
 
         free_stack(stack);

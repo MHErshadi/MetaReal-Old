@@ -1,298 +1,214 @@
 // MetaReal Programming Language version 1.0.0
 
+#include <ir/value.h>
 #include <stdlib.h>
 #include <stdio.h>
-
-#include <mrir/ival.h>
-#include <mstr.h>
-#include <mrir/ilst.h>
-#include <mrir/idct.h>
-#include <mem/blk.h>
-#include <debug/crash.h>
+#include <crash.h>
 
 #define UINT64_MAX "9223372036854775807"
 
-#define ill_op_error(t1, t2, o)                                                                            \
-    do                                                                                                     \
-    {                                                                                                      \
-        uint64 siz = 40 + vals_len[t1] + vals_len[t2];                                                     \
-        str det = malloc(siz);                                                                             \
-                                                                                                           \
-        if (!det)                                                                                          \
-            mem_error(siz);                                                                                \
-                                                                                                           \
-        snprintf(det, siz, "Illegal Operation (%s) between <%s> and <%s>", o, vals_nam[t1], vals_nam[t2]); \
-                                                                                                           \
-        igres_fail(res, run_tim_set(ILL_OP, det, pss, pse, ictx));                                         \
-        return op1;                                                                                        \
+#define illegal_operation_error(t1, t2, o)                                                                           \
+    do                                                                                                               \
+    {                                                                                                                \
+        uint64 size = 40 + values_label_len[t1] + values_label_len[t2];                                              \
+                                                                                                                     \
+        str detail = malloc(size);                                                                                   \
+        if (!detail)                                                                                                 \
+            alloc_error(size);                                                                                       \
+                                                                                                                     \
+        snprintf(detail, size, "Illegal Operation (%s) between <%s> and <%s>", o, values_name[t1], values_name[t2]); \
+                                                                                                                     \
+        gres_fail(res, runtime_set(ILLEGAL_OPERATION, detail, poss, pose, context));                                 \
+        return op1;                                                                                                  \
     } while (0)
 
 block_t value_add(gres_p res, block_t op1, block_t op2, stack_t stack, heap_t heap, context_t context, pos_t poss, pos_t pose)
 {
-    if (op1._dtyp == INT_V)
+    if (op1._dtype == INT_V)
     {
-        if (op2._dtyp == INT_V)
+        if (op2._dtype == INT_V)
         {
-            if (OPT_LVL && !IS_USEFUL(op1._prop) && !IS_USEFUL(op2._prop))
+            if (OPT_LVL && !IS_USEFUL(op1._properties) && !IS_USEFUL(op2._properties))
             {
-                int64 val = ((int_i)op1._blk)->_val + ((int_i)op2._blk)->_val;
+                int_i op1b = op1._block;
+                mint_add(op1b->_value, ((int_i)op2._block)->_value);
 
-                int_i blk = iint_set(mem, val);
-
-                return iblk_set1(INT_I, blk, INT_V, SET_PROP(0, 0, 0));
+                return op1;
             }
 
-            bop_i blk = ibop_set(mem, op1, op2, "addII");
+            binary_operation_i block = binary_operation_i_set(stack, op1, op2, "addII");
 
-            return iblk_set1(BOP_I, blk, INT_V, SET_PROP(1, 1, 0));
+            return block_set1(BINARY_OPERATION_I, block, INT_V, SET_PROPERTIES(1, 1, 0));
         }
 
-        if (op2._dtyp == FLT_V)
+        if (op2._dtype == FLOAT_V)
         {
-            if (OPT_LVL && !IS_USEFUL(op1._prop) && !IS_USEFUL(op2._prop))
+            if (OPT_LVL && !IS_USEFUL(op1._properties) && !IS_USEFUL(op2._properties))
             {
-                dec64 val = ((int_i)op1._blk)->_val + ((flt_i)op2._blk)->_val;
+                mfloat_t op1v;
+                set_mfloat_mint(op1v, ((int_i)op1._block)->_value);
 
-                flt_i blk = iflt_set(mem, val);
+                mfloat_add(op1v, ((float_i)op2._block)->_value);
 
-                return iblk_set1(FLT_I, blk, FLT_V, SET_PROP(0, 0, 0));
+                float_i block = float_i_set(stack, op1v);
+
+                return block_set1(FLOAT_I, block, FLOAT_V, SET_PROPERTIES(0, 0, 0));
             }
 
-            bop_i blk = ibop_set(mem, op1, op2, "addIF");
+            binary_operation_i block = binary_operation_i_set(stack, op1, op2, "addIF");
 
-            return iblk_set1(BOP_I, blk, FLT_V, SET_PROP(1, 1, 0));
+            return block_set1(BINARY_OPERATION_I, block, FLOAT_V, SET_PROPERTIES(1, 1, 0));
         }
 
-        ill_op_error(INT_V, op2._dtyp, "+");
+        illegal_operation_error(INT_V, op2._dtype, "+");
     }
 
-    if (op1._dtyp == FLT_V)
+    if (op1._dtype == FLOAT_V)
     {
-        if (op2._dtyp == INT_V)
+        if (op2._dtype == INT_V)
         {
-            if (OPT_LVL && !IS_USEFUL(op1._prop) && !IS_USEFUL(op2._prop))
+            if (OPT_LVL && !IS_USEFUL(op1._properties) && !IS_USEFUL(op2._properties))
             {
-                dec64 val = ((flt_i)op1._blk)->_val + ((int_i)op2._blk)->_val;
+                float_i op1b = op1._block;
+                mfloat_t op2v;
+                set_mfloat_mint(op2v, ((int_i)op2._block)->_value);
 
-                flt_i blk = iflt_set(mem, val);
+                mfloat_add(op1b->_value, op2v);
 
-                return iblk_set1(FLT_I, blk, FLT_V, SET_PROP(0, 0, 0));
+                return op1;
             }
 
-            bop_i blk = ibop_set(mem, op1, op2, "addFI");
+            binary_operation_i block = binary_operation_i_set(stack, op1, op2, "addFI");
 
-            return iblk_set1(BOP_I, blk, FLT_V, SET_PROP(1, 1, 0));
+            return block_set1(BINARY_OPERATION_I, block, FLOAT_V, SET_PROPERTIES(1, 1, 0));
         }
 
-        if (op2._dtyp == FLT_V)
+        if (op2._dtype == FLOAT_V)
         {
-            if (OPT_LVL && !IS_USEFUL(op1._prop) && !IS_USEFUL(op2._prop))
+            if (OPT_LVL && !IS_USEFUL(op1._properties) && !IS_USEFUL(op2._properties))
             {
-                dec64 val = ((flt_i)op1._blk)->_val + ((flt_i)op2._blk)->_val;
+                float_i op1b = op1._block;
+                mfloat_add(op1b->_value, ((float_i)op2._block)->_value);
 
-                flt_i blk = iflt_set(mem, val);
-
-                return iblk_set1(FLT_I, blk, FLT_V, SET_PROP(0, 0, 0));
+                return op1;
             }
 
-            bop_i blk = ibop_set(mem, op1, op2, "addFF");
+            binary_operation_i block = binary_operation_i_set(stack, op1, op2, "addFF");
 
-            return iblk_set1(BOP_I, blk, FLT_V, SET_PROP(1, 1, 0));
+            return block_set1(BINARY_OPERATION_I, block, FLOAT_V, SET_PROPERTIES(1, 1, 0));
         }
 
-        ill_op_error(FLT_V, op2._dtyp, "+");
+        illegal_operation_error(FLOAT_V, op2._dtype, "+");
     }
 
-    if (op1._dtyp == STR_V)
+    if (op1._dtype == STR_V)
     {
-        if (op2._dtyp == STR_V)
+        if (op2._dtype == STR_V)
         {
-            if (OPT_LVL && !IS_USEFUL(op1._prop) && !IS_USEFUL(op2._prop))
+            if (OPT_LVL && !IS_USEFUL(op1._properties) && !IS_USEFUL(op2._properties))
             {
-                if (!op1._blk)
-                {
-                    if (!op2._blk)
-                        return iblk_set2(STR_I, STR_V, SET_PROP(0, 0, 0));
-
-                    str_i op1b = op1._blk;
-                    str_i blk = istr_set(mem, op1b->_val, op1b->_siz);
-
-                    return iblk_set1(STR_I, blk, STR_V, SET_PROP(0, 0, 0));
-                }
-
-                if (!op2._blk)
-                {
-                    str_i op2b = op2._blk;
-                    str_i blk = istr_set(mem, op2b->_val, op2b->_siz);
-
-                    return iblk_set1(STR_I, blk, STR_V, SET_PROP(0, 0, 0));
-                }
-
-                str_i op1b = op1._blk;
-                str_i op2b = op2._blk;
-
-                str val;
-                uint64 siz = mstr_concat(mem, MEM_SIZ, &val, op1b->_val, op1b->_siz, op2b->_val, op2b->_siz);
-
-                str_i blk = istr_set(mem, val, siz);
-
-                return iblk_set1(STR_I, blk, STR_V, SET_PROP(0, 0, 0));
-            }
-
-            bop_i blk = ibop_set(mem, op1, op2, "addSS");
-
-            return iblk_set1(BOP_I, blk, STR_V, SET_PROP(1, 1, 0));
-        }
-
-        ill_op_error(STR_V, op2._dtyp, "+");
-    }
-
-    if (op1._dtyp == LST_V)
-    {
-        if (op2._dtyp == LST_V)
-        {
-            if (OPT_LVL && !IS_USEFUL(op1._prop) && !IS_USEFUL(op2._prop))
-            {
-                if (!op1._blk)
-                {
-                    if (!op2._blk)
-                        return iblk_set2(LST_I, LST_V, SET_PROP(0, 0, 0));
-
+                if (!op1._block)
                     return op2;
-                }
 
-                if (!op2._blk)
+                if (!op2._block)
                     return op1;
 
-                lst_i op2b = op2._blk;
+                str_i op1b = op1._block;
+                mstr_concat(heap, op1b->_value, ((str_i)op2._block)->_value);
 
-                lst_i blk = ilst_concat(mem, op1._blk, op2b->_elms, op2b->_siz);
-
-                return iblk_set1(LST_I, blk, LST_V, SET_PROP(0, 1, 0));
+                return op1;
             }
 
-            bop_i blk = ibop_set(mem, op1, op2, "addLL");
+            binary_operation_i block = binary_operation_i_set(stack, op1, op2, "addSS");
 
-            return iblk_set1(BOP_I, blk, LST_V, SET_PROP(1, 1, 0));
+            return block_set1(BINARY_OPERATION_I, block, STR_V, SET_PROPERTIES(1, 1, 0));
         }
 
-        if (op2._dtyp == TPL_V)
+        illegal_operation_error(STR_V, op2._dtype, "+");
+    }
+
+    if (op1._dtype == LIST_V)
+    {
+        if (op2._dtype == LIST_V)
         {
-            if (OPT_LVL && !IS_USEFUL(op1._prop) && !IS_USEFUL(op2._prop))
+            if (OPT_LVL && !IS_USEFUL(op1._properties) && !IS_USEFUL(op2._properties))
             {
-                if (!op1._blk)
-                {
-                    if (!op2._blk)
-                        return iblk_set2(LST_I, LST_V, SET_PROP(0, 0, 0));
+                if (!op1._block)
+                    return op2;
 
-                    tpl_i op2b = op2._blk;
-
-                    lst_i blk = ilst_set(mem, op2b->_elms, op2b->_siz);
-
-                    return iblk_set1(LST_I, blk, LST_V, SET_PROP(0, 1, 0));
-                }
-
-                if (!op2._blk)
+                if (!op2._block)
                     return op1;
 
-                tpl_i op2b = op2._blk;
+                list_i op1b = op1._block;
+                mlist_concat(heap, op1b->_value, ((list_i)op2._block)->_value);
 
-                lst_i blk = ilst_concat(mem, op1._blk, op2b->_elms, op2b->_siz);
-
-                return iblk_set1(LST_I, blk, LST_V, SET_PROP(0, 1, 0));
+                return op1;
             }
 
-            bop_i blk = ibop_set(mem, op1, op2, "addLT");
+            binary_operation_i block = binary_operation_i_set(stack, op1, op2, "addLL");
 
-            return iblk_set1(BOP_I, blk, LST_V, SET_PROP(1, 1, 0));
+            return block_set1(BINARY_OPERATION_I, block, LIST_V, SET_PROPERTIES(1, 1, 0));
         }
 
-        if (op2._dtyp == DCT_V)
+        if (op2._dtype == TUPLE_V)
         {
-            if (OPT_LVL && !IS_USEFUL(op1._prop) && !IS_USEFUL(op2._prop))
+            if (OPT_LVL && !IS_USEFUL(op1._properties) && !IS_USEFUL(op2._properties))
             {
-                if (!op1._blk)
-                {
-                    if (!op2._blk)
-                        return iblk_set2(LST_I, LST_V, SET_PROP(0, 0, 0));
+                if (!op1._block)
+                    return op2;
 
-                    dct_i op2b = op2._blk;
-
-                    lst_i blk = ilst_set(mem, op2b->_vals, op2b->_siz);
-
-                    return iblk_set1(LST_I, blk, LST_V, SET_PROP(0, 1, 0));
-                }
-
-                if (!op2._blk)
+                if (!op2._block)
                     return op1;
 
-                dct_i op2b = op2._blk;
+                list_i op1b = op1._block;
+                mlist_concat_mtuple(heap, op1b->_value, ((tuple_i)op2._block)->_value);
 
-                lst_i blk = ilst_concat(mem, op1._blk, op2b->_vals, op2b->_siz);
-
-                return iblk_set1(LST_I, blk, LST_V, SET_PROP(0, 1, 0));
+                return op1;
             }
 
-            bop_i blk = ibop_set(mem, op1, op2, "addLD");
+            binary_operation_i block = binary_operation_i_set(stack, op1, op2, "addLT");
 
-            return iblk_set1(BOP_I, blk, LST_V, SET_PROP(1, 1, 0));
+            return block_set1(BINARY_OPERATION_I, block, LIST_V, SET_PROPERTIES(1, 1, 0));
         }
 
-        if (OPT_LVL && !IS_USEFUL(op1._prop) && !IS_USEFUL(op2._prop))
+        if (OPT_LVL && !IS_USEFUL(op1._properties) && !IS_USEFUL(op2._properties))
         {
-            if (!op1._blk)
+            if (!op1._block)
             {
-                lst_i blk = ilst_set(mem, &op2, 1);
+                block_p elements = heap_alloc(heap, sizeof(block_t));
+                *elements = op2;
 
-                return iblk_set2(LST_I, LST_V, SET_PROP(0, 1, 0));
+                mlist_t value;
+                set_mlist(value, elements, 1);
+
+                list_i block = list_i_set(stack, value);
+                op1._block = block;
+
+                return op1;
             }
 
-            lst_i blk = ilst_append(mem, op1._blk, op2);
+            list_i op1b = op1._block;
+            mlist_append(heap, op1b->_value, op2);
 
-            return iblk_set1(LST_I, blk, LST_V, SET_PROP(0, 1, 0));
+            return op1;
         }
 
-        bop_i blk;
+        binary_operation_i block;
 
-        switch (op2._dtyp)
+        switch (op2._dtype)
         {
         case INT_V:
-            blk = ibop_set(mem, op1, op2, "addLI");
-        case FLT_V:
-            blk = ibop_set(mem, op1, op2, "addLF");
-        case BOL_V:
-            blk = ibop_set(mem, op1, op2, "addLB");
+            block = binary_operation_i_set(stack, op1, op2, "addLI");
+        case FLOAT_V:
+            block = binary_operation_i_set(stack, op1, op2, "addLF");
+        case BOOL_V:
+            block = binary_operation_i_set(stack, op1, op2, "addLB");
         case STR_V:
-            blk = ibop_set(mem, op1, op2, "addLS");
+            block = binary_operation_i_set(stack, op1, op2, "addLS");
         }
 
-        return iblk_set1(BOP_I, blk, LST_V, SET_PROP(1, 1, 0));
+        return block_set1(BINARY_OPERATION_I, block, LIST_V, SET_PROPERTIES(1, 1, 0));
     }
 
-    if (op1._dtyp == DCT_V)
-    {
-        if (op2._dtyp == DCT_V)
-        {
-            if (OPT_LVL && !IS_USEFUL(op1._prop) && !IS_USEFUL(op2._prop))
-            {
-                if (!op1._blk)
-                    return op2;
-
-                if (!op2._blk)
-                    return op1;
-
-                dct_i blk = idct_concat(mem, op1._blk, op2._blk);
-
-                return iblk_set1(DCT_I, blk, DCT_V, SET_PROP(0, 1, 0));
-            }
-
-            bop_i blk = ibop_set(mem, op1, op2, "addDD");
-
-            return iblk_set1(BOP_I, blk, DCT_V, SET_PROP(1, 1, 0));
-        }
-
-        ill_op_error(DCT_V, op2._dtyp, "+");
-    }
-
-    ill_op_error(op1._dtyp, op2._dtyp, "+");
+    illegal_operation_error(op1._dtype, op2._dtype, "+");
 }

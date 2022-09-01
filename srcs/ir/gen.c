@@ -45,9 +45,8 @@ gres_t gen(node_p nodes, stack_t stack, heap_t heap, context_t context)
         if (res._ir._msize == alloc)
         {
             res._ir._main = realloc(res._ir._main, (alloc += IR_MAIN_SIZE) * sizeof(block_t));
-
             if (!res._ir._main)
-                mem_error(alloc * sizeof(block_t));
+                alloc_error(alloc * sizeof(block_t));
         }
 
         res._ir._main[res._ir._msize++] = block;
@@ -56,9 +55,8 @@ gres_t gen(node_p nodes, stack_t stack, heap_t heap, context_t context)
     if (res._ir._msize != alloc)
     {
         res._ir._main = realloc(res._ir._main, res._ir._msize * sizeof(block_t));
-
         if (!res._ir._main)
-            mem_error(res._ir._msize * sizeof(block_t));
+            alloc_error(res._ir._msize * sizeof(block_t));
     }
 
     free(nodes);
@@ -101,7 +99,7 @@ void ir_print(data_p data, ir_t ir)
         uint64 i;
         for (i = 0; i < ir._msize; i++)
         {
-            if (OPT_LVL)
+            if (!OPT_LVL)
             {
                 if (IS_USEFUL(ir._main[i]._properties))
                 {
@@ -273,7 +271,10 @@ block_t visit_list(gres_p res, node_t node, stack_t stack, heap_t heap, context_
             is_useful = 1;
     }
 
-    list_i block = list_i_set(stack, elements, node_->_size);
+    mlist_t value;
+    set_mlist(value, elements, node_->_size);
+
+    list_i block = list_i_set(stack, value);
 
     if (is_useful)
         return block_set1(LIST_I, block, LIST_V, SET_PROPERTIES(1, 1, 0));
@@ -304,7 +305,10 @@ block_t visit_tuple(gres_p res, node_t node, stack_t stack, heap_t heap, context
             is_useful = 1;
     }
 
-    tuple_i block = tuple_i_set(stack, elements, node_->_size);
+    mtuple_t value;
+    set_mtuple(value, elements, node_->_size);
+
+    tuple_i block = tuple_i_set(stack, value);
 
     if (is_useful)
         return block_set1(TUPLE_I, block, TUPLE_V, SET_PROPERTIES(1, 1, 0));
@@ -313,65 +317,25 @@ block_t visit_tuple(gres_p res, node_t node, stack_t stack, heap_t heap, context
 
 block_t visit_dict(gres_p res, node_t node, stack_t stack, heap_t heap, context_t context)
 {
-    if (!node._node)
-        return block_set2(DICT_I, DICT_V, SET_PROPERTIES(0, 0, 0));
-
-    dct_n nod = node._nod;
-
-    block_tp keys = heap_alloc(mem, nod->_siz * sizeof(block_t), MEM_SIZ);
-    block_tp vals = blk_alloc(mem, nod->_siz * sizeof(block_t), MEM_SIZ);
-
-    uint8 is_useful = 0;
-    uint64 i;
-    for (i = 0; i < nod->_siz; i++)
-    {
-        block_t key = visit_nod(res, nod->_keys[i], mem, ictx);
-
-        if (res->_herr)
-            return key;
-
-        block_t val = visit_nod(res, nod->_vals[i], mem, ictx);
-
-        if (res->_herr)
-            return val;
-
-        uint64 pos;
-        if (!iblkp_contains(keys, i, key, &pos))
-        {
-            keys[i] = key;
-            vals[i] = val;
-        }
-        else
-            vals[pos] = val;
-
-        if (IS_USEFUL(key._prop) || IS_USEFUL(val._prop))
-            is_useful = 1;
-    }
-
-    dct_i blk = idct_set(mem, keys, vals, nod->_siz);
-
-    if (is_useful)
-        return iblk_set1(DICT_I, blk, DICT_V, SET_PROPERTIES(1, 1, 0));
-    return iblk_set1(DICT_I, blk, DICT_V, SET_PROPERTIES(0, 1, 0));
 }
 
-block_t visit_bop(igres_tp res, node_t node, stack_t stack, heap_t heap, context_t context)
+block_t visit_binary_operation(gres_p res, node_t node, stack_t stack, heap_t heap, context_t context)
 {
-    bop_n nod = node._nod;
+    binary_operation_n node_ = node._node;
 
-    block_t op1 = visit_nod(res, nod->_op1, mem, ictx);
+    block_t op1 = visit_node(res, node_->_op1, stack, heap, context);
 
-    if (res->_herr)
+    if (res->_has_error)
         return op1;
 
-    block_t op2 = visit_nod(res, nod->_op2, mem, ictx);
+    block_t op2 = visit_node(res, node_->_op2, stack, heap, context);
 
-    if (res->_herr)
+    if (res->_has_error)
         return op2;
 
-    switch (nod->_opr)
+    switch (node_->_operator)
     {
     case ADD_T:
-        return ival_add(res, op1, op2, mem, ictx, node._pss, node._pse);
+        return value_add(res, op1, op2, stack, heap, context, node._poss, node._pose);
     }
 }

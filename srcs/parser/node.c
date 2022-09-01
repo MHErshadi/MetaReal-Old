@@ -30,7 +30,7 @@ body_t body_set(stack_t stack, node_t nodes)
 {
     body_t body;
 
-    body._nodes = stack_alloc(stack, sizeof(node_t), STACK_SIZE);
+    body._nodes = stack_alloc(stack, sizeof(node_t));
 
     *body._nodes = nodes;
     body._size = 1;
@@ -40,7 +40,7 @@ body_t body_set(stack_t stack, node_t nodes)
 
 int_n int_n_set(stack_t stack, str value, uint64 len)
 {
-    int_n node = stack_alloc(stack, sizeof(struct __int__), STACK_SIZE);
+    int_n node = stack_alloc(stack, sizeof(struct __int_n__));
 
     node->_value = value;
     node->_len = len;
@@ -50,7 +50,7 @@ int_n int_n_set(stack_t stack, str value, uint64 len)
 
 float_n float_n_set(stack_t stack, str value, uint64 len)
 {
-    float_n node = stack_alloc(stack, sizeof(struct __float__), STACK_SIZE);
+    float_n node = stack_alloc(stack, sizeof(struct __float_n__));
 
     node->_value = value;
     node->_len = len;
@@ -60,7 +60,7 @@ float_n float_n_set(stack_t stack, str value, uint64 len)
 
 bool_n bool_n_set(stack_t stack, uint8 stat)
 {
-    bool_n node = stack_alloc(stack, sizeof(struct __bool__), STACK_SIZE);
+    bool_n node = stack_alloc(stack, sizeof(struct __bool_n__));
 
     node->_stat = stat;
 
@@ -69,7 +69,7 @@ bool_n bool_n_set(stack_t stack, uint8 stat)
 
 str_n str_n_set(stack_t stack, str value, uint64 len)
 {
-    str_n node = stack_alloc(stack, sizeof(struct __str__), STACK_SIZE);
+    str_n node = stack_alloc(stack, sizeof(struct __str_n__));
 
     node->_value = value;
     node->_len = len;
@@ -79,7 +79,7 @@ str_n str_n_set(stack_t stack, str value, uint64 len)
 
 list_n list_n_set(stack_t stack, node_p elements, uint64 size)
 {
-    list_n node = stack_alloc(stack, sizeof(struct __list__), STACK_SIZE);
+    list_n node = stack_alloc(stack, sizeof(struct __list_n__));
 
     node->_elements = elements;
     node->_size = size;
@@ -89,7 +89,7 @@ list_n list_n_set(stack_t stack, node_p elements, uint64 size)
 
 tuple_n tuple_n_set(stack_t stack, node_p elements, uint64 size)
 {
-    tuple_n node = stack_alloc(stack, sizeof(struct __tuple__), STACK_SIZE);
+    tuple_n node = stack_alloc(stack, sizeof(struct __tuple_n__));
 
     node->_elements = elements;
     node->_size = size;
@@ -99,7 +99,7 @@ tuple_n tuple_n_set(stack_t stack, node_p elements, uint64 size)
 
 dict_n dict_n_set(stack_t stack, pair_p elements, uint64 size)
 {
-    dict_n node = stack_alloc(stack, sizeof(struct __dict__), STACK_SIZE);
+    dict_n node = stack_alloc(stack, sizeof(struct __dict_n__));
 
     node->_elements = elements;
     node->_size = size;
@@ -109,7 +109,7 @@ dict_n dict_n_set(stack_t stack, pair_p elements, uint64 size)
 
 binary_operation_n binary_operation_n_set(stack_t stack, uint8 operator, node_t op1, node_t op2)
 {
-    binary_operation_n node = stack_alloc(stack, sizeof(struct __binary_operation__), STACK_SIZE);
+    binary_operation_n node = stack_alloc(stack, sizeof(struct __binary_operation_n__));
 
     node->_operator = operator;
     node->_op1 = op1;
@@ -120,7 +120,7 @@ binary_operation_n binary_operation_n_set(stack_t stack, uint8 operator, node_t 
 
 unary_operation_n unary_operation_n_set(stack_t stack, uint8 operator, node_t op)
 {
-    unary_operation_n node = stack_alloc(stack, sizeof(struct __unary_operation__), STACK_SIZE);
+    unary_operation_n node = stack_alloc(stack, sizeof(struct __unary_operation_n__));
 
     node->_operator = operator;
     node->_op = op;
@@ -130,7 +130,7 @@ unary_operation_n unary_operation_n_set(stack_t stack, uint8 operator, node_t op
 
 ternary_condition_n ternary_condition_n_set(stack_t stack, node_t condition, node_t op1, node_t op2)
 {
-    ternary_condition_n node = stack_alloc(stack, sizeof(struct __ternary_condition__), STACK_SIZE);
+    ternary_condition_n node = stack_alloc(stack, sizeof(struct __ternary_condition_n__));
 
     node->_condition = condition;
     node->_op1 = op1;
@@ -141,7 +141,7 @@ ternary_condition_n ternary_condition_n_set(stack_t stack, node_t condition, nod
 
 subscript_n subscript_n_set(stack_t stack, node_t array, node_t index)
 {
-    subscript_n node = stack_alloc(stack, sizeof(struct __subscript__), STACK_SIZE);
+    subscript_n node = stack_alloc(stack, sizeof(struct __subscript_n__));
 
     node->_array = array;
     node->_index = index;
@@ -151,7 +151,7 @@ subscript_n subscript_n_set(stack_t stack, node_t array, node_t index)
 
 var_assign_n var_assign_n_set(stack_t stack, str name, node_t value, uint8 properties)
 {
-    var_assign_n node = stack_alloc(stack, sizeof(struct __var_assign__), STACK_SIZE);
+    var_assign_n node = stack_alloc(stack, sizeof(struct __var_assign_n__));
 
     node->_name = name;
     node->_value = value;
@@ -162,7 +162,7 @@ var_assign_n var_assign_n_set(stack_t stack, str name, node_t value, uint8 prope
 
 var_reassign_n var_reassign_n_set(stack_t stack, uint8 operator, node_t var, node_t value)
 {
-    var_reassign_n node = stack_alloc(stack, sizeof(struct __var_reassign__), STACK_SIZE);
+    var_reassign_n node = stack_alloc(stack, sizeof(struct __var_reassign_n__));
 
     node->_operator = operator;
     node->_var = var;
@@ -173,7 +173,7 @@ var_reassign_n var_reassign_n_set(stack_t stack, uint8 operator, node_t var, nod
 
 var_fixed_assign_n var_fixed_assign_n_set(stack_t stack, uint8 operator, node_t var)
 {
-    var_fixed_assign_n node = stack_alloc(stack, sizeof(struct __var_fixed_assign__), STACK_SIZE);
+    var_fixed_assign_n node = stack_alloc(stack, sizeof(struct __var_fixed_assign_n__));
 
     node->_operator = operator;
     node->_var = var;
@@ -183,7 +183,7 @@ var_fixed_assign_n var_fixed_assign_n_set(stack_t stack, uint8 operator, node_t 
 
 var_access_n var_access_n_set(stack_t stack, str name)
 {
-    var_access_n node = stack_alloc(stack, sizeof(struct __var_access__), STACK_SIZE);
+    var_access_n node = stack_alloc(stack, sizeof(struct __var_access_n__));
 
     node->_name = name;
 
@@ -192,7 +192,7 @@ var_access_n var_access_n_set(stack_t stack, str name)
 
 func_def_n func_def_n_set(stack_t stack, str name, arg_p args, uint64 size, body_t body, uint8 properties)
 {
-    func_def_n node = stack_alloc(stack, sizeof(struct __func_def__), STACK_SIZE);
+    func_def_n node = stack_alloc(stack, sizeof(struct __func_def_n__));
 
     node->_name = name;
     node->_args = args;
@@ -205,7 +205,7 @@ func_def_n func_def_n_set(stack_t stack, str name, arg_p args, uint64 size, body
 
 func_call_n func_call_n_set(stack_t stack, node_t func, arg_p args, uint64 size)
 {
-    func_call_n node = stack_alloc(stack, sizeof(struct __func_call__), STACK_SIZE);
+    func_call_n node = stack_alloc(stack, sizeof(struct __func_call_n__));
 
     node->_func = func;
     node->_args = args;
@@ -216,7 +216,7 @@ func_call_n func_call_n_set(stack_t stack, node_t func, arg_p args, uint64 size)
 
 class_def_n class_def_n_set(stack_t stack, str name, body_t body, uint8 properties)
 {
-    class_def_n node = stack_alloc(stack, sizeof(struct __class_def__), STACK_SIZE);
+    class_def_n node = stack_alloc(stack, sizeof(struct __class_def_n__));
 
     node->_name = name;
     node->_body = body;
@@ -227,7 +227,7 @@ class_def_n class_def_n_set(stack_t stack, str name, body_t body, uint8 properti
 
 struct_def_n struct_def_n_set(stack_t stack, str name, body_t body, uint8 properties)
 {
-    struct_def_n node = stack_alloc(stack, sizeof(struct __struct_def__), STACK_SIZE);
+    struct_def_n node = stack_alloc(stack, sizeof(struct __struct_def_n__));
 
     node->_name = name;
     node->_body = body;
@@ -238,7 +238,7 @@ struct_def_n struct_def_n_set(stack_t stack, str name, body_t body, uint8 proper
 
 dollar_func_call_n dollar_func_call_n_set(stack_t stack, str name, node_p args, uint64 size)
 {
-    dollar_func_call_n node = stack_alloc(stack, sizeof(struct __dollar_func_call__), STACK_SIZE);
+    dollar_func_call_n node = stack_alloc(stack, sizeof(struct __dollar_func_call_n__));
 
     node->_name = name;
     node->_args = args;
@@ -249,7 +249,7 @@ dollar_func_call_n dollar_func_call_n_set(stack_t stack, str name, node_p args, 
 
 if_n if_n_set(stack_t stack, stat_p stats, uint64 size, body_t ebody)
 {
-    if_n node = stack_alloc(stack, sizeof(struct __if__), STACK_SIZE);
+    if_n node = stack_alloc(stack, sizeof(struct __if_n__));
 
     node->_stats = stats;
     node->_size = size;
@@ -260,7 +260,7 @@ if_n if_n_set(stack_t stack, stat_p stats, uint64 size, body_t ebody)
 
 switch_n switch_n_set(stack_t stack, node_t value, stat_p stats, uint64 size, body_t dbody)
 {
-    switch_n node = stack_alloc(stack, sizeof(struct __switch__), STACK_SIZE);
+    switch_n node = stack_alloc(stack, sizeof(struct __switch_n__));
 
     node->_value = value;
     node->_stats = stats;
@@ -272,7 +272,7 @@ switch_n switch_n_set(stack_t stack, node_t value, stat_p stats, uint64 size, bo
 
 for_n for_n_set(stack_t stack, str var, node_t start, node_t end, node_t step, body_t body)
 {
-    for_n node = stack_alloc(stack, sizeof(struct __for__), STACK_SIZE);
+    for_n node = stack_alloc(stack, sizeof(struct __for_n__));
 
     node->_var = var;
     node->_start = start;
@@ -285,7 +285,7 @@ for_n for_n_set(stack_t stack, str var, node_t start, node_t end, node_t step, b
 
 foreach_n foreach_n_set(stack_t stack, str var, node_t iterable, body_t body)
 {
-    foreach_n node = stack_alloc(stack, sizeof(struct __foreach__), STACK_SIZE);
+    foreach_n node = stack_alloc(stack, sizeof(struct __foreach_n__));
 
     node->_var = var;
     node->_iterable = iterable;
@@ -296,7 +296,7 @@ foreach_n foreach_n_set(stack_t stack, str var, node_t iterable, body_t body)
 
 while_n while_n_set(stack_t stack, node_t condition, body_t body)
 {
-    while_n node = stack_alloc(stack, sizeof(struct __while__), STACK_SIZE);
+    while_n node = stack_alloc(stack, sizeof(struct __while_n__));
 
     node->_condition = condition;
     node->_body = body;
@@ -306,7 +306,7 @@ while_n while_n_set(stack_t stack, node_t condition, body_t body)
 
 do_while_n do_while_n_set(stack_t stack, body_t body, node_t condition)
 {
-    do_while_n node = stack_alloc(stack, sizeof(struct __do_while__), STACK_SIZE);
+    do_while_n node = stack_alloc(stack, sizeof(struct __do_while_n__));
 
     node->_body = body;
     node->_condition = condition;
@@ -316,7 +316,7 @@ do_while_n do_while_n_set(stack_t stack, body_t body, node_t condition)
 
 loop_n loop_n_set(stack_t stack, node_t init, node_t condition, node_t step, body_t body)
 {
-    loop_n node = stack_alloc(stack, sizeof(struct __loop__), STACK_SIZE);
+    loop_n node = stack_alloc(stack, sizeof(struct __loop_n__));
 
     node->_init = init;
     node->_condition = condition;
@@ -328,7 +328,7 @@ loop_n loop_n_set(stack_t stack, node_t init, node_t condition, node_t step, bod
 
 try_n try_n_set(stack_t stack, body_t error, stat_p stats, uint64 size, body_t fbody)
 {
-    try_n node = stack_alloc(stack, sizeof(struct __try__), STACK_SIZE);
+    try_n node = stack_alloc(stack, sizeof(struct __try_n__));
 
     node->_error = error;
     node->_stats = stats;
@@ -340,7 +340,7 @@ try_n try_n_set(stack_t stack, body_t error, stat_p stats, uint64 size, body_t f
 
 return_n return_n_set(stack_t stack, node_t value)
 {
-    return_n node = stack_alloc(stack, sizeof(struct __return__), STACK_SIZE);
+    return_n node = stack_alloc(stack, sizeof(struct __return_n__));
 
     node->_value = value;
 
@@ -349,7 +349,7 @@ return_n return_n_set(stack_t stack, node_t value)
 
 import_n import_n_set(stack_t stack, str lib)
 {
-    import_n node = stack_alloc(stack, sizeof(struct __import__), STACK_SIZE);
+    import_n node = stack_alloc(stack, sizeof(struct __import_n__));
 
     node->_lib = lib;
 

@@ -3,7 +3,8 @@
 #ifndef __M_TUPLE__
 #define __M_TUPLE__
 
-#include <ir/block.h>
+#include <ir/block_struct.h>
+#include <memory/memory.h>
 
 struct __mtuple__
 {
