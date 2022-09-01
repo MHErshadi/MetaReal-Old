@@ -125,121 +125,121 @@ struct __pair__
 typedef struct __pair__ pair_t;
 typedef struct __pair__ *pair_p;
 
-struct __int__
+struct __int_n__
 {
     str _value;
     uint64 _len;
 };
-typedef struct __int__ *int_n;
+typedef struct __int_n__ *int_n;
 
-struct __float__ 
+struct __float_n__ 
 {
     str _value;
     uint64 _len;
 };
-typedef struct __float__ *float_n;
+typedef struct __float_n__ *float_n;
 
-struct __bool__
+struct __bool_n__
 {
     uint8 _stat : 1;
 };
-typedef struct __bool__ *bool_n;
+typedef struct __bool_n__ *bool_n;
 
-struct __str__
+struct __str_n__
 {
     str _value;
     uint64 _len;
 };
-typedef struct __str__ *str_n;
+typedef struct __str_n__ *str_n;
 
-struct __list__
+struct __list_n__
 {
     node_p _elements;
     uint64 _size;
 };
-typedef struct __list__ *list_n;
+typedef struct __list_n__ *list_n;
 
-struct __tuple__
+struct __tuple_n__
 {
     node_p _elements;
     uint64 _size;
 };
-typedef struct __tuple__ *tuple_n;
+typedef struct __tuple_n__ *tuple_n;
 
-struct __dict__
+struct __dict_n__
 {
     pair_p _elements;
     uint64 _size;
 };
-typedef struct __dict__ *dict_n;
+typedef struct __dict_n__ *dict_n;
 
-struct __binary_operation__
+struct __binary_operation_n__
 {
     uint8 _operator;
 
     node_t _op1;
     node_t _op2;
 };
-typedef struct __binary_operation__ *binary_operation_n;
+typedef struct __binary_operation_n__ *binary_operation_n;
 
-struct __unary_operation__
+struct __unary_operation_n__
 {
     uint8 _operator;
 
     node_t _op;
 };
-typedef struct __unary_operation__ *unary_operation_n;
+typedef struct __unary_operation_n__ *unary_operation_n;
 
-struct __ternary_condition__
+struct __ternary_condition_n__
 {
     node_t _condition;
 
     node_t _op1;
     node_t _op2;
 };
-typedef struct __ternary_condition__ *ternary_condition_n;
+typedef struct __ternary_condition_n__ *ternary_condition_n;
 
-struct __subscript__
+struct __subscript_n__
 {
     node_t _array;
 
     node_t _index;
 };
-typedef struct __subscript__ *subscript_n;
+typedef struct __subscript_n__ *subscript_n;
 
-struct __var_assign__
+struct __var_assign_n__
 {
     str _name;
     node_t _value;
 
     uint8 _properties; // 0b00001234 (1 : access type) (2 : storage context) (3 : is constant) (4 : is static)
 };
-typedef struct __var_assign__ *var_assign_n;
+typedef struct __var_assign_n__ *var_assign_n;
 
-struct __var_reassign__
+struct __var_reassign_n__
 {
     uint8 _operator;
 
     node_t _var;
     node_t _value;
 };
-typedef struct __var_reassign__ *var_reassign_n;
+typedef struct __var_reassign_n__ *var_reassign_n;
 
-struct __var_fixed_assign__
+struct __var_fixed_assign_n__
 {
     uint8 _operator; // 0b00000012 (1 : operator type) (2 : is prefix or not)
 
     node_t _var;
 };
-typedef struct __var_fixed_assign__ *var_fixed_assign_n;
+typedef struct __var_fixed_assign_n__ *var_fixed_assign_n;
 
-struct __var_access__
+struct __var_access_n__
 {
     str _name;
 };
-typedef struct __var_access__ *var_access_n;
+typedef struct __var_access_n__ *var_access_n;
 
-struct __func_def__
+struct __func_def_n__
 {
     str _name;
 
@@ -250,18 +250,18 @@ struct __func_def__
 
     uint8 _properties; // 0b0051234 (1 : access type) (2 : storage context) (3 : is constant) (4 : is static) (5 : is single-line)
 };
-typedef struct __func_def__ *func_def_n;
+typedef struct __func_def_n__ *func_def_n;
 
-struct __func_call__
+struct __func_call_n__
 {
     node_t _func;
 
     arg_p _args;
     uint64 _size;
 };
-typedef struct __func_call__ *func_call_n;
+typedef struct __func_call_n__ *func_call_n;
 
-struct __class_def__
+struct __class_def_n__
 {
     str _name;
 
@@ -269,9 +269,9 @@ struct __class_def__
 
     uint8 _properties; // 0b0001234 (1 : access type) (2 : storage context) (3 : is constant) (4 : is static)
 };
-typedef struct __class_def__ *class_def_n;
+typedef struct __class_def_n__ *class_def_n;
 
-struct __struct_def__
+struct __struct_def_n__
 {
     str _name;
 
@@ -279,27 +279,27 @@ struct __struct_def__
 
     uint8 _properties; // 0b0001234 (1 : access type) (2 : storage context) (3 : is constant) (4 : is static)
 };
-typedef struct __struct_def__ *struct_def_n;
+typedef struct __struct_def_n__ *struct_def_n;
 
-struct __dollar_func_call__
+struct __dollar_func_call_n__
 {
     str _name;
 
     node_p _args;
     uint64 _size;
 };
-typedef struct __dollar_func_call__ *dollar_func_call_n;
+typedef struct __dollar_func_call_n__ *dollar_func_call_n;
 
-struct __if__
+struct __if_n__
 {
     stat_p _stats;
     uint64 _size;
 
     body_t _ebody;
 };
-typedef struct __if__ *if_n;
+typedef struct __if_n__ *if_n;
 
-struct __switch__
+struct __switch_n__
 {
     node_t _value;
 
@@ -308,9 +308,9 @@ struct __switch__
 
     body_t _dbody;
 };
-typedef struct __switch__ *switch_n;
+typedef struct __switch_n__ *switch_n;
 
-struct __for__
+struct __for_n__
 {
     str _var;
 
@@ -320,9 +320,9 @@ struct __for__
 
     body_t _body;
 };
-typedef struct __for__ *for_n;
+typedef struct __for_n__ *for_n;
 
-struct __foreach__
+struct __foreach_n__
 {
     str _var;
 
@@ -330,23 +330,23 @@ struct __foreach__
 
     body_t _body;
 };
-typedef struct __foreach__ *foreach_n;
+typedef struct __foreach_n__ *foreach_n;
 
-struct __while__
+struct __while_n__
 {
     node_t _condition;
     body_t _body;
 };
-typedef struct __while__ *while_n;
+typedef struct __while_n__ *while_n;
 
-struct __do_while__
+struct __do_while_n__
 {
     body_t _body;
     node_t _condition;
 };
-typedef struct __do_while__ *do_while_n;
+typedef struct __do_while_n__ *do_while_n;
 
-struct __loop__
+struct __loop_n__
 {
     node_t _init;
     node_t _condition;
@@ -354,9 +354,9 @@ struct __loop__
 
     body_t _body;
 };
-typedef struct __loop__ *loop_n;
+typedef struct __loop_n__ *loop_n;
 
-struct __try__
+struct __try_n__
 {
     body_t _error;
 
@@ -365,19 +365,19 @@ struct __try__
 
     body_t _fbody;
 };
-typedef struct __try__ *try_n;
+typedef struct __try_n__ *try_n;
 
-struct __return__
+struct __return_n__
 {
     node_t _value;
 };
-typedef struct __return__ *return_n;
+typedef struct __return_n__ *return_n;
 
-struct __import__
+struct __import_n__
 {
     str _lib;
 };
-typedef struct __import__ *import_n;
+typedef struct __import_n__ *import_n;
 
 node_t node_set1(uint8 type, ptr node, pos_t poss, pos_t pose);
 node_t node_set2(uint8 type, pos_t poss, pos_t pose);

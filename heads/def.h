@@ -17,7 +17,7 @@
 #define CMD_MAX_INPUT 1025
 #define FILE_MAX_INPUT 8193
 
-#define OPT_LVL 0
+#define OPT_LVL 1
 
 #define STACK_SIZE 65536
 #define HEAP_SIZE 65536

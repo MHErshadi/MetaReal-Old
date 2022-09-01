@@ -1,6 +1,6 @@
 // MetaReal Programming Language version 1.0.0
 
-#include <array/tuple.h>
+#include <ir/block.h>
 
 void copy_mtuple(stack_t stack, heap_t heap, mtuple_t dst, mtuple_c src)
 {

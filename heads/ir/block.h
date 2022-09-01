@@ -3,7 +3,9 @@
 #ifndef __M_BLOCK__
 #define __M_BLOCK__
 
-#include <ctypes.h>
+#include <mfloat/mfloat.h>
+#include <mstr/mstr.h>
+#include <array/list.h>
 
 enum _block_
 {
@@ -43,76 +45,52 @@ struct __data__
 typedef struct __data__ data_t;
 typedef struct __data__ *data_p;
 
-struct __block__
-{
-    uint8 _type;
-    ptr _block;
-
-    uint8 _dtype;
-    uint64 _id;
-
-    uint8 _properties; // 0b00000021 (1 : is useful) (2 : is complex)
-};
-typedef struct __block__ block_t;
-typedef struct __block__ *block_p;
-
-#define SET_PROPERTIES(is_useful, is_complex, tail) 0b ## tail ## is_complex ## is_useful
-
-#define IS_USEFUL(x) ((x) & 1)
-#define IS_COMPLEX(x) ((x) >> 1 & 1)
-#define IS_TRUE(x) ((x) >> 2)
-
-#include <mfloat/mfloat.h>
-#include <mstr/mstr.h>
-#include <array/list.h>
-#include <array/tuple.h>
-
-struct __int__
+struct __int_i__
 {
     mint_t _value;
 };
-typedef struct __int__ *int_i;
+typedef struct __int_i__ *int_i;
 
-struct __float__
+struct __float_i__
 {
     mfloat_t _value;
 };
-typedef struct __float__ *float_i;
+typedef struct __float_i__ *float_i;
 
-struct __str__
+struct __str_i__
 {
     mstr_t _value;
 };
-typedef struct __str__ *str_i;
+typedef struct __str_i__ *str_i;
 
-struct __list__
+struct __list_i__
 {
     mlist_t _value;
 };
-typedef struct __list__ *list_i;
+typedef struct __list_i__ *list_i;
 
-struct __tuple__
+struct __tuple_i__
 {
     mtuple_t _value;
 };
-typedef struct __tuple__ *tuple_i;
+typedef struct __tuple_i__ *tuple_i;
 
-struct __dict__
+struct __dict_i__
 {
     block_p _keys;
     block_p _values;
     uint64 _size;
 };
-typedef struct __dict__ *dict_i;
+typedef struct __dict_i__ *dict_i;
 
-struct __binary_operation__
+struct __binary_operation_i__
 {
     block_t _op1;
     block_t _op2;
 
     cstr _operator;
 };
-typedef struct __binary_operation__ *binary_operation_i;
+typedef struct __binary_operation_i__ *binary_operation_i;
 
 block_t block_set1(uint8 type, ptr block, uint8 dtype, uint8 properties);
 block_t block_set2(uint8 type, uint8 dtype, uint8 properties);
@@ -132,4 +110,4 @@ tuple_i tuple_i_set(stack_t stack, mtuple_t value);
 dict_i dict_i_set(stack_t stack, block_p keys, block_p values, uint64 size);
 binary_operation_i binary_operation_i_set(stack_t stack, block_t op1, block_t op2, cstr operator);
 
-#endif /* __IBLK__ */
+#endif /* __M_BLOCK__ */

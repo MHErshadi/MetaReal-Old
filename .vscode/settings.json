@@ -34,6 +34,11 @@
         "context.h": "c",
         "fblock.h": "c",
         "math.h": "c",
-        "mfloat.h": "c"
+        "mfloat.h": "c",
+        "list.h": "c",
+        "tuple.h": "c",
+        "block_struct.h": "c",
+        "gen.h": "c",
+        "value.h": "c"
     }
 }

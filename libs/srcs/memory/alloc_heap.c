@@ -13,5 +13,5 @@ void alloc_heap(heap_t heap, uint64 size)
 
     heap->_size = size;
 
-    heap->_fblock = set_fblock(0, size, NULL);
+    heap->_fblock = set_fblock(heap->_data, size, NULL);
 }

@@ -187,7 +187,7 @@ void block_print(data_p data, block_p block, cstr end)
         fprintf(STDOUT, "$LST%llu |lst = {", block->_id);
 
         for (i = 0; i < list->_value->_size; i++)
-            block_print(data, &list->_value->_elements[i], ", ");
+            block_label(data, &list->_value->_elements[i], ", ");
 
         fprintf(STDOUT, "\b\b}%s", end);
         return;
@@ -275,7 +275,7 @@ void block_print(data_p data, block_p block, cstr end)
 
 int_i int_i_set(stack_t stack, mint_t value)
 {
-    int_i block = stack_alloc(stack, sizeof(struct __int__));
+    int_i block = stack_alloc(stack, sizeof(struct __int_i__));
 
     block->_value->_value = value->_value;
 
@@ -284,7 +284,7 @@ int_i int_i_set(stack_t stack, mint_t value)
 
 float_i float_i_set(stack_t stack, mfloat_t value)
 {
-    float_i block = stack_alloc(stack, sizeof(struct __float__));
+    float_i block = stack_alloc(stack, sizeof(struct __float_i__));
 
     block->_value->_value = value->_value;
 
@@ -293,7 +293,7 @@ float_i float_i_set(stack_t stack, mfloat_t value)
 
 str_i str_i_set(stack_t stack, mstr_t value)
 {
-    str_i block = stack_alloc(stack, sizeof(struct __str__));
+    str_i block = stack_alloc(stack, sizeof(struct __str_i__));
 
     block->_value->_str = value->_str;
     block->_value->_size = value->_size;
@@ -303,7 +303,7 @@ str_i str_i_set(stack_t stack, mstr_t value)
 
 list_i list_i_set(stack_t stack, mlist_t value)
 {
-    list_i block = stack_alloc(stack, sizeof(struct __list__));
+    list_i block = stack_alloc(stack, sizeof(struct __list_i__));
 
     block->_value->_elements = value->_elements;
     block->_value->_size = value->_size;
@@ -313,7 +313,7 @@ list_i list_i_set(stack_t stack, mlist_t value)
 
 tuple_i tuple_i_set(stack_t stack, mtuple_t value)
 {
-    tuple_i block = stack_alloc(stack, sizeof(struct __tuple__));
+    tuple_i block = stack_alloc(stack, sizeof(struct __tuple_i__));
 
     block->_value->_elements = value->_elements;
     block->_value->_size = value->_size;
@@ -323,7 +323,7 @@ tuple_i tuple_i_set(stack_t stack, mtuple_t value)
 
 dict_i dict_i_set(stack_t stack, block_p keys, block_p values, uint64 size)
 {
-    dict_i block = stack_alloc(stack, sizeof(struct __dict__));
+    dict_i block = stack_alloc(stack, sizeof(struct __dict_i__));
 
     block->_keys = keys;
     block->_values = values;
@@ -334,7 +334,7 @@ dict_i dict_i_set(stack_t stack, block_p keys, block_p values, uint64 size)
 
 binary_operation_i binary_operation_i_set(stack_t stack, block_t op1, block_t op2, cstr operator)
 {
-    binary_operation_i block = stack_alloc(stack, sizeof(struct __binary_operation__));
+    binary_operation_i block = stack_alloc(stack, sizeof(struct __binary_operation_i__));
 
     block->_op1 = op1;
     block->_op2 = op2;

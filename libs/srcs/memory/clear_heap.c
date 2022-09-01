@@ -9,5 +9,5 @@ void clear_heap(heap_t heap)
 {
     if (heap->_fblock)
         free_fblock(heap->_fblock);
-    heap->_fblock = set_fblock(0, heap->_size, NULL);
+    heap->_fblock = set_fblock(heap->_data, heap->_size, NULL);
 }

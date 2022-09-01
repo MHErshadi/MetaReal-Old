@@ -1,6 +1,6 @@
 // MetaReal Programming Language version 1.0.0
 
-#include <array/list.h>
+#include <ir/block.h>
 
 uint8 mlist_nequal(mlist_c op1, mlist_c op2)
 {

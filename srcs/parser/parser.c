@@ -287,7 +287,7 @@ token_p tuple(pres_p res, token_p tokens, stack_t stack, heap_t heap)
         if (size != alloc)
             heap_shrink(heap, elements, size * sizeof(node_t));
 
-        tuple_n node = tuple_set(stack, elements, size);
+        tuple_n node = tuple_n_set(stack, elements, size);
 
         *res->_nodes = node_set1(TUPLE_N, node, elements->_poss, res->_nodes->_pose);
         return tokens;
@@ -1540,7 +1540,7 @@ token_p hand_struct_def(pres_p res, token_p tokens, stack_t stack, heap_t heap)
 
     if (tokens->_type != LCURLY_BRACE_T)
     {
-        tokens = gen_prop(&properties, tokens);
+        tokens = gen_properties(&properties, tokens);
 
         if (tokens->_type != IDENTIFIER_T)
         {
@@ -2535,7 +2535,7 @@ token_p gen_case(body_p body, uint64 alt, pres_p res, token_p tokens, stack_t st
 
     do
     {
-        adv_nln2(tokens);
+        advance_newline2(tokens);
 
         if (tokens->_type == CASE_K || tokens->_type == DEFAULT_K || tokens->_type == RCURLY_BRACE_T || tokens->_type == EOF_T)
             break;
