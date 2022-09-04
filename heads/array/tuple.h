@@ -1,10 +1,9 @@
 // MetaReal Programming Language version 1.0.0
 
-#ifndef __M_TUPLE__
-#define __M_TUPLE__
+#ifndef __M_MTUPLE__
+#define __M_MTUPLE__
 
 #include <ir/block_struct.h>
-#include <memory/memory.h>
 
 struct __mtuple__
 {
@@ -25,4 +24,4 @@ void free_mtuple(heap_t heap, mtuple_t mtuple);
 uint8 mtuple_equal(mtuple_c op1, mtuple_c op2);
 uint8 mtuple_nequal(mtuple_c op1, mtuple_c op2);
 
-#endif /* __M_TUPLE__ */
+#endif /* __M_MTUPLE__ */

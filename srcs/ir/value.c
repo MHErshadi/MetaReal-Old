@@ -30,8 +30,7 @@ block_t value_add(gres_p res, block_t op1, block_t op2, stack_t stack, heap_t he
         {
             if (OPT_LVL && !IS_USEFUL(op1._properties) && !IS_USEFUL(op2._properties))
             {
-                int_i op1b = op1._block;
-                mint_add(op1b->_value, ((int_i)op2._block)->_value);
+                mint_add(((int_i)op1._block)->_value, ((int_i)op2._block)->_value);
 
                 return op1;
             }
@@ -69,11 +68,10 @@ block_t value_add(gres_p res, block_t op1, block_t op2, stack_t stack, heap_t he
         {
             if (OPT_LVL && !IS_USEFUL(op1._properties) && !IS_USEFUL(op2._properties))
             {
-                float_i op1b = op1._block;
                 mfloat_t op2v;
                 set_mfloat_mint(op2v, ((int_i)op2._block)->_value);
 
-                mfloat_add(op1b->_value, op2v);
+                mfloat_add(((float_i)op1._block)->_value, op2v);
 
                 return op1;
             }
@@ -87,8 +85,7 @@ block_t value_add(gres_p res, block_t op1, block_t op2, stack_t stack, heap_t he
         {
             if (OPT_LVL && !IS_USEFUL(op1._properties) && !IS_USEFUL(op2._properties))
             {
-                float_i op1b = op1._block;
-                mfloat_add(op1b->_value, ((float_i)op2._block)->_value);
+                mfloat_add(((float_i)op1._block)->_value, ((float_i)op2._block)->_value);
 
                 return op1;
             }
@@ -113,8 +110,7 @@ block_t value_add(gres_p res, block_t op1, block_t op2, stack_t stack, heap_t he
                 if (!op2._block)
                     return op1;
 
-                str_i op1b = op1._block;
-                mstr_concat(heap, op1b->_value, ((str_i)op2._block)->_value);
+                mstr_concat(heap, ((str_i)op1._block)->_value, ((str_i)op2._block)->_value);
 
                 return op1;
             }
@@ -139,8 +135,7 @@ block_t value_add(gres_p res, block_t op1, block_t op2, stack_t stack, heap_t he
                 if (!op2._block)
                     return op1;
 
-                list_i op1b = op1._block;
-                mlist_concat(heap, op1b->_value, ((list_i)op2._block)->_value);
+                mlist_concat(heap, ((list_i)op1._block)->_value, ((list_i)op2._block)->_value);
 
                 return op1;
             }
@@ -160,8 +155,7 @@ block_t value_add(gres_p res, block_t op1, block_t op2, stack_t stack, heap_t he
                 if (!op2._block)
                     return op1;
 
-                list_i op1b = op1._block;
-                mlist_concat_mtuple(heap, op1b->_value, ((tuple_i)op2._block)->_value);
+                mlist_concat_mtuple(heap, ((list_i)op1._block)->_value, ((tuple_i)op2._block)->_value);
 
                 return op1;
             }
@@ -187,8 +181,7 @@ block_t value_add(gres_p res, block_t op1, block_t op2, stack_t stack, heap_t he
                 return op1;
             }
 
-            list_i op1b = op1._block;
-            mlist_append(heap, op1b->_value, op2);
+            mlist_append(heap, ((list_i)op1._block)->_value, op2);
 
             return op1;
         }
@@ -205,9 +198,35 @@ block_t value_add(gres_p res, block_t op1, block_t op2, stack_t stack, heap_t he
             block = binary_operation_i_set(stack, op1, op2, "addLB");
         case STR_V:
             block = binary_operation_i_set(stack, op1, op2, "addLS");
+        case DICT_V:
+            block = binary_operation_i_set(stack, op1, op2, "addLD");
         }
 
         return block_set1(BINARY_OPERATION_I, block, LIST_V, SET_PROPERTIES(1, 1, 0));
+    }
+    if (op1._dtype == DICT_V)
+    {
+        if (op2._dtype == DICT_V)
+        {
+            if (OPT_LVL && !IS_USEFUL(op1._properties) && !IS_USEFUL(op2._properties))
+            {
+                if (!op1._block)
+                    return op2;
+
+                if (!op2._block)
+                    return op1;
+
+                mdict_concat(heap, ((dict_i)op1._block)->_value, ((dict_i)op2._block)->_value);
+
+                return op1;
+            }
+
+            binary_operation_i block = binary_operation_i_set(stack, op1, op2, "addDD");
+
+            return block_set1(BINARY_OPERATION_I, block, DICT_V, SET_PROPERTIES(1, 1, 0));
+        }
+
+        illegal_operation_error(DICT_V, op2._dtype, "+");
     }
 
     illegal_operation_error(op1._dtype, op2._dtype, "+");

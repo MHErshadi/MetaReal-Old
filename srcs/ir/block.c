@@ -8,6 +8,9 @@ void block_label(data_p data, block_p block, cstr end);
 
 uint64 block_id(data_p data, uint8 dtype);
 
+void dict_node_print(data_p data, dict_node_p node);
+void dict_node_label(data_p data, dict_node_p node);
+
 block_t block_set1(uint8 type, ptr block, uint8 dtype, uint8 properties)
 {
     block_t block_;
@@ -95,6 +98,18 @@ block_t block_copy(block_t block, stack_t stack, heap_t heap)
 
         return block_set1(TUPLE_I, block_, TUPLE_V, block._properties);
     }
+    if (block._type == DICT_I)
+    {
+        if (!block._block)
+            return block;
+
+        mdict_t value;
+        copy_mdict(stack, heap, value, ((dict_i)block._block)->_value);
+
+        dict_i block_ = dict_i_set(stack, value);
+
+        return block_set1(DICT_I, block_, DICT_V, block._properties);
+    }
 }
 
 void block_free(heap_t heap, block_t block)
@@ -105,6 +120,8 @@ void block_free(heap_t heap, block_t block)
         free_mlist(heap, ((list_i)block._block)->_value);
     if (block._type == TUPLE_I && block._block)
         free_mtuple(heap, ((tuple_i)block._block)->_value);
+    if (block._type == DICT_I && block._block)
+        free_mdict(heap, ((dict_i)block._block)->_value);
 }
 
 uint8 block_equal(block_t op1, block_t op2)
@@ -123,12 +140,52 @@ uint8 block_equal(block_t op1, block_t op2)
     case BOOL_I:
         return IS_TRUE(op1._properties) == IS_TRUE(op2._properties);
     case STR_I:
+        if (!op1._block)
+            return op2._block ? 0 : 1;
+        if (!op2._block)
+            return 0;
+
         return mstr_equal(((str_i)op1._block)->_value, ((str_i)op2._block)->_value);
     case LIST_I:
+        if (!op1._block)
+            return op2._block ? 0 : 1;
+        if (!op2._block)
+            return 0;
+
         return mlist_equal(((list_i)op1._block)->_value, ((list_i)op2._block)->_value);
     case TUPLE_I:
+        if (!op1._block)
+            return op2._block ? 0 : 1;
+        if (!op2._block)
+            return 0;
+
         return mtuple_equal(((tuple_i)op1._block)->_value, ((tuple_i)op2._block)->_value);
+    case DICT_I:
+        if (!op1._block)
+            return op2._block ? 0 : 1;
+        if (!op2._block)
+            return 0;
+
+        return mdict_equal(((dict_i)op1._block)->_value, ((dict_i)op2._block)->_value);
     }
+}
+
+uint64 block_weight(block_t block)
+{
+    if (block._type == INT_I)
+        return ((int_i)block._block)->_value->_value;
+    if (block._type == FLOAT_I)
+        return ((float_i)block._block)->_value->_value;
+    if (block._type == BOOL_I)
+        return IS_TRUE(block._properties);
+    if (block._type == STR_I)
+        return ((str_i)block._block)->_value->_size;
+    if (block._type == LIST_I)
+        return ((list_i)block._block)->_value->_size;
+    if (block._type == TUPLE_I)
+        return ((tuple_i)block._block)->_value->_size;
+    if (block._type == DICT_I)
+        return ((dict_i)block._block)->_value->_size;
 }
 
 void block_print(data_p data, block_p block, cstr end)
@@ -180,14 +237,14 @@ void block_print(data_p data, block_p block, cstr end)
         uint64 i;
         for (i = 0; i < list->_value->_size; i++)
             if (IS_COMPLEX(list->_value->_elements[i]._properties))
-                block_print(data, &list->_value->_elements[i], ";\n");
+                block_print(data, list->_value->_elements + i, ";\n");
 
         if (!block->_id)
             block->_id = ++data->_list_count;
         fprintf(STDOUT, "$LST%llu |lst = {", block->_id);
 
         for (i = 0; i < list->_value->_size; i++)
-            block_label(data, &list->_value->_elements[i], ", ");
+            block_label(data, list->_value->_elements + i, ", ");
 
         fprintf(STDOUT, "\b\b}%s", end);
         return;
@@ -205,14 +262,14 @@ void block_print(data_p data, block_p block, cstr end)
         uint64 i;
         for (i = 0; i < tuple->_value->_size; i++)
             if (IS_COMPLEX(tuple->_value->_elements[i]._properties))
-                block_print(data, &tuple->_value->_elements[i], ";\n");
+                block_print(data, tuple->_value->_elements + i, ";\n");
 
         if (!block->_id)
             block->_id = ++data->_tuple_count;
         fprintf(STDOUT, "$TPL%llu |tpl = {", block->_id);
 
         for (i = 0; i < tuple->_value->_size; i++)
-            block_label(data, &tuple->_value->_elements[i], ", ");
+            block_label(data, tuple->_value->_elements + i, ", ");
 
         fprintf(STDOUT, "\b\b}%s", end);
         return;
@@ -227,28 +284,15 @@ void block_print(data_p data, block_p block, cstr end)
 
         dict_i dict = block->_block;
 
-        uint64 i;
-        for (i = 0; i < dict->_size; i++)
-            if (IS_COMPLEX(dict->_keys[i]._properties))
-                block_print(data, &dict->_keys[i], ";\n");
-
-        for (i = 0; i < dict->_size; i++)
-            if (IS_COMPLEX(dict->_values[i]._properties))
-                block_print(data, &dict->_values[i], ";\n");
-
-        fprintf(STDOUT, "$KEYS |lst = {");
-
-        for (i = 0; i < dict->_size; i++)
-            block_label(data, &dict->_keys[i], ", ");
-
-        fprintf(STDOUT, "\b\b};\n$VALS |lst = {");
-
-        for (i = 0; i < dict->_size; i++)
-            block_label(data, &dict->_values[i], ", ");
+        dict_node_print(data, dict->_value->_node);
 
         if (!block->_id)
             block->_id = ++data->_dict_count;
-        fprintf(STDOUT, "\b\b};\n$DCT%llu |dct = {$KEYS, $VALS}%s", block->_id, end);
+        fprintf(STDOUT, "$DCT%llu |dct = {", block->_id);
+
+        dict_node_label(data, dict->_value->_node);
+
+        fprintf(STDOUT, "\b\b}%s", end);
         return;
     }
 
@@ -321,13 +365,11 @@ tuple_i tuple_i_set(stack_t stack, mtuple_t value)
     return block;
 }
 
-dict_i dict_i_set(stack_t stack, block_p keys, block_p values, uint64 size)
+dict_i dict_i_set(stack_t stack, mdict_t value)
 {
     dict_i block = stack_alloc(stack, sizeof(struct __dict_i__));
 
-    block->_keys = keys;
-    block->_values = values;
-    block->_size = size;
+    block->_value->_node = value->_node;
 
     return block;
 }
@@ -441,4 +483,30 @@ uint64 block_id(data_p data, uint8 dtype)
     case DICT_V:
         return ++data->_dict_count;
     }
+}
+
+void dict_node_print(data_p data, dict_node_p node)
+{
+    if (node->_left)
+        dict_node_print(data, node->_left);
+
+    if (IS_COMPLEX(node->_key._properties))
+        block_print(data, &node->_key, ";\n");
+    if (IS_COMPLEX(node->_value._properties))
+        block_print(data, &node->_value, ";\n");
+
+    if (node->_right)
+        dict_node_print(data, node->_right);
+}
+
+void dict_node_label(data_p data, dict_node_p node)
+{
+    if (node->_left)
+        dict_node_label(data, node->_left);
+
+    block_label(data, &node->_key, ": ");
+    block_label(data, &node->_value, ", ");
+
+    if (node->_right)
+        dict_node_label(data, node->_right);
 }

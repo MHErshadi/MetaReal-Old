@@ -6,6 +6,7 @@
 #include <mfloat/mfloat.h>
 #include <mstr/mstr.h>
 #include <array/list.h>
+#include <array/dict.h>
 
 enum _block_
 {
@@ -77,9 +78,7 @@ typedef struct __tuple_i__ *tuple_i;
 
 struct __dict_i__
 {
-    block_p _keys;
-    block_p _values;
-    uint64 _size;
+    mdict_t _value;
 };
 typedef struct __dict_i__ *dict_i;
 
@@ -99,15 +98,18 @@ block_t block_copy(block_t block, stack_t stack, heap_t heap);
 void block_free(heap_t heap, block_t block);
 
 uint8 block_equal(block_t op1, block_t op2);
+uint64 block_weight(block_t block);
 
 void block_print(data_p data, block_p block, cstr end);
+
+/* */
 
 int_i int_i_set(stack_t stack, mint_t value);
 float_i float_i_set(stack_t stack, mfloat_t value);
 str_i str_i_set(stack_t stack, mstr_t value);
 list_i list_i_set(stack_t stack, mlist_t value);
 tuple_i tuple_i_set(stack_t stack, mtuple_t value);
-dict_i dict_i_set(stack_t stack, block_p keys, block_p values, uint64 size);
+dict_i dict_i_set(stack_t stack, mdict_t value);
 binary_operation_i binary_operation_i_set(stack_t stack, block_t op1, block_t op2, cstr operator);
 
 #endif /* __M_BLOCK__ */

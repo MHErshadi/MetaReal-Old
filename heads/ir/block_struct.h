@@ -3,7 +3,7 @@
 #ifndef __M_BLOCK_STRUCT__
 #define __M_BLOCK_STRUCT__
 
-#include <ctypes.h>
+#include <memory/memory.h>
 
 struct __block__
 {

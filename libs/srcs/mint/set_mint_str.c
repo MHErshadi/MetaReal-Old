@@ -4,7 +4,7 @@
 #include <mint.h>
 #include <stdio.h>
 
-void set_mint_str(mint_t dst, cstr value)
+void set_mint_str(mint_t dst, cstr src)
 {
-    sscanf(value, "%lld", &dst->_value);
+    sscanf(src, "%lld", &dst->_value);
 }

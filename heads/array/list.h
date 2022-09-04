@@ -1,7 +1,7 @@
 // MetaReal Programming Language version 1.0.0
 
-#ifndef __M_LIST__
-#define __M_LIST__
+#ifndef __M_MLIST__
+#define __M_MLIST__
 
 #include <array/tuple.h>
 
@@ -30,4 +30,4 @@ void mlist_repeat(stack_t stack, heap_t heap, mlist_t mlist, uint64 count);
 uint8 mlist_equal(mlist_c op1, mlist_c op2);
 uint8 mlist_nequal(mlist_c op1, mlist_c op2);
 
-#endif /* __M_LIST__ */
+#endif /* __M_MLIST__ */

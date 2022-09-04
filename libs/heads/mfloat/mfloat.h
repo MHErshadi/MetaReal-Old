@@ -13,7 +13,7 @@ struct __mfloat__
 typedef struct __mfloat__ mfloat_t[1];
 typedef const struct __mfloat__ mfloat_c[1];
 
-void set_mfloat_str(mfloat_t dst, cstr value);
+void set_mfloat_str(mfloat_t dst, cstr src);
 void set_mfloat_mint(mfloat_t dst, mint_c src);
 
 void copy_mfloat(mfloat_t dst, mfloat_c src);
