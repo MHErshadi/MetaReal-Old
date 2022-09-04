@@ -6,14 +6,6 @@
 
 void mstr_concat(heap_t heap, mstr_t op1, mstr_t op2)
 {
-    if (!op2->_size)
-        return;
-    if (!op1->_size)
-    {
-        op1 = op2;
-        return;
-    }
-
     uint64 size = op1->_size + op2->_size + 1;
 
     op1->_str = heap_expand(heap, op1->_str, size);

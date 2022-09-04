@@ -70,4 +70,10 @@ void heap_shrink(heap_t heap, ptr block, uint64 size);
 
 void heap_free(heap_t heap, ptr block);
 
+/* */
+
+ptr heap_fixed_alloc(heap_t heap, uint64 size);
+
+void heap_fixed_free(heap_t heap, ptr block, uint64 size);
+
 #endif /* __M_MEMORY__ */

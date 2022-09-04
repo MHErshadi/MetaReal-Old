@@ -4,7 +4,7 @@
 #include <mfloat.h>
 #include <stdio.h>
 
-void set_mfloat_str(mfloat_t dst, cstr value)
+void set_mfloat_str(mfloat_t dst, cstr src)
 {
-    sscanf(value, "%lf", &dst->_value);
+    sscanf(src, "%lf", &dst->_value);
 }

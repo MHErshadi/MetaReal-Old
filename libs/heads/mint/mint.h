@@ -13,7 +13,7 @@ struct __mint__
 typedef struct __mint__ mint_t[1];
 typedef const struct __mint__ mint_c[1];
 
-void set_mint_str(mint_t dst, cstr value);
+void set_mint_str(mint_t dst, cstr src);
 
 void copy_mint(mint_t dst, mint_c src);
 

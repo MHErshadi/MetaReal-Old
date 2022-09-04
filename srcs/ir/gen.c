@@ -317,6 +317,52 @@ block_t visit_tuple(gres_p res, node_t node, stack_t stack, heap_t heap, context
 
 block_t visit_dict(gres_p res, node_t node, stack_t stack, heap_t heap, context_t context)
 {
+    if (!node._node)
+        return block_set2(DICT_I, DICT_V, SET_PROPERTIES(0, 0, 0));
+
+    dict_n node_ = node._node;
+
+    block_t key = visit_node(res, node_->_elements->key, stack, heap, context);
+
+    if (res->_has_error)
+        return key;
+
+    block_t value = visit_node(res, node_->_elements->value, stack, heap, context);
+
+    if (res->_has_error)
+        return value;
+
+    dict_node_p elements = set_dict_node(heap, key, value, NULL, NULL);
+    uint64 size = 1;
+
+    uint8 is_useful = IS_USEFUL(key._properties) || IS_USEFUL(value._properties);
+    uint64 i;
+    for (i = 1; i < node_->_size; i++)
+    {
+        key = visit_node(res, node_->_elements[i].key, stack, heap, context);
+
+        if (res->_has_error)
+            return key;
+
+        value = visit_node(res, node_->_elements[i].value, stack, heap, context);
+
+        if (res->_has_error)
+            return value;
+
+        size += dict_node_new(heap, elements, key, value);
+
+        if (IS_USEFUL(key._properties) || IS_USEFUL(value._properties))
+            is_useful = 1;
+    }
+
+    mdict_t value_;
+    set_mdict(value_, elements, size);
+
+    dict_i block = dict_i_set(stack, value_);
+
+    if (is_useful)
+        return block_set1(DICT_I, block, DICT_V, SET_PROPERTIES(1, 1, 0));
+    return block_set1(DICT_I, block, DICT_V, SET_PROPERTIES(0, 1, 0));
 }
 
 block_t visit_binary_operation(gres_p res, node_t node, stack_t stack, heap_t heap, context_t context)

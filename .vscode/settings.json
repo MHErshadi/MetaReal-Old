@@ -39,6 +39,7 @@
         "tuple.h": "c",
         "block_struct.h": "c",
         "gen.h": "c",
-        "value.h": "c"
+        "value.h": "c",
+        "dict.h": "c"
     }
 }
